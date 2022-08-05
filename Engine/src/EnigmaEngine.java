@@ -22,15 +22,18 @@ import static utill.Utility.*;
 
 public class EnigmaEngine implements Engine {
 
+    // The engine contains the Enigma Machine instance.
     private EnigmaMachine machine;
 
+    // engine constructor
     public EnigmaEngine(){
     }
-
+    // creating new machine instance using all the parts the machine needs.
     public void buildMachine(ArrayList<Rotor> availableRotors, ArrayList<Reflector> availableReflectors, int rotorsCount, String alphabet, Map<Character, Integer> character2index){
-        machine= new EnigmaMachine(availableRotors, availableReflectors, rotorsCount, alphabet, character2index);
+        machine = new EnigmaMachine(availableRotors, availableReflectors, rotorsCount, alphabet, character2index);
     }
-
+    // updating the current machine configurations.
+    // based on String of input from the user.
     public void updateConfiguration(String rotors, String windows, String reflector ,String plugs){
 
         // build reflectorID
@@ -57,7 +60,7 @@ public class EnigmaEngine implements Engine {
 
         machine.updateConfiguration(rotorsIDs, windowOfssets, reflectorID, plugs);
     }
-
+    // ciphering text with the cipher method of "machine".
     public String cipherText ( String toCipher ) {
         StringBuilder cipheredText = new StringBuilder();
 
@@ -68,7 +71,7 @@ public class EnigmaEngine implements Engine {
         advanceCipherCounter();
         return cipheredText.toString();
     }
-
+    // get fileName from user and load Xml file to build new machine.
     public void buildMachineFromXmlFile(String fileName) {
         try {
             InputStream inputStream = new FileInputStream(new File("Engine/src/ex1-sanity-small.xml"));
@@ -83,7 +86,8 @@ public class EnigmaEngine implements Engine {
             e.printStackTrace();
         }
     }
-
+    // unmarshalling the schema of provided Xml file to create jaxb classes
+    // to help build the machine from a xml file
     private static CTEEnigma deserializeFrom(InputStream in) throws JAXBException {
         JAXBContext jc = JAXBContext.newInstance(JAXB_XML_PACKAGE_NAME);
         Unmarshaller u = jc.createUnmarshaller();
@@ -91,6 +95,8 @@ public class EnigmaEngine implements Engine {
     }
 
     public static String JAXB_XML_PACKAGE_NAME = "machine.jaxb.generated";
+
+    // convert all data from jaxb classes to our own classes.
 
     private void buildMachineFromCTEEnigma( CTEEnigma cteEnigma ){
         CTEMachine cteMachine = cteEnigma.getCTEMachine();
