@@ -1,0 +1,77 @@
+package servlets;
+
+import constants.Constants;
+import dto.DTOstatus;
+import engine.Engine;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import utils.SessionUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Scanner;
+
+@WebServlet(name = "Load XML", urlPatterns = "/load")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
+public class LoadXMLServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String usernameFromSession = SessionUtils.getUsername(req);
+
+        if (usernameFromSession == null) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            resp.getWriter().println("no username specified");
+        } else {
+            // check if username is valid/existing Uboat client
+            Map<String, Engine> userName2engine;
+            ServletContext servletContext = getServletContext();
+            userName2engine = (Map<String, Engine>) servletContext.getAttribute(Constants.MAP_OF_ENGINES_ATTRIBUTE_NAME);
+
+            if (userName2engine.containsKey(usernameFromSession)) {
+                Engine currentUBoatEngine = userName2engine.get(usernameFromSession);
+
+                if (req.getParts().size() == 1) {
+
+                    Collection<Part> parts = req.getParts();
+
+                    String fileContent = "";
+                    for (Part file : parts) {
+                        //to write the content of the file to a string
+                        fileContent = readFromInputStream(file.getInputStream());
+                    }
+
+                    DTOstatus loadXMLstatus = currentUBoatEngine.buildMachineFromXmlFile(fileContent);
+
+                    if (!loadXMLstatus.isSucceed()) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println(loadXMLstatus.getDetails().name());
+                    } else { // all ok
+                        resp.setStatus(HttpServletResponse.SC_OK);
+                        resp.getWriter().println("build successfully.");
+                    }
+
+                } else { // more parts than 1
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    resp.getWriter().println("please upload only 1 file");
+                }
+            } else { // if no key in map
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                resp.getWriter().println("no UBoat Client exist with that name specified");
+            }
+        }
+    }
+
+    private String readFromInputStream(InputStream inputStream) {
+        return new Scanner(inputStream).useDelimiter("\\Z").next();
+    }
+}

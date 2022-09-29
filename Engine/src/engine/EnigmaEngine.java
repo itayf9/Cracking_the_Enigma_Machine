@@ -41,6 +41,10 @@ public class EnigmaEngine implements Engine {
 
     public static String JAXB_XML_PACKAGE_NAME = "machine.jaxb.generated";
 
+    public EnigmaEngine() {
+        System.out.println("inside the default ctor of EnigmaEngine");
+    }
+
     /**
      * creating new machine instance using all the parts the machine needs.
      */
