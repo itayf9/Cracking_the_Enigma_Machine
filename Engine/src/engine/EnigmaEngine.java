@@ -29,10 +29,7 @@ public class EnigmaEngine implements Engine {
 
     // The engine contains Machine instance and machine records object.
     private Machine machine;
-
-
     private DecryptManager decryptManager;
-
     private boolean charByCharState = false;
     private long currentCipherProcessTimeElapsed;
     private String currentCipherProcessOutputText;
@@ -116,33 +113,25 @@ public class EnigmaEngine implements Engine {
      * gets fileName from user and loads XML file to build a new machine.
      * then, builds the machine.
      *
-     * @param fileName string - name of xml file
+     * @param fileContent string - name of xml file
      * @return DTOstatus object that describes the status of the operation
      */
-    public DTOstatus buildMachineFromXmlFile(String fileName) {
+    public DTOstatus buildMachineFromXmlFile(String fileContent) {
         boolean isSucceeded = true;
         Problem details;
 
         // checks if the file is in the .xml format.
-        if (!fileName.endsWith(".xml")) {
-            isSucceeded = false;
-            details = Problem.FILE_NOT_IN_FORMAT;
-        } else {
-            try {
-                InputStream inputStream = new FileInputStream(fileName);
-                CTEEnigma cteEnigma = deserializeFrom(inputStream);
-                details = buildEnigmaFromCTEEnigma(cteEnigma);
-                if (details != Problem.NO_PROBLEM) {
-                    isSucceeded = false;
-                }
-
-            } catch (JAXBException e) {
-                details = Problem.JAXB_ERROR;
+        try {
+            InputStream inputStream = new ByteArrayInputStream(fileContent.getBytes());
+            CTEEnigma cteEnigma = deserializeFrom(inputStream);
+            details = buildEnigmaFromCTEEnigma(cteEnigma);
+            if (details != Problem.NO_PROBLEM) {
                 isSucceeded = false;
-            } catch (FileNotFoundException e) {
-                isSucceeded = false;
-                details = Problem.FILE_NOT_FOUND;
             }
+
+        } catch (JAXBException e) {
+            details = Problem.JAXB_ERROR;
+            isSucceeded = false;
         }
 
         // resets the statistics when loading a new machine
@@ -307,16 +296,6 @@ public class EnigmaEngine implements Engine {
                 }
             }
         }
-
-        // validating the number of agents
-        int numberOfAgents = cteEnigma.getCTEDecipher().getAgents();
-
-        if (numberOfAgents < 2) {
-            return problem = Problem.FILE_TOO_LITTLE_AGENTS;
-        } else if (numberOfAgents > 50) {
-            return problem = Problem.FILE_TOO_MANY_AGENTS;
-        }
-
         return problem;
     }
 
@@ -442,9 +421,8 @@ public class EnigmaEngine implements Engine {
         // initializes decrypt manager
         String words = cteEnigma.getCTEDecipher().getCTEDictionary().getWords().trim().toUpperCase();
         String excludeChars = cteEnigma.getCTEDecipher().getCTEDictionary().getExcludeChars();
-        int numberOfAgents = cteEnigma.getCTEDecipher().getAgents();
 
-        decryptManager = new DecryptManager(new Dictionary(words, excludeChars), numberOfAgents, this.machine);
+        decryptManager = new DecryptManager(new Dictionary(words, excludeChars), this.machine);
 
         return problem; // for code readability -> problem = Problem.NO_PROBLEM;
     }

@@ -46,11 +46,11 @@ public class DecryptManager {
     private final BooleanProperty isBruteForceActionPaused;
 
 
-    public DecryptManager(Dictionary dictionary, int numOfAvailableAgents, Machine enigmaMachine) {
+    public DecryptManager(Dictionary dictionary, Machine enigmaMachine) {
         int LIMIT_NUMBER_OF_TASK = 1000;
         this.threadPoolBlockingQueue = new LinkedBlockingQueue<>(LIMIT_NUMBER_OF_TASK);
         this.dictionary = dictionary;
-        this.numOfAvailableAgents = numOfAvailableAgents;
+        this.numOfAvailableAgents = 1;
         this.enigmaMachine = enigmaMachine;
         this.totalPossibleWindowsPositions = (long) Math.pow(enigmaMachine.getAlphabet().length(), enigmaMachine.getRotorsCount());
         this.totalTimeDecryptProperty = new SimpleLongProperty();
