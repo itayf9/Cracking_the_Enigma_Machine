@@ -70,4 +70,8 @@ public class Dictionary {
     public String getExcludeChars() {
         return excludeChars;
     }
+
+    public Set<String> getDictionaryWords() {
+        return words;
+    }
 }

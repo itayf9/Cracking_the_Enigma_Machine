@@ -9,7 +9,7 @@ import utill.Utility;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
-
+/*
 public class Console {
     private static final Engine engine = new EnigmaEngine();
     private static boolean isMachineLoaded = false;
@@ -25,13 +25,13 @@ public class Console {
     private static final String MSG_PLEASE_LOAD_MACHINE_BEFORE_STATS = "Please load machine from a file before checking for statistics.";
 
     public static void main(String[] args) {
-        run();
+
     }
 
     /**
      * runs the Console UI
      */
-    private static void run() {
+    /*private static void run() {
 
         boolean isExit = false;
         System.out.println(MSG_WELCOME);
@@ -114,11 +114,11 @@ public class Console {
                 printMessageWithBorders("An unknown error had occurred. Please try again.");
             }
         }
-    }
-
+    }*/
+/*
     /**
      * prints the menu operations
-     */
+     *//*
     private static void printMainMenu() {
         System.out.println("\nSelect an operation:");
         System.out.println("1  -  Load System Details From File.\n" +
@@ -137,7 +137,7 @@ public class Console {
      * getting the user's choice from the menu
      *
      * @return Operation that represents the user's choice
-     */
+     *//*
     private static Operation getInputUserChoice() {
 
         int userChoiceNum;
@@ -171,7 +171,7 @@ public class Console {
      * asks the user to try again or go back to the menu
      *
      * @return true if wants to try again. false if wants to go back to the menu
-     */
+     *//*
     private static boolean getInputWantToTryAgain() {
 
         String userChoice;
@@ -197,7 +197,7 @@ public class Console {
      *
      * @param numberOfIntegers the rotors count
      * @return list of integers representing the rotor's id's
-     */
+     *//*
     private static String getInputStringOfIntegers(int numberOfIntegers) {
         boolean isValid = false;
         String StringOfChoices;
@@ -223,7 +223,7 @@ public class Console {
      * get alphabet characters from the user
      *
      * @return String of characters
-     */
+     *//*
     private static String getInputSequenceOfCharacters() {
 
         boolean isValid = false;
@@ -251,7 +251,7 @@ public class Console {
      * get reflector input from user.
      *
      * @return integer representing reflector id.
-     */
+     *//*
     private static int getInputInteger() {
         boolean isValid = false;
 
@@ -280,7 +280,7 @@ public class Console {
      * get the plugs from the user.
      *
      * @return a list of strings, each string contains 2 characters representing a Plug.
-     */
+     *//*
     private static String getInputListOfStrings() {
         boolean isValid = false;
         String plugs = "";
@@ -299,7 +299,7 @@ public class Console {
      * get text to cipher from user
      *
      * @return string of text.
-     */
+     *//*
     private static String getInputCipherText() {
 
         boolean isValid = false;
@@ -321,7 +321,7 @@ public class Console {
      * get fileName from user.
      *
      * @return string represents the file name.
-     */
+     *//*
     private static String getXMLFileName() {
         System.out.println("Enter the full path of the file to load machine from (XML file):");
 
@@ -330,7 +330,7 @@ public class Console {
 
     /**
      * Q1 - loads xml file and builds the enigma machine.
-     */
+     *//*
     private static void loadXmlFile() {
         String xmlFileName = getXMLFileName();
         DTOstatus buildMachineFromXMLStatus = engine.buildMachineFromXmlFile(xmlFileName);
@@ -346,7 +346,7 @@ public class Console {
 
     /**
      * Q2 - display the machine specifications.
-     */
+     *//*
     private static void displaySpecifications() {
         DTOspecs specsStatus = engine.displayMachineSpecifications();
         if (specsStatus.isSucceed()) {
@@ -356,7 +356,7 @@ public class Console {
 
     /**
      * Q3 - choose new config manually.
-     */
+     *//*
     private static void chooseConfigManual() {
         boolean isWantToTryAgain;
         int rotorCount = engine.getRotorsCount();
@@ -439,7 +439,7 @@ public class Console {
 
     /**
      * Q4 - choose new config automatically.
-     */
+     *//*
     static private void chooseConfigAuto() {
         DTOsecretConfig configStatus = engine.selectConfigurationAuto();
         isMachineConfigured = true;
@@ -455,7 +455,7 @@ public class Console {
 
     /**
      * Q5 - gets input from user and send it to machine to cipher.
-     */
+     *//*
     static private void processInput() {
         printMessageWithBorders("Please enter text to cipher:");
         String inputText = getInputCipherText();
@@ -471,7 +471,7 @@ public class Console {
 
     /**
      * Q6 - reset machine config to it's original last config.
-     */
+     *//*
     static private void resetConfig() {
         DTOresetConfig resetStatus = engine.resetConfiguration();
         if (resetStatus.isSucceed()) {
@@ -481,7 +481,7 @@ public class Console {
 
     /**
      * Q7 - gets history and stats from the machine and display to user.
-     */
+     *//*
     static private void getHistoryAndStats() {
         DTOstatistics statisticsStatus = engine.getHistoryAndStatistics();
         if (!statisticsStatus.isSucceed()) {
@@ -496,7 +496,7 @@ public class Console {
      * display message for the user.
      *
      * @param problem a detailed enum representing a problem at the code.
-     */
+     *//*
     private static void displayMessage(Problem problem) {
         String msg = "";
         switch (problem) {
@@ -641,7 +641,7 @@ public class Console {
      * print the specs to the user as required.
      *
      * @param dtoSpecs the DTOspecs object, containing the specs of the machine.
-     */
+     *//*
     private static void printSpecifications(DTOspecs dtoSpecs) {
         StringBuilder strSpecs = new StringBuilder();
 
@@ -678,7 +678,7 @@ public class Console {
      * @param inUseReflectorSymbol   a String of the reflector symbol
      * @param inUsePlugs             a String of the plugs in use
      * @param notchDistancesToWindow a list of the current notch positions
-     */
+     *//*
     private static void printConfiguration(List<Integer> inUseRotorsIDs, String windowsCharacters, String inUseReflectorSymbol, String inUsePlugs, List<Integer> notchDistancesToWindow) {
         StringBuilder strConfig = new StringBuilder();
 
@@ -731,7 +731,7 @@ public class Console {
      * print all machine stats
      *
      * @param stats DTOstatistics object that contains machine records
-     */
+     *//*
     private static void printStatistics(DTOstatistics stats) {
 
 
@@ -763,7 +763,7 @@ public class Console {
      * gets a file name for an existing machine
      *
      * @return a String of the file's name
-     */
+     *//*
     private static String getExistingMachineFileName() {
         System.out.println("Enter the name of the file of the existing machine: ");
 
@@ -772,7 +772,7 @@ public class Console {
 
     /**
      * loads an existing machine from a file
-     */
+     *//*
     private static void loadExistingMachineFromFile() {
         String fileName = getExistingMachineFileName();
         DTOstatus loadExistingMachineStatus;
@@ -795,7 +795,7 @@ public class Console {
 
     /**
      * saves an existing machine to file
-     */
+     *//*
     private static void saveExistingMachineToFile() {
         String fileName = getXMLFileName();
         try {
@@ -812,7 +812,7 @@ public class Console {
      * print a messege with borders
      *
      * @param msg the messege to print
-     */
+     *//*
     private static void printMessageWithBorders(String msg) {
         printBorder(msg);
         System.out.println("  " + msg);
@@ -823,7 +823,7 @@ public class Console {
      * prints a border in the size of a messege
      *
      * @param msg the messege
-     */
+     *//*
     private static void printBorder(String msg) {
         StringBuilder myStr = new StringBuilder();
         myStr.append('|');
@@ -833,5 +833,6 @@ public class Console {
         }
         myStr.append('|');
         System.out.println(myStr);
-    }
-}
+    }*/
+/*}
+ */

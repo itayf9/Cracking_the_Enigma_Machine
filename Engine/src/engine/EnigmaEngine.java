@@ -7,6 +7,7 @@ import dm.difficultylevel.DifficultyLevel;
 import dto.*;
 import javafx.util.Pair;
 import machine.EnigmaMachine;
+
 import machine.Machine;
 import machine.component.Reflector;
 import machine.component.Rotor;
@@ -19,8 +20,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -31,13 +30,11 @@ import static utill.Utility.*;
 public class EnigmaEngine implements Engine {
 
     // The engine contains Machine instance and machine records object.
-    private Machine machine;
-    private DecryptManager decryptManager;
     private boolean charByCharState = false;
     private long currentCipherProcessTimeElapsed;
     private String currentCipherProcessOutputText;
     private String currentCipherProcessInputText;
-    private List<StatisticRecord> machineRecords = new ArrayList<>();
+    private final List<StatisticRecord> machineRecords = new ArrayList<>();
 
     private final Map<String, Battlefield> uboatName2battleField;
 
@@ -51,10 +48,11 @@ public class EnigmaEngine implements Engine {
     /**
      * creating new machine instance using all the parts the machine needs.
      */
-    public void buildMachine(List<Rotor> availableRotors, List<Reflector> availableReflectors, int rotorsCount, String alphabet, Map<Character, Integer> character2index) {
-        currentCipherProcessOutputText = "";
-        currentCipherProcessInputText = "";
-        machine = new EnigmaMachine(availableRotors, availableReflectors, rotorsCount, alphabet, character2index);
+    public void buildMachine(List<Rotor> availableRotors, List<Reflector> availableReflectors, int rotorsCount, String alphabet, Map<Character,
+            Integer> character2index, String userName) {
+        //  currentCipherProcessOutputText = "";
+        //  currentCipherProcessInputText = "";
+        uboatName2battleField.get(userName).setMachine(new EnigmaMachine(availableRotors, availableReflectors, rotorsCount, alphabet, character2index));
     }
 
     /**
@@ -66,24 +64,23 @@ public class EnigmaEngine implements Engine {
      * @param reflectorID  the id of the wanted reflector, as an integer
      * @param plugs        String that represents plugs, with no spaces or separators
      */
-    public void updateConfiguration(List<Integer> rotorsIDs, String windowsChars, int reflectorID, String plugs) {
+    public void updateConfiguration(List<Integer> rotorsIDs, String windowsChars, int reflectorID, String plugs, String userName) {
 
         // build windowOffsets
         List<Integer> windowOfssets = new ArrayList<>();
 
         for (int i = 0; i < windowsChars.length(); i++) {
-            Rotor nextRotor = machine.getRotorByID(rotorsIDs.get(i));
+            Rotor nextRotor = uboatName2battleField.get(userName).getMachine().getRotorByID(rotorsIDs.get(i));
             int offset = nextRotor.translateChar2Offset(windowsChars.charAt(i));
             windowOfssets.add(offset);
         }
 
         // sets the new configuration into the machine.
-        machine.setMachineConfiguration(rotorsIDs, windowOfssets, reflectorID, plugs);
+        uboatName2battleField.get(userName).getMachine().setMachineConfiguration(rotorsIDs, windowOfssets, reflectorID, plugs);
 
         // adds new configuration to statistical records.
-        StatisticRecord newRecord = new StatisticRecord(rotorsIDs, windowsChars, reflectorID, plugs, machine.getOriginalNotchPositions());
+        StatisticRecord newRecord = new StatisticRecord(rotorsIDs, windowsChars, reflectorID, plugs, uboatName2battleField.get(userName).getMachine().getOriginalNotchPositions());
         machineRecords.add(newRecord);
-
     }
 
     /**
@@ -92,16 +89,16 @@ public class EnigmaEngine implements Engine {
      * @param toCipher a String of text to cipher
      * @return a String of the ciphered text
      */
-    public String cipherText(String toCipher) {
+    public String cipherText(String toCipher, String userName) {
         StringBuilder cipheredText = new StringBuilder();
 
         // goes through the character in the string
         for (Character currentChar : toCipher.toCharArray()) {
-            cipheredText.append(machine.cipher(currentChar));
+            cipheredText.append(uboatName2battleField.get(userName).getMachine().cipher(currentChar));
         }
         if (!charByCharState) {
             // increasing the cipher counter
-            machine.advanceCipherCounter();
+            uboatName2battleField.get(userName).getMachine().advanceCipherCounter();
         }
 
         return cipheredText.toString();
@@ -111,8 +108,8 @@ public class EnigmaEngine implements Engine {
      * @return the rotors count of the machine
      */
     @Override
-    public int getRotorsCount() {
-        return machine.getRotorsCount();
+    public int getRotorsCount(String userName) {
+        return uboatName2battleField.get(userName).getMachine().getRotorsCount();
     }
 
     /**
@@ -122,7 +119,7 @@ public class EnigmaEngine implements Engine {
      * @param fileContent string - name of xml file
      * @return DTOstatus object that describes the status of the operation
      */
-    public DTOstatus buildMachineFromXmlFile(String fileContent) {
+    public DTOstatus buildMachineFromXmlFile(String fileContent, String userName) {
         boolean isSucceeded = true;
         Problem details;
 
@@ -130,7 +127,7 @@ public class EnigmaEngine implements Engine {
         try {
             InputStream inputStream = new ByteArrayInputStream(fileContent.getBytes());
             CTEEnigma cteEnigma = deserializeFrom(inputStream);
-            details = buildEnigmaFromCTEEnigma(cteEnigma);
+            details = buildEnigmaFromCTEEnigma(cteEnigma, userName);
             if (details != Problem.NO_PROBLEM) {
                 isSucceeded = false;
             }
@@ -288,9 +285,7 @@ public class EnigmaEngine implements Engine {
                 } catch (IndexOutOfBoundsException e) {
                     return Problem.FILE_REFLECTOR_MAPPING_NOT_IN_ALPHABET;
                 }
-
             }
-
         }
 
         int firstFalse = reflectorIDFlags.indexOf(false);
@@ -302,6 +297,26 @@ public class EnigmaEngine implements Engine {
                 }
             }
         }
+
+        CTEBattlefield battlefield = cteEnigma.getCTEBattlefield();
+
+        // check for a valid difficulty level
+        if (getDifficultyLevelFromString(battlefield.getLevel()).equals(DifficultyLevel.UNDEFINED)) {
+            return Problem.INVALID_DIFFICULTY_LEVEL;
+        }
+
+        // check if battlefield name already exist
+        String battleFieldName = battlefield.getBattleName();
+
+        if (uboatName2battleField.entrySet().stream().anyMatch(stringBattlefieldEntry -> stringBattlefieldEntry.getValue().getBattleName().equals(battleFieldName))) {
+            return Problem.BATTLEFIELD_NAME_ALREADY_EXIST;
+        }
+
+        // check for number of allies
+        if (battlefield.getAllies() < 1) {
+            return Problem.ALLIES_COUNT_LESS_THAN_1;
+        }
+
         return problem;
     }
 
@@ -325,7 +340,7 @@ public class EnigmaEngine implements Engine {
      * @param cteEnigma the engine generated from jaxb
      * @return a Problem describing the problem that occurred. if valid, returns Problem.NO_PROBLEM
      */
-    private Problem buildEnigmaFromCTEEnigma(CTEEnigma cteEnigma) {
+    private Problem buildEnigmaFromCTEEnigma(CTEEnigma cteEnigma, String userName) {
 
         Problem problem = validateCTEEnigma(cteEnigma);
         if (problem != Problem.NO_PROBLEM) {
@@ -424,11 +439,20 @@ public class EnigmaEngine implements Engine {
         // builds the machine with the components that were initialized
         buildMachine(availableRotors, availableReflectors, rotorsCount, alphabet, character2index, userName);
 
-        // initializes decrypt manager
+        // initializes dictionary
         String words = cteEnigma.getCTEDecipher().getCTEDictionary().getWords().trim().toUpperCase();
         String excludeChars = cteEnigma.getCTEDecipher().getCTEDictionary().getExcludeChars();
 
-        decryptManager = new DecryptManager(new Dictionary(words, excludeChars), this.machine);
+        uboatName2battleField.get(userName).setDictionary(new Dictionary(words, excludeChars));
+
+        // initializes number of allies
+        uboatName2battleField.get(userName).setNumOfAllies(cteEnigma.getCTEBattlefield().getAllies());
+
+        // initializes battle name
+        uboatName2battleField.get(userName).setBattleName(cteEnigma.getCTEBattlefield().getBattleName());
+
+        // initializes difficulty level
+        uboatName2battleField.get(userName).setDifficultyLevel(getDifficultyLevelFromString(cteEnigma.getCTEBattlefield().getLevel()));
 
         return problem; // for code readability -> problem = Problem.NO_PROBLEM;
     }
@@ -486,7 +510,7 @@ public class EnigmaEngine implements Engine {
         return new DTOspecs(isSucceeded, details, availableRotorsCount, inUseRotorsCount,
                 notchDistancesToWindow, originalNotchPositions, availableReflectorsCount, cipheredTextsCount,
                 inUseRotorsIDs, originalWindowsCharacters, currentWindowsCharacters, inUseReflectorSymbol, dictionaryExcludeCharacters,
-                inUsePlugs, decryptManager.getNumOfAvailableAgents());
+                inUsePlugs);
     }
 
     /**
@@ -500,7 +524,7 @@ public class EnigmaEngine implements Engine {
      * @return DTOstatus object that represents the status of the operation
      */
     @Override
-    public DTOsecretConfig selectConfigurationManual(String rotorsIDs, String windows, int reflectorID, String plugs) {
+    public DTOsecretConfig selectConfigurationManual(String rotorsIDs, String windows, int reflectorID, String plugs, String userName) {
         boolean isSucceed = true;
         Problem details = Problem.NO_PROBLEM;
 
@@ -525,9 +549,9 @@ public class EnigmaEngine implements Engine {
         }
         // here we have String of window characters representing rotor's position according to the window.
 
-        updateConfiguration(rotorsIDList, reversedWindows.toString(), reflectorID, plugs);
+        updateConfiguration(rotorsIDList, reversedWindows.toString(), reflectorID, plugs, userName);
 
-        List<Integer> notchPositions = machine.getOriginalNotchPositions();
+        List<Integer> notchPositions = uboatName2battleField.get(userName).getMachine().getOriginalNotchPositions();
 
         return new DTOsecretConfig(isSucceed, details, rotorsIDList, reversedWindows.toString(), decimalToRoman(reflectorID), plugs, notchPositions);
     }
@@ -539,11 +563,11 @@ public class EnigmaEngine implements Engine {
      * @return DTOsecretConfig object representing the new configuration
      */
     @Override
-    public DTOsecretConfig selectConfigurationAuto() {
+    public DTOsecretConfig selectConfigurationAuto(String userName) {
         boolean isSucceeded = true;
         Problem details = Problem.NO_PROBLEM;
 
-        String alphabet = machine.getAlphabet();
+        String alphabet = uboatName2battleField.get(userName).getMachine().getAlphabet();
 
         List<Integer> randomGeneratedRotorIDs = new ArrayList<>();
         int randomGeneratedReflectorID;
@@ -553,20 +577,20 @@ public class EnigmaEngine implements Engine {
         List<Boolean> alreadyPlugged = new ArrayList<>(Collections.nCopies(alphabet.length(), false));
 
         // randomizes rotors ID and order
-        for (int i = 0; i < machine.getRotorsCount(); i++) {
-            int randomRotorID = (int) Math.ceil(Math.random() * machine.getAvailableRotorsLen());
+        for (int i = 0; i < uboatName2battleField.get(userName).getMachine().getRotorsCount(); i++) {
+            int randomRotorID = (int) Math.ceil(Math.random() * uboatName2battleField.get(userName).getMachine().getAvailableRotorsLen());
             while (randomGeneratedRotorIDs.contains(randomRotorID)) {
-                randomRotorID = (int) Math.ceil(Math.random() * machine.getAvailableRotorsLen());
+                randomRotorID = (int) Math.ceil(Math.random() * uboatName2battleField.get(userName).getMachine().getAvailableRotorsLen());
             }
 
             randomGeneratedRotorIDs.add(randomRotorID);
         }
 
         // randomizes reflector ID
-        randomGeneratedReflectorID = (int) Math.ceil(Math.random() * machine.getAvailableReflectorsLen());
+        randomGeneratedReflectorID = (int) Math.ceil(Math.random() * uboatName2battleField.get(userName).getMachine().getAvailableReflectorsLen());
 
         // randomizes window offsets
-        for (int i = 0; i < machine.getRotorsCount(); i++) {
+        for (int i = 0; i < uboatName2battleField.get(userName).getMachine().getRotorsCount(); i++) {
             // get random index
             int randomIndex = (int) Math.floor(Math.random() * alphabet.length());
             // convert random index to Character from the alphabet.
@@ -594,15 +618,15 @@ public class EnigmaEngine implements Engine {
 
         // updates the configuration
         updateConfiguration(randomGeneratedRotorIDs, randomGeneratedWindowCharacters.toString(),
-                randomGeneratedReflectorID, randomGeneratedPlugs.toString());
+                randomGeneratedReflectorID, randomGeneratedPlugs.toString(), userName);
 
         // get Notch Distances from window to display to user.
         List<Integer> notchDistances = new ArrayList<>();
 
         for (Integer rotorId : randomGeneratedRotorIDs) {
-            Rotor currentRotor = machine.getRotorByID(rotorId);
+            Rotor currentRotor = uboatName2battleField.get(userName).getMachine().getRotorByID(rotorId);
             int currentNotchDistance = (currentRotor.getOriginalNotchIndex() - currentRotor.getOffset()
-                    + machine.getAlphabet().length()) % machine.getAlphabet().length();
+                    + uboatName2battleField.get(userName).getMachine().getAlphabet().length()) % uboatName2battleField.get(userName).getMachine().getAlphabet().length();
             notchDistances.add(currentNotchDistance);
         }
 
@@ -618,7 +642,7 @@ public class EnigmaEngine implements Engine {
      * @return DTOciphertext object which has the ciphered text
      */
     @Override
-    public DTOciphertext cipherInputText(String inputText) {
+    public DTOciphertext cipherInputText(String inputText, String userName) {
 
         boolean isSucceed = false;
         String outputText = "";
@@ -629,7 +653,7 @@ public class EnigmaEngine implements Engine {
             return new DTOciphertext(false, problem, outputText);
         }
         // check valid ABC
-        problem = isAllCharsInAlphabet(inputText);
+        problem = isAllCharsInAlphabet(inputText, userName);
 
         if (problem.equals(Problem.NO_PROBLEM)) {
             isSucceed = true;
@@ -637,7 +661,7 @@ public class EnigmaEngine implements Engine {
             // cipher in line-by-line mode
             if (!charByCharState) {
                 long startMeasureTime = System.nanoTime();
-                outputText = cipherText(inputText);
+                outputText = cipherText(inputText, userName);
                 long timeElapsed = System.nanoTime() - startMeasureTime;
                 Pair<Pair<String, String>, Long> inputTextToOutputTextToTimeElapsed = new Pair<>(new Pair<>(inputText, outputText), timeElapsed);
 
@@ -645,7 +669,7 @@ public class EnigmaEngine implements Engine {
             } else {
                 // cipher in char-by-char mode
                 long startMeasureTime = System.nanoTime();
-                outputText = cipherText(inputText);
+                outputText = cipherText(inputText, userName);
                 long timeElapsed = System.nanoTime() - startMeasureTime;
                 currentCipherProcessTimeElapsed += timeElapsed; // value that engine holds for current  cipher time
                 currentCipherProcessInputText += inputText;
@@ -663,11 +687,11 @@ public class EnigmaEngine implements Engine {
      * @param inputText a String to check
      * @return a Problem that represents the problem of the text. if valid, returns Problem.NO_PROBLEM
      */
-    private Problem isAllCharsInAlphabet(String inputText) {
+    private Problem isAllCharsInAlphabet(String inputText, String userName) {
         final int NOT_FOUND = -1;
 
         for (Character currentCharacter : inputText.toCharArray()) {
-            if (machine.getAlphabet().indexOf(currentCharacter) == NOT_FOUND) {
+            if (uboatName2battleField.get(userName).getMachine().getAlphabet().indexOf(currentCharacter) == NOT_FOUND) {
                 return Problem.CIPHER_INPUT_NOT_IN_ALPHABET;
             }
         }
@@ -681,15 +705,15 @@ public class EnigmaEngine implements Engine {
      * @return DTOresetConfig representing the status of the operation
      */
     @Override
-    public DTOresetConfig resetConfiguration() {
+    public DTOresetConfig resetConfiguration(String userName) {
 
         boolean isSucceed = true;
         Problem details = Problem.NO_PROBLEM;
 
-        for (int i = 0; i < machine.getRotorsCount(); i++) {
+        for (int i = 0; i < uboatName2battleField.get(userName).getMachine().getRotorsCount(); i++) {
 
-            int currentOffset = machine.getInUseWindowsOffsets().get(i);
-            machine.getInUseRotors().get(i).rotateToOffset(currentOffset);
+            int currentOffset = uboatName2battleField.get(userName).getMachine().getInUseWindowsOffsets().get(i);
+            uboatName2battleField.get(userName).getMachine().getInUseRotors().get(i).rotateToOffset(currentOffset);
         }
 
         return new DTOresetConfig(isSucceed, details);
@@ -702,7 +726,7 @@ public class EnigmaEngine implements Engine {
      * @return DTOstatus representing the status of the operation
      */
     @Override
-    public DTOstatus validateRotors(String rotorsIDs) {
+    public DTOstatus validateRotors(String rotorsIDs, String userName) {
         boolean isSucceed = true;
         Problem details = Problem.NO_PROBLEM;
 
@@ -718,17 +742,17 @@ public class EnigmaEngine implements Engine {
             isSucceed = false;
             details = Problem.ROTOR_INPUT_HAS_SPACE;
         } else {
-            List<Boolean> rotorIdFlags = new ArrayList<>(Collections.nCopies(machine.getAvailableRotorsLen(), false));
+            List<Boolean> rotorIdFlags = new ArrayList<>(Collections.nCopies(uboatName2battleField.get(userName).getMachine().getAvailableRotorsLen(), false));
 
             // create list of Strings contains rotors id's to validate through
             String[] rotorsIdArray = rotorsIDs.split(",");
 
 
             // check if rotorsIDs size is exactly the required size.
-            if (rotorsIdArray.length < machine.getRotorsCount()) {
+            if (rotorsIdArray.length < uboatName2battleField.get(userName).getMachine().getRotorsCount()) {
                 isSucceed = false;
                 details = Problem.ROTOR_INPUT_NOT_ENOUGH_ELEMENTS;
-            } else if (rotorsIdArray.length > machine.getRotorsCount()) {
+            } else if (rotorsIdArray.length > uboatName2battleField.get(userName).getMachine().getRotorsCount()) {
                 isSucceed = false;
                 details = Problem.ROTOR_INPUT_TOO_MANY_ELEMENTS;
             } else {
@@ -745,7 +769,7 @@ public class EnigmaEngine implements Engine {
                     }
 
                     // check if the rotorID exists in this machine.
-                    if (integerRotorId <= 0 || integerRotorId > machine.getAvailableRotorsLen()) {
+                    if (integerRotorId <= 0 || integerRotorId > uboatName2battleField.get(userName).getMachine().getAvailableRotorsLen()) {
                         isSucceed = false;
                         details = Problem.ROTOR_INPUT_OUT_OF_RANGE_ID;
                         break;
@@ -771,20 +795,20 @@ public class EnigmaEngine implements Engine {
      * @return DTOstatus representing the status of the operation
      */
     @Override
-    public DTOstatus validateWindowCharacters(String windowChars) {
+    public DTOstatus validateWindowCharacters(String windowChars, String userName) {
         boolean isSucceed = true;
         Problem details = Problem.NO_PROBLEM;
         final int CHAR_NOT_FOUND = -1;
 
-        if (windowChars.length() > machine.getRotorsCount()) {
+        if (windowChars.length() > uboatName2battleField.get(userName).getMachine().getRotorsCount()) {
             isSucceed = false;
             details = Problem.WINDOW_INPUT_TOO_MANY_LETTERS;
-        } else if (windowChars.length() < machine.getRotorsCount()) {
+        } else if (windowChars.length() < uboatName2battleField.get(userName).getMachine().getRotorsCount()) {
             isSucceed = false;
             details = Problem.WINDOW_INPUT_TOO_FEW_LETTERS;
         } else {
             for (Character currentWindowCharacter : windowChars.toCharArray()) {
-                if (machine.getAlphabet().indexOf(currentWindowCharacter) == CHAR_NOT_FOUND) {
+                if (uboatName2battleField.get(userName).getMachine().getAlphabet().indexOf(currentWindowCharacter) == CHAR_NOT_FOUND) {
                     isSucceed = false;
                     details = Problem.WINDOWS_INPUT_NOT_IN_ALPHABET;
                     break;
@@ -802,7 +826,7 @@ public class EnigmaEngine implements Engine {
      * @return DTOstatus representing the status of the operation
      */
     @Override
-    public DTOstatus validateReflector(int reflectorID) {
+    public DTOstatus validateReflector(int reflectorID, String userName) {
         boolean isSucceed = true;
         Problem details = Problem.NO_PROBLEM;
 
@@ -816,7 +840,7 @@ public class EnigmaEngine implements Engine {
             details = Problem.REFLECTOR_INPUT_EMPTY_STRING;
         } else {
             // check if the reflectorID exists in this machine.
-            if (reflectorID <= 0 || reflectorID > machine.getAvailableReflectorsLen()) {
+            if (reflectorID <= 0 || reflectorID > uboatName2battleField.get(userName).getMachine().getAvailableReflectorsLen()) {
                 isSucceed = false;
                 details = Problem.REFLECTOR_INPUT_OUT_OF_RANGE_ID;
             }
@@ -832,10 +856,10 @@ public class EnigmaEngine implements Engine {
      * @return DTOstatus representing the status of the operation
      */
     @Override
-    public DTOstatus validatePlugs(String plugs) {
+    public DTOstatus validatePlugs(String plugs, String userName) {
         boolean isSucceed = true;
         Problem details = Problem.NO_PROBLEM;
-        List<Boolean> alreadyPlugged = new ArrayList<>(Collections.nCopies(machine.getAlphabet().length(), false));
+        List<Boolean> alreadyPlugged = new ArrayList<>(Collections.nCopies(uboatName2battleField.get(userName).getMachine().getAlphabet().length(), false));
         final int CHAR_NOT_FOUND = -1;
 
 
@@ -845,8 +869,8 @@ public class EnigmaEngine implements Engine {
         } else {
             // goes through all the plugs (go through pairs)
             for (int i = 0; i < plugs.length(); i += 2) {
-                int firstInPlugIndex = machine.getAlphabet().indexOf(plugs.charAt(i));
-                int secondInPlugIndex = machine.getAlphabet().indexOf(plugs.charAt(i + 1));
+                int firstInPlugIndex = uboatName2battleField.get(userName).getMachine().getAlphabet().indexOf(plugs.charAt(i));
+                int secondInPlugIndex = uboatName2battleField.get(userName).getMachine().getAlphabet().indexOf(plugs.charAt(i + 1));
 
                 // check if both characters are the same.
                 if (firstInPlugIndex == secondInPlugIndex) {
@@ -893,100 +917,42 @@ public class EnigmaEngine implements Engine {
     /**
      * @return true is the machine is configured. false otherwise
      */
-    public boolean getIsMachineConfigured() {
-        return machine.isConfigured();
-    }
-
-    /**
-     * saves the existing machine into a file.
-     *
-     * @param fileName the name of the file to save the machine in
-     * @return DTOstatus representing the status of the operation
-     * @throws IOException for a problem with the saving
-     */
-    public DTOstatus saveExistingMachineToFile(String fileName) throws IOException {
-        boolean isSucceed = true;
-        Problem details = Problem.NO_PROBLEM;
-
-        if (fileName.length() == 0) {
-            details = Problem.FILE_NOT_FOUND;
-            return new DTOstatus(false, details);
-        }
-        // else, tries to save to the file
-        try (ObjectOutputStream out =
-                     new ObjectOutputStream(
-                             Files.newOutputStream(Paths.get(fileName)))) {
-            out.writeObject(machine);
-            out.writeObject(machineRecords);
-            out.flush();
-        }
-
-        return new DTOstatus(isSucceed, details);
-    }
-
-    /**
-     * loads an existing machine from a file
-     *
-     * @param fileName the name of the file to load the machine from
-     * @return DTOstatus representing the status of the operation
-     * @throws IOException            for a problem with the loading
-     * @throws ClassNotFoundException for a problem with the serialized class
-     */
-    public DTOstatus loadExistingMachineFromFile(String fileName) throws IOException, ClassNotFoundException {
-        boolean isSucceed = true;
-        Problem details = Problem.NO_PROBLEM;
-
-        if (fileName.length() == 0) {
-            details = Problem.FILE_NOT_FOUND;
-            return new DTOstatus(false, details);
-        }
-        // else, tries to load from the file
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
-
-            machine = (EnigmaMachine) in.readObject();
-            machineRecords = (List<StatisticRecord>) in.readObject();
-        } catch (FileNotFoundException e) {
-            isSucceed = false;
-            details = Problem.FILE_NOT_FOUND;
-        } catch (InvalidClassException | StreamCorruptedException | OptionalDataException e) {
-            isSucceed = false;
-            details = Problem.FILE_EXISTING_LOAD_FAILED;
-        }
-
-        return new DTOstatus(isSucceed, details);
-    }
-
-    /**
-     * @return a list of all candidates of the deciphering process
-     */
-    @Override
-    public DTOcandidates getDecipherCandidates() {
-        boolean isSucceeded = true;
-        Problem details = Problem.NO_PROBLEM;
-
-        return new DTOcandidates(isSucceeded, details, decryptManager.getDecipherCandidates());
+    public boolean getIsMachineConfigured(String userName) {
+        return uboatName2battleField.get(userName).getMachine().isConfigured();
     }
 
     @Override
-    public void startBruteForceProcess(UIAdapter uiAdapter, String textToDecipher,
-                                       DifficultyLevel difficultyLevel, int taskSize, int numOfSelectedAgents) {
+    public void startBruteForceProcess(UIAdapter uiAdapter, String textToDecipher, DifficultyLevel difficultyLevel,
+                                       int taskSize, int numOfSelectedAgents, String userName) {
 
-        decryptManager.startDecrypt(taskSize, numOfSelectedAgents, textToDecipher, difficultyLevel, uiAdapter);
+        Set<DecryptManager> allies = uboatName2battleField.get(userName).getAllies();
+
+        // allies.for each DM need to start produce tasks
+        // decryptManager.startDecrypt(taskSize, numOfSelectedAgents, textToDecipher, difficultyLevel, uiAdapter);
     }
 
     @Override
-    public void stopBruteForceProcess() {
-        decryptManager.stopDecrypt();
+    public void stopBruteForceProcess(String userName) {
+        Set<DecryptManager> allies = uboatName2battleField.get(userName).getAllies();
+
+        // allies.for each DM need to stop all tasks
+        // decryptManager.stopDecrypt();
     }
 
     @Override
-    public void pauseBruteForceProcess() {
-        decryptManager.pauseDecrypt();
+    public void pauseBruteForceProcess(String userName) {
+        Set<DecryptManager> allies = uboatName2battleField.get(userName).getAllies();
+
+        // allies.for each DM need to stop all tasks
+        // decryptManager.pauseDecrypt();
     }
 
     @Override
-    public void resumeBruteForceProcess() {
-        decryptManager.resumeDecrypt();
+    public void resumeBruteForceProcess(String userName) {
+        Set<DecryptManager> allies = uboatName2battleField.get(userName).getAllies();
+
+        // allies.for each DM need to stop all tasks
+        // decryptManager.resumeDecrypt();
     }
 
 
@@ -994,9 +960,9 @@ public class EnigmaEngine implements Engine {
      * @return the machine's alphabet as a String
      */
     @Override
-    public String getMachineAlphabet() {
-        if (machine != null) {
-            return machine.getAlphabet();
+    public String getMachineAlphabet(String userName) {
+        if (uboatName2battleField.get(userName).getMachine() != null) {
+            return uboatName2battleField.get(userName).getMachine().getAlphabet();
         }
 
         return "";
@@ -1030,20 +996,20 @@ public class EnigmaEngine implements Engine {
      */
     @Override
     public void doneCurrentCipherProcess() {
-        Pair<Pair<String, String>, Long> inputTextToOutputTextToTimeElapsed = new Pair<>(new Pair<>(currentCipherProcessInputText, currentCipherProcessOutputText), currentCipherProcessTimeElapsed);
-        machineRecords.get(machineRecords.size() - 1).getCipherHistory().add(inputTextToOutputTextToTimeElapsed);
-        resetCurrentCipherProcess();
-        machine.advanceCipherCounter();
+//        Pair<Pair<String, String>, Long> inputTextToOutputTextToTimeElapsed = new Pair<>(new Pair<>(currentCipherProcessInputText, currentCipherProcessOutputText), currentCipherProcessTimeElapsed);
+//        machineRecords.get(machineRecords.size() - 1).getCipherHistory().add(inputTextToOutputTextToTimeElapsed);
+//        resetCurrentCipherProcess();
+//        machine.advanceCipherCounter();
     }
 
     @Override
-    public DTOdictionary getDictionaryWords() {
-        return new DTOdictionary(decryptManager.getDictionaryWords());
+    public DTOdictionary getDictionaryWords(String userName) {
+        return new DTOdictionary(uboatName2battleField.get(userName).getDictionary().getDictionaryWords());
     }
 
     @Override
-    public boolean isAllWordsInDictionary(String text) {
-        return decryptManager.isAllWordsInDictionary(text);
+    public boolean isAllWordsInDictionary(String text, String userName) {
+        return uboatName2battleField.get(userName).getDictionary().isAllWordsInDictionary(text);
     }
 
     @Override
@@ -1058,7 +1024,7 @@ public class EnigmaEngine implements Engine {
     @Override
     public String toString() {
         return "engine.EnigmaEngine{" +
-                "machine=" + machine +
+                "machine=" + uboatName2battleField +
                 '}';
     }
 }

@@ -1,7 +1,12 @@
 package utils;
 
+import battlefield.Battlefield;
+import constants.Constants;
+import engine.Engine;
+import engine.EnigmaEngine;
 import jakarta.servlet.ServletContext;
-import manager.UBoatManager;
+
+import java.util.Map;
 
 public class ServletUtils {
 
@@ -15,14 +20,16 @@ public class ServletUtils {
     private static final Object userManagerLock = new Object();
     private static final Object chatManagerLock = new Object();
 
-    public static UBoatManager getUBoatManager(ServletContext servletContext) {
+    public static Map<String, Battlefield> getUboatName2battleField(ServletContext servletContext) {
 
         synchronized (userManagerLock) {
-            if (servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME) == null) {
-                servletContext.setAttribute(USER_MANAGER_ATTRIBUTE_NAME, new UBoatManager());
+            if (servletContext.getAttribute(Constants.ENGINE) == null) {
+                servletContext.setAttribute(Constants.ENGINE, new EnigmaEngine());
             }
         }
-        return (UBoatManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
+        Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
+
+        return engine.getBattleFieldManager();
     }
 
     /*public static ChatManager getChatManager(ServletContext servletContext) {

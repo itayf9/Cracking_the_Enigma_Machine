@@ -6,6 +6,8 @@ import dm.candidatecollector.CandidatesCollector;
 import dm.dictionary.Dictionary;
 import dm.difficultylevel.DifficultyLevel;
 import dm.taskproducer.TaskProducer;
+import engine.Engine;
+import engine.EnigmaEngine;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -23,35 +25,28 @@ import static utill.Utility.nCk;
 
 public class DecryptManager {
 
+
     private BlockingQueue<AgentConclusion> candidatesQueue;
     private ThreadPoolExecutor threadExecutor;
     private Thread collector;
     private Thread taskProducer;
     private final Machine enigmaMachine;
     private final Dictionary dictionary;
-    private final int numOfAvailableAgents;
     private final List<Candidate> allCandidates = new ArrayList<>();
     private long totalPossibleConfigurations;
     private final long totalPossibleWindowsPositions;
-
     private LongProperty totalTimeDecryptProperty;
     private final BlockingQueue<Runnable> threadPoolBlockingQueue;
-
-    public int getNumOfAvailableAgents() {
-        return numOfAvailableAgents;
-    }
+    private DifficultyLevel difficultyLevel;
 
     private final BooleanProperty isBruteForceActionCancelled;
-
     private final BooleanProperty isBruteForceActionPaused;
 
-
-    public DecryptManager(Dictionary dictionary, Machine enigmaMachine) {
+    public DecryptManager(String name, Dictionary dictionary, Machine machine) {
         int LIMIT_NUMBER_OF_TASK = 1000;
         this.threadPoolBlockingQueue = new LinkedBlockingQueue<>(LIMIT_NUMBER_OF_TASK);
         this.dictionary = dictionary;
-        this.numOfAvailableAgents = 1;
-        this.enigmaMachine = enigmaMachine;
+        this.enigmaMachine = machine;
         this.totalPossibleWindowsPositions = (long) Math.pow(enigmaMachine.getAlphabet().length(), enigmaMachine.getRotorsCount());
         this.totalTimeDecryptProperty = new SimpleLongProperty();
         this.isBruteForceActionCancelled = new SimpleBooleanProperty(false);
@@ -103,9 +98,8 @@ public class DecryptManager {
      * @param difficultyLevel     difficulty label
      * @param uiAdapter           ui adapter to update the ui
      */
-    public void startDecrypt(int taskSize, int numOfSelectedAgents, String textToDecipher,
-                             DifficultyLevel difficultyLevel, UIAdapter uiAdapter) {
-
+    public void startDecrypt(int taskSize, int numOfSelectedAgents, String textToDecipher, DifficultyLevel difficultyLevel
+            , UIAdapter uiAdapter) {
 
         this.candidatesQueue = new LinkedBlockingQueue<>();
         isBruteForceActionCancelled.set(false);

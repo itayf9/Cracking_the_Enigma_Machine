@@ -1,5 +1,6 @@
 package servlets;
 
+import battlefield.Battlefield;
 import constants.Constants;
 import dto.DTOstatus;
 import engine.Engine;
@@ -33,13 +34,12 @@ public class LoadXMLServlet extends HttpServlet {
             resp.getWriter().println("no username specified");
         } else {
             // check if username is valid/existing Uboat client
-            Map<String, Engine> userName2engine;
             ServletContext servletContext = getServletContext();
-            userName2engine = (Map<String, Engine>) servletContext.getAttribute(Constants.MAP_OF_ENGINES_ATTRIBUTE_NAME);
+            Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
+            Map<String, Battlefield> userName2battlefield = engine.getBattleFieldManager();
 
             if (userName2battlefield.containsKey(usernameFromSession)) {
                 if (req.getParts().size() == 1) {
-
                     Collection<Part> parts = req.getParts();
 
                     String fileContent = "";
@@ -48,7 +48,7 @@ public class LoadXMLServlet extends HttpServlet {
                         fileContent = readFromInputStream(file.getInputStream());
                     }
 
-                    DTOstatus loadXMLstatus = currentUBoatEngine.buildMachineFromXmlFile(fileContent);
+                    DTOstatus loadXMLstatus = engine.buildMachineFromXmlFile(fileContent, usernameFromSession);
 
                     if (!loadXMLstatus.isSucceed()) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
