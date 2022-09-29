@@ -1,5 +1,6 @@
 package servlets;
 
+import battlefield.Battlefield;
 import constants.Constants;
 import engine.Engine;
 import engine.EnigmaEngine;
@@ -7,7 +8,6 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import manager.UBoatManager;
 import utils.ServletUtils;
 import utils.SessionUtils;
 
@@ -26,7 +26,7 @@ public class LightWeightLoginServlet extends HttpServlet {
         System.out.println("got to login servlet");
 
         String usernameFromSession = SessionUtils.getUsername(request);
-        UBoatManager uBoatManager = ServletUtils.getUBoatManager(getServletContext());
+        Map<String, Battlefield> uboatName2battleField = ServletUtils.getUboatName2battleField(getServletContext());
 
         if (usernameFromSession == null) { //user is not logged in yet
 

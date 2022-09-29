@@ -37,9 +37,7 @@ public class LoadXMLServlet extends HttpServlet {
             ServletContext servletContext = getServletContext();
             userName2engine = (Map<String, Engine>) servletContext.getAttribute(Constants.MAP_OF_ENGINES_ATTRIBUTE_NAME);
 
-            if (userName2engine.containsKey(usernameFromSession)) {
-                Engine currentUBoatEngine = userName2engine.get(usernameFromSession);
-
+            if (userName2battlefield.containsKey(usernameFromSession)) {
                 if (req.getParts().size() == 1) {
 
                     Collection<Part> parts = req.getParts();

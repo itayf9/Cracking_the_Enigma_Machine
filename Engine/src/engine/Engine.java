@@ -27,7 +27,7 @@ public interface Engine {
      *
      * @return DTOspecs object that represents the specs.
      */
-    DTOspecs displayMachineSpecifications();
+    DTOspecs displayMachineSpecifications(String username);
 
     /**
      * prepares the new configuration from user, to be in the right format for the machine.

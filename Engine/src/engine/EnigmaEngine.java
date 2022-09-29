@@ -1,5 +1,6 @@
 package engine;
 
+import battlefield.Battlefield;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;
 import dm.difficultylevel.DifficultyLevel;
@@ -22,6 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+
+import static dm.difficultylevel.DifficultyLevel.getDifficultyLevelFromString;
 import static utill.Utility.*;
 
 
@@ -36,9 +39,12 @@ public class EnigmaEngine implements Engine {
     private String currentCipherProcessInputText;
     private List<StatisticRecord> machineRecords = new ArrayList<>();
 
+    private final Map<String, Battlefield> uboatName2battleField;
+
     public static String JAXB_XML_PACKAGE_NAME = "machine.jaxb.generated";
 
     public EnigmaEngine() {
+        this.uboatName2battleField = new HashMap<>();
         System.out.println("inside the default ctor of EnigmaEngine");
     }
 
@@ -416,7 +422,7 @@ public class EnigmaEngine implements Engine {
         availableReflectors.sort(reflectorComparator);
 
         // builds the machine with the components that were initialized
-        buildMachine(availableRotors, availableReflectors, rotorsCount, alphabet, character2index);
+        buildMachine(availableRotors, availableReflectors, rotorsCount, alphabet, character2index, userName);
 
         // initializes decrypt manager
         String words = cteEnigma.getCTEDecipher().getCTEDictionary().getWords().trim().toUpperCase();
@@ -433,7 +439,7 @@ public class EnigmaEngine implements Engine {
      * @return DTOspecs object that represents the specs.
      */
     @Override
-    public DTOspecs displayMachineSpecifications() {
+    public DTOspecs displayMachineSpecifications(String username) {
 
         boolean isSucceeded = true;
         Problem details = Problem.NO_PROBLEM;
@@ -451,21 +457,24 @@ public class EnigmaEngine implements Engine {
         int availableReflectorsCount = 0;
         int cipheredTextsCount = 0;
 
-        try {
-            availableRotorsCount = machine.getAvailableRotorsLen();
-            inUseRotorsCount = machine.getRotorsCount();
-            availableReflectorsCount = machine.getAvailableReflectorsLen();
-            cipheredTextsCount = machine.getCipherCounter();
-            dictionaryExcludeCharacters = decryptManager.getDictionaryExcludeCharacters();
+        Machine currentMachine = uboatName2battleField.get(username).getMachine();
+        Dictionary currentDictionary = uboatName2battleField.get(username).getDictionary();
 
-            if (machine.isConfigured()) {
-                inUseRotorsIDs = machine.getInUseRotorsIDs();
-                originalWindowsCharacters = machine.getOriginalWindowsCharacters();
-                currentWindowsCharacters = machine.getCurrentWindowsCharacters();
-                inUseReflectorSymbol = decimalToRoman(machine.getInUseReflector().getId());
-                inUsePlugs = machine.getAllPlugPairs();
-                notchDistancesToWindow = machine.getInUseNotchDistanceToWindow();
-                originalNotchPositions = machine.getOriginalNotchPositions();
+        try {
+            availableRotorsCount = currentMachine.getAvailableRotorsLen();
+            inUseRotorsCount = currentMachine.getRotorsCount();
+            availableReflectorsCount = currentMachine.getAvailableReflectorsLen();
+            cipheredTextsCount = currentMachine.getCipherCounter();
+            dictionaryExcludeCharacters = currentDictionary.getExcludeChars();
+
+            if (currentMachine.isConfigured()) {
+                inUseRotorsIDs = currentMachine.getInUseRotorsIDs();
+                originalWindowsCharacters = currentMachine.getOriginalWindowsCharacters();
+                currentWindowsCharacters = currentMachine.getCurrentWindowsCharacters();
+                inUseReflectorSymbol = decimalToRoman(currentMachine.getInUseReflector().getId());
+                inUsePlugs = currentMachine.getAllPlugPairs();
+                notchDistancesToWindow = currentMachine.getInUseNotchDistanceToWindow();
+                originalNotchPositions = currentMachine.getOriginalNotchPositions();
             } else {
                 details = Problem.NO_CONFIGURATION;
             }
@@ -1037,6 +1046,14 @@ public class EnigmaEngine implements Engine {
         return decryptManager.isAllWordsInDictionary(text);
     }
 
+    @Override
+    public void addDecryptManager(String alliesName, String uboatUserName) {
+        uboatName2battleField.get(uboatUserName).addDecryptManager(alliesName);
+    }
+
+    public Map<String, Battlefield> getBattleFieldManager() {
+        return uboatName2battleField;
+    }
 
     @Override
     public String toString() {

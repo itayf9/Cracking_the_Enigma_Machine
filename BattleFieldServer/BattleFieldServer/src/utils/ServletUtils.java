@@ -3,8 +3,6 @@ package utils;
 import jakarta.servlet.ServletContext;
 import manager.UBoatManager;
 
-import java.util.HashSet;
-
 public class ServletUtils {
 
     private static final String USER_MANAGER_ATTRIBUTE_NAME = "userManager";

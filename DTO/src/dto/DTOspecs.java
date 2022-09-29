@@ -9,7 +9,6 @@ public class DTOspecs extends DTOstatus {
     private int inUseRotorsCount;
     private List<Integer> notchDistancesToWindow;
     private List<Integer> originalNotchPositions;
-    private int numOfAvailableAgents;
 
     private int availableReflectorsCount;
     private int cipheredTextsCount;
