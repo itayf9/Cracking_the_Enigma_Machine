@@ -58,8 +58,16 @@ public class Battlefield {
         this.dictionary = dictionary;
     }
 
-    public void setBattleName(String battleName) {
-        this.battleName = battleName;
+    public BlockingQueue<AgentConclusion> getUboatCandidatesQueue() {
+        return uboatCandidatesQueue;
+    }
+
+    public void setUboatCandidatesQueue(BlockingQueue<AgentConclusion> uboatCandidatesQueue) {
+        this.uboatCandidatesQueue = uboatCandidatesQueue;
+    }
+
+    public void setBattlefieldName(String battlefieldName) {
+        this.battlefieldName = battlefieldName;
     }
 
     public void setNumOfAllies(int numOfAllies) {
@@ -70,7 +78,7 @@ public class Battlefield {
         this.difficultyLevel = difficultyLevel;
     }
 
-    public void addDecryptManager(String name) {
-        allies.add(new DecryptManager(name, dictionary, machine));
+    public void addDecryptManager(String allieName) {
+        allies.add(new DecryptManager(allieName, this));
     }
 }

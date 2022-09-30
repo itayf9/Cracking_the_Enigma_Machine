@@ -6,7 +6,7 @@
 
     <servlet>
         <servlet-name>LightWeightLoginServlet</servlet-name>
-        <servlet-class>servlets.LightWeightLoginServlet</servlet-class>
+        <servlet-class>servlets.common.LightWeightLoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LightWeightLoginServlet</servlet-name>

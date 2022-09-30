@@ -308,7 +308,7 @@ public class EnigmaEngine implements Engine {
         // check if battlefield name already exist
         String battleFieldName = battlefield.getBattleName();
 
-        if (uboatName2battleField.entrySet().stream().anyMatch(stringBattlefieldEntry -> stringBattlefieldEntry.getValue().getBattleName().equals(battleFieldName))) {
+        if (uboatName2battleField.entrySet().stream().anyMatch(stringBattlefieldEntry -> stringBattlefieldEntry.getValue().getBattlefieldName().equals(battleFieldName))) {
             return Problem.BATTLEFIELD_NAME_ALREADY_EXIST;
         }
 
@@ -449,7 +449,7 @@ public class EnigmaEngine implements Engine {
         uboatName2battleField.get(userName).setNumOfAllies(cteEnigma.getCTEBattlefield().getAllies());
 
         // initializes battle name
-        uboatName2battleField.get(userName).setBattleName(cteEnigma.getCTEBattlefield().getBattleName());
+        uboatName2battleField.get(userName).setBattlefieldName(cteEnigma.getCTEBattlefield().getBattleName());
 
         // initializes difficulty level
         uboatName2battleField.get(userName).setDifficultyLevel(getDifficultyLevelFromString(cteEnigma.getCTEBattlefield().getLevel()));

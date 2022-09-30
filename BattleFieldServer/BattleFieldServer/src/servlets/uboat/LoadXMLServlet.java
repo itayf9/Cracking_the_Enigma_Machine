@@ -1,4 +1,4 @@
-package servlets;
+package servlets.uboat;
 
 import battlefield.Battlefield;
 import constants.Constants;

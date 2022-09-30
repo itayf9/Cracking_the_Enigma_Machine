@@ -1,5 +1,6 @@
 package dm.decryptmanager;
 
+import battlefield.Battlefield;
 import candidate.Candidate;
 import dm.agent.AgentConclusion;
 import dm.candidatecollector.CandidatesCollector;
@@ -29,24 +30,36 @@ public class DecryptManager {
     private BlockingQueue<AgentConclusion> candidatesQueue;
     private ThreadPoolExecutor threadExecutor;
     private Thread collector;
+    private final List<Candidate> allCandidates = new ArrayList<>();
+
+
     private Thread taskProducer;
+
     private final Machine enigmaMachine;
     private final Dictionary dictionary;
-    private final List<Candidate> allCandidates = new ArrayList<>();
+    private DifficultyLevel difficultyLevel;
+
+
     private long totalPossibleConfigurations;
     private final long totalPossibleWindowsPositions;
     private LongProperty totalTimeDecryptProperty;
-    private final BlockingQueue<Runnable> threadPoolBlockingQueue;
-    private DifficultyLevel difficultyLevel;
 
+
+    private final BlockingQueue<Runnable> waitingTasksBlockingQueue;
+    private int taskSize;
+    private String allieName;
+    private BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final BooleanProperty isBruteForceActionCancelled;
     private final BooleanProperty isBruteForceActionPaused;
 
     public DecryptManager(String name, Dictionary dictionary, Machine machine) {
         int LIMIT_NUMBER_OF_TASK = 1000;
-        this.threadPoolBlockingQueue = new LinkedBlockingQueue<>(LIMIT_NUMBER_OF_TASK);
-        this.dictionary = dictionary;
-        this.enigmaMachine = machine;
+        this.waitingTasksBlockingQueue = new LinkedBlockingQueue<>(LIMIT_NUMBER_OF_TASK);
+        this.dictionary = battlefield.getDictionary();
+        this.enigmaMachine = battlefield.getMachine();
+        this.difficultyLevel = battlefield.getDifficultyLevel();
+        this.allieName = allieName;
+        this.uboatCandidateQueue = battlefield.getUboatCandidatesQueue();
         this.totalPossibleWindowsPositions = (long) Math.pow(enigmaMachine.getAlphabet().length(), enigmaMachine.getRotorsCount());
         this.totalTimeDecryptProperty = new SimpleLongProperty();
         this.isBruteForceActionCancelled = new SimpleBooleanProperty(false);
@@ -212,5 +225,9 @@ public class DecryptManager {
 
     public boolean isAllWordsInDictionary(String text) {
         return dictionary.isAllWordsInDictionary(text);
+    }
+
+    public void setTaskSize(int taskSize) {
+        this.taskSize = taskSize;
     }
 }
