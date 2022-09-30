@@ -7,8 +7,6 @@ import dm.candidatecollector.CandidatesCollector;
 import dm.dictionary.Dictionary;
 import dm.difficultylevel.DifficultyLevel;
 import dm.taskproducer.TaskProducer;
-import engine.Engine;
-import engine.EnigmaEngine;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -28,7 +26,6 @@ public class DecryptManager {
 
 
     private BlockingQueue<AgentConclusion> candidatesQueue;
-    private ThreadPoolExecutor threadExecutor;
     private Thread collector;
     private final List<Candidate> allCandidates = new ArrayList<>();
 
@@ -52,7 +49,7 @@ public class DecryptManager {
     private final BooleanProperty isBruteForceActionCancelled;
     private final BooleanProperty isBruteForceActionPaused;
 
-    public DecryptManager(String name, Dictionary dictionary, Machine machine) {
+    public DecryptManager(String allieName, Battlefield battlefield) {
         int LIMIT_NUMBER_OF_TASK = 1000;
         this.waitingTasksBlockingQueue = new LinkedBlockingQueue<>(LIMIT_NUMBER_OF_TASK);
         this.dictionary = battlefield.getDictionary();
@@ -61,6 +58,9 @@ public class DecryptManager {
         this.allieName = allieName;
         this.uboatCandidateQueue = battlefield.getUboatCandidatesQueue();
         this.totalPossibleWindowsPositions = (long) Math.pow(enigmaMachine.getAlphabet().length(), enigmaMachine.getRotorsCount());
+
+
+        // maybe delete those later
         this.totalTimeDecryptProperty = new SimpleLongProperty();
         this.isBruteForceActionCancelled = new SimpleBooleanProperty(false);
         this.isBruteForceActionPaused = new SimpleBooleanProperty(false);
@@ -93,7 +93,7 @@ public class DecryptManager {
 
         // stopping the thread pool
         isBruteForceActionCancelled.set(true);
-        threadExecutor.shutdownNow();
+        // threadExecutor.shutdownNow();
 
         //  stopping the collector Task / Thread
         collector.interrupt();
@@ -105,14 +105,10 @@ public class DecryptManager {
     /**
      * initiates the thread needed to start the brute force process
      *
-     * @param taskSize            size of task per thread to execute
-     * @param numOfSelectedAgents num of threads in pool
-     * @param textToDecipher      the text that agents trying to cipher
-     * @param difficultyLevel     difficulty label
-     * @param uiAdapter           ui adapter to update the ui
+     * @param textToDecipher the text that agents trying to cipher
+     * @param uiAdapter      ui adapter to update the ui
      */
-    public void startDecrypt(int taskSize, int numOfSelectedAgents, String textToDecipher, DifficultyLevel difficultyLevel
-            , UIAdapter uiAdapter) {
+    public void startDecrypt(String textToDecipher, UIAdapter uiAdapter) {
 
         this.candidatesQueue = new LinkedBlockingQueue<>();
         isBruteForceActionCancelled.set(false);
@@ -123,16 +119,16 @@ public class DecryptManager {
         setTotalConfigs(difficultyLevel);
 
         // setting up the collector of the candidates
-        collector = new Thread(new CandidatesCollector(candidatesQueue, totalPossibleConfigurations, uiAdapter,
-                totalTimeDecryptProperty, isBruteForceActionCancelledProperty(), isBruteForceActionPaused));
+        collector = new Thread(new CandidatesCollector(candidatesQueue, totalPossibleConfigurations,
+                totalTimeDecryptProperty, isBruteForceActionCancelledProperty(), isBruteForceActionPaused, uboatCandidateQueue));
         collector.setName("THE_COLLECTOR");
 
         // starting the thread pool
-        threadExecutor = new ThreadPoolExecutor(numOfSelectedAgents, numOfSelectedAgents,
-                0L, TimeUnit.MILLISECONDS, threadPoolBlockingQueue);
+        // threadExecutor = new ThreadPoolExecutor(numOfSelectedAgents, numOfSelectedAgents,
+        //     0L, TimeUnit.MILLISECONDS, threadPoolBlockingQueue);
 
         // setting up thr thread factory for the thread pool
-        threadExecutor.setThreadFactory(new ThreadFactory() {
+        /* threadExecutor.setThreadFactory(new ThreadFactory() {
 
             private int nameCounter = 0;
 
@@ -141,18 +137,17 @@ public class DecryptManager {
                 nameCounter++;
                 return new Thread(r, String.valueOf(nameCounter));
             }
-        });
+        });*/
 
         // setting a thread that produces tasks
         taskProducer = new Thread(new TaskProducer(this, taskSize, difficultyLevel, textToDecipher));
         taskProducer.setName("TASK_PRODUCER");
 
         // trigger the threads
-        threadExecutor.prestartAllCoreThreads();
+        // threadExecutor.prestartAllCoreThreads();
 
-        taskProducer.start(); // thread is in the air starting the missions spread.
+        taskProducer.start();
         collector.start();
-        // main thread ends here
     }
 
     private void setTotalConfigs(DifficultyLevel difficultyLevel) {
@@ -199,8 +194,8 @@ public class DecryptManager {
         return candidatesQueue;
     }
 
-    public BlockingQueue<Runnable> getThreadPoolBlockingQueue() {
-        return threadPoolBlockingQueue;
+    public BlockingQueue<Runnable> getWaitingTasksBlockingQueue() {
+        return waitingTasksBlockingQueue;
     }
 
     public boolean isIsBruteForceActionCancelled() {

@@ -1,5 +1,6 @@
 package battlefield;
 
+import dm.agent.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;
 import dm.difficultylevel.DifficultyLevel;
@@ -7,6 +8,7 @@ import machine.Machine;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 
 public class Battlefield {
 
@@ -14,9 +16,10 @@ public class Battlefield {
     private Machine machine;
     private Set<DecryptManager> allies;
     private Dictionary dictionary;
-    private String battleName;
+    private String battlefieldName;
     private int numOfAllies;
     private DifficultyLevel difficultyLevel;
+    private BlockingQueue<AgentConclusion> uboatCandidatesQueue;
 
     public Battlefield() {
         this.allies = new HashSet<>();
@@ -34,8 +37,8 @@ public class Battlefield {
         return dictionary;
     }
 
-    public String getBattleName() {
-        return battleName;
+    public String getBattlefieldName() {
+        return battlefieldName;
     }
 
     public int getNumOfAllies() {

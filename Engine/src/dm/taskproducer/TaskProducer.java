@@ -23,13 +23,11 @@ public class TaskProducer implements Runnable {
     private final Dictionary dictionary;
     private final BlockingQueue<AgentConclusion> candidatesQueue;
     private final DecryptManager dm;
-    private Map<String, Machine> machines;
-    private static int taskCounter = 0;
 
 
     public TaskProducer(DecryptManager dm, int taskSize, DifficultyLevel difficultyLevel, String textToDecipher) {
         this.dm = dm;
-        this.agentTaskQueue = dm.getThreadPoolBlockingQueue();
+        this.agentTaskQueue = dm.getWaitingTasksBlockingQueue();
         this.machine = dm.getEnigmaMachine();
         this.alphabet = machine.getAlphabet();
         this.taskSize = taskSize;
@@ -93,7 +91,6 @@ public class TaskProducer implements Runnable {
 
         // set up first agentTask
         try {
-            taskCounter++;
             agentTaskQueue.put(new AgentTask(rotorsIDs, new ArrayList<>(currentWindowsOffsets), reflectorID,
                     copyOfMachine, dm, taskSize, textToDecipher, dictionary, candidatesQueue));
         } catch (InterruptedException ignored) {
