@@ -1,11 +1,16 @@
 package utils;
 
 import battlefield.Battlefield;
+import com.google.gson.Gson;
 import constants.Constants;
+import dto.DTOstatus;
 import engine.Engine;
 import engine.EnigmaEngine;
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletResponse;
+import problem.Problem;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class ServletUtils {
@@ -32,23 +37,16 @@ public class ServletUtils {
         return engine.getBattleFieldManager();
     }
 
-    /*public static ChatManager getChatManager(ServletContext servletContext) {
-        synchronized (chatManagerLock) {
-            if (servletContext.getAttribute(CHAT_MANAGER_ATTRIBUTE_NAME) == null) {
-                servletContext.setAttribute(CHAT_MANAGER_ATTRIBUTE_NAME, new ChatManager());
-            }
-        }
-        return (ChatManager) servletContext.getAttribute(CHAT_MANAGER_ATTRIBUTE_NAME);
-    }*/
-
-    /*public static int getIntParameter(HttpServletRequest request, String name) {
-        String value = request.getParameter(name);
-        if (value != null) {
+    public static boolean validateAuthorization(String usernameFromSession, HttpServletResponse resp, Gson gson) {
+        if (usernameFromSession == null) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             try {
-                return Integer.parseInt(value);
-            } catch (NumberFormatException numberFormatException) {
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
+                return false;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
-        return INT_PARAMETER_ERROR;
-    }*/
+        return true;
+    }
 }

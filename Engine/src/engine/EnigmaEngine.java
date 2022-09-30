@@ -572,6 +572,8 @@ public class EnigmaEngine implements Engine {
         List<Integer> randomGeneratedRotorIDs = new ArrayList<>();
         int randomGeneratedReflectorID;
         StringBuilder randomGeneratedWindowCharacters = new StringBuilder();
+
+
         int randomPlugsCount = (int) Math.floor(Math.random() * (alphabet.length() + 1)) / 2;
         StringBuilder randomGeneratedPlugs = new StringBuilder();
         List<Boolean> alreadyPlugged = new ArrayList<>(Collections.nCopies(alphabet.length(), false));
@@ -618,7 +620,7 @@ public class EnigmaEngine implements Engine {
 
         // updates the configuration
         updateConfiguration(randomGeneratedRotorIDs, randomGeneratedWindowCharacters.toString(),
-                randomGeneratedReflectorID, randomGeneratedPlugs.toString(), userName);
+                randomGeneratedReflectorID, "", userName);
 
         // get Notch Distances from window to display to user.
         List<Integer> notchDistances = new ArrayList<>();
@@ -632,7 +634,7 @@ public class EnigmaEngine implements Engine {
 
         return new DTOsecretConfig(isSucceeded, details, randomGeneratedRotorIDs,
                 randomGeneratedWindowCharacters.toString(), decimalToRoman(randomGeneratedReflectorID),
-                randomGeneratedPlugs.toString(), notchDistances);
+                "", notchDistances);
     }
 
     /**

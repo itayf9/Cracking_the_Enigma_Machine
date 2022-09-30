@@ -1,6 +1,7 @@
 package servlets.uboat;
 
 import battlefield.Battlefield;
+import com.google.gson.Gson;
 import constants.Constants;
 import dto.DTOstatus;
 import engine.Engine;
@@ -31,10 +32,9 @@ public class LoadXMLServlet extends HttpServlet {
 
         String usernameFromSession = SessionUtils.getUsername(req);
 
-        if (usernameFromSession == null) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            resp.getWriter().println("no username specified");
-        } else {
+        boolean isValid = validateAuthorization(usernameFromSession, resp, new Gson());
+
+        if (isValid) {
             // check if username is valid/existing Uboat client
             ServletContext servletContext = getServletContext();
             Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);

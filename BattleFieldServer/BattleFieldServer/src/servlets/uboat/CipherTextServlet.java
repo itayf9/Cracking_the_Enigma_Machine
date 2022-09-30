@@ -26,10 +26,9 @@ public class CipherTextServlet extends HttpServlet {
         // get userName of uboat 
         String userNameFromSession = SessionUtils.getUsername(req);
         Gson gson = new Gson();
-        if (userNameFromSession == null) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
-        } else {
+        resp.setContentType("application/json");
+        boolean isValid = validateAuthorization(userNameFromSession, resp, gson);
+        if (isValid) {
             // get engine from context
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
             // validate the text to cipher
