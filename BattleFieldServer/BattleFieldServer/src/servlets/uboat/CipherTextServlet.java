@@ -14,6 +14,8 @@ import utils.SessionUtils;
 
 import java.io.IOException;
 
+import static utils.ServletUtils.validateAuthorization;
+
 public class CipherTextServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

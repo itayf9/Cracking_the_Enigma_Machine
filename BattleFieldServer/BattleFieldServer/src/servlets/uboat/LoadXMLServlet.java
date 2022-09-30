@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Scanner;
 
+import static utils.ServletUtils.validateAuthorization;
+
 @WebServlet(name = "Load XML", urlPatterns = "/load")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class LoadXMLServlet extends HttpServlet {
