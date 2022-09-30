@@ -23,6 +23,7 @@ public class Battlefield {
 
     public Battlefield() {
         this.allies = new HashSet<>();
+        this.battlefieldName = "";
     }
 
     public Machine getMachine() {
