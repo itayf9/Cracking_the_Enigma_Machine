@@ -1,6 +1,7 @@
 package constants;
 
 public class Constants {
+
         public static final String USERNAME = "username";
         public static final String USER_NAME_ERROR = "username_error";
 
@@ -12,4 +13,5 @@ public class Constants {
         public static final String MAP_OF_ENGINES_ATTRIBUTE_NAME = "mapOfEngines";
 
         public static final String CONTEST = "contest";
+        public static String CLIENT_TYPE = "client-type";
 }

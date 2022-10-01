@@ -20,10 +20,12 @@ public class Battlefield {
     private int numOfAllies;
     private DifficultyLevel difficultyLevel;
     private BlockingQueue<AgentConclusion> uboatCandidatesQueue;
+    private boolean isUboatReady;
 
     public Battlefield() {
         this.allies = new HashSet<>();
         this.battlefieldName = "";
+        this.isUboatReady = false;
     }
 
     public Machine getMachine() {
@@ -48,6 +50,14 @@ public class Battlefield {
 
     public DifficultyLevel getDifficultyLevel() {
         return difficultyLevel;
+    }
+
+    public boolean getIsUboatReady() {
+        return isUboatReady;
+    }
+
+    public void setIsUboatReady(boolean isUboatReady) {
+        this.isUboatReady = isUboatReady;
     }
 
     public void setMachine(Machine machine) {

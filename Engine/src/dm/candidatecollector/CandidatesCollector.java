@@ -8,7 +8,7 @@ import java.util.concurrent.BlockingQueue;
 
 public class CandidatesCollector implements Runnable {
 
-    private final BlockingQueue<AgentConclusion> candidateQueue;
+    private final BlockingQueue<AgentConclusion> agentReportsOfCandidateQueue;
     BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final long totalPossibleConfigurations;
 
@@ -18,10 +18,10 @@ public class CandidatesCollector implements Runnable {
 
     private long pauseMeasuring;
 
-    public CandidatesCollector(BlockingQueue<AgentConclusion> candidateQueue, long totalPossibleConfigurations,
+    public CandidatesCollector(BlockingQueue<AgentConclusion> agentReportsOfCandidateQueue, long totalPossibleConfigurations,
                                LongProperty totalTimeDecryptProperty, BooleanProperty isBruteForceActionCancelled,
                                BooleanProperty isBruteForceActionPaused, BlockingQueue<AgentConclusion> uboatCandidateQueue) {
-        this.candidateQueue = candidateQueue;
+        this.agentReportsOfCandidateQueue = agentReportsOfCandidateQueue;
         this.uboatCandidateQueue = uboatCandidateQueue;
         this.totalPossibleConfigurations = totalPossibleConfigurations;
         this.totalTimeDecryptProperty = totalTimeDecryptProperty;
@@ -44,7 +44,7 @@ public class CandidatesCollector implements Runnable {
         while (scannedConfigsCount < totalPossibleConfigurations && !isBruteForceActionCancelled.getValue()) {
             AgentConclusion queueTakenCandidates;
             try {
-                queueTakenCandidates = candidateQueue.take();
+                queueTakenCandidates = agentReportsOfCandidateQueue.take();
                 tasksCounter++;
                 totalTasksProcessTime += queueTakenCandidates.getTimeTakenToDoTask();
                 averageTasksProcessTime = (double) totalTasksProcessTime / (double) tasksCounter;
@@ -68,6 +68,7 @@ public class CandidatesCollector implements Runnable {
 
                 // pushing the conclusion back to the uboat queue
                 try {
+
                     uboatCandidateQueue.put(queueTakenCandidates);
                 } catch (InterruptedException ignored) {
 

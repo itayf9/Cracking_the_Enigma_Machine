@@ -25,12 +25,11 @@ import static utill.Utility.nCk;
 public class DecryptManager {
 
 
-    private BlockingQueue<AgentConclusion> candidatesQueue;
+    private BlockingQueue<AgentConclusion> agentReportsOfCandidatesQueue;
     private Thread collector;
     private final List<Candidate> allCandidates = new ArrayList<>();
-
-
     private Thread taskProducer;
+
 
     private final Machine enigmaMachine;
     private final Dictionary dictionary;
@@ -62,7 +61,7 @@ public class DecryptManager {
         this.numOfAgents = 0;
         this.uboatCandidateQueue = battlefield.getUboatCandidatesQueue();
         this.totalPossibleWindowsPositions = (long) Math.pow(enigmaMachine.getAlphabet().length(), enigmaMachine.getRotorsCount());
-
+        this.isDMReady = false;
 
         // maybe delete those later
         this.totalTimeDecryptProperty = new SimpleLongProperty();
@@ -114,7 +113,7 @@ public class DecryptManager {
      */
     public void startDecrypt(String textToDecipher, UIAdapter uiAdapter) {
 
-        this.candidatesQueue = new LinkedBlockingQueue<>();
+        this.agentReportsOfCandidatesQueue = new LinkedBlockingQueue<>();
         isBruteForceActionCancelled.set(false);
 
         totalTimeDecryptProperty.setValue(System.nanoTime());
@@ -123,7 +122,7 @@ public class DecryptManager {
         setTotalConfigs(difficultyLevel);
 
         // setting up the collector of the candidates
-        collector = new Thread(new CandidatesCollector(candidatesQueue, totalPossibleConfigurations,
+        collector = new Thread(new CandidatesCollector(agentReportsOfCandidatesQueue, totalPossibleConfigurations,
                 totalTimeDecryptProperty, isBruteForceActionCancelledProperty(), isBruteForceActionPaused, uboatCandidateQueue));
         collector.setName("THE_COLLECTOR");
 
@@ -195,7 +194,7 @@ public class DecryptManager {
     }
 
     public BlockingQueue<AgentConclusion> getCandidatesQueue() {
-        return candidatesQueue;
+        return agentReportsOfCandidatesQueue;
     }
 
     public BlockingQueue<Runnable> getWaitingTasksBlockingQueue() {
@@ -240,5 +239,13 @@ public class DecryptManager {
 
     public void setTaskSize(int taskSize) {
         this.taskSize = taskSize;
+    }
+
+    public void setDMReady(boolean isReady) {
+        this.isDMReady = isReady;
+    }
+
+    public boolean getDMReady() {
+        return isDMReady;
     }
 }

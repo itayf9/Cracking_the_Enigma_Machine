@@ -27,8 +27,6 @@ public class CodeCalibrationManualServlet extends HttpServlet {
         String usernameFromSession = SessionUtils.getUsername(req);
         boolean isValid = validateAuthorization(usernameFromSession, resp, gson);
 
-        System.out.println(req.getParameter("rotors") + "  " + req.getParameter("windows") + "  " + req.getParameter("reflector") + "  " + req.getParameter("plugs"));
-
         if (isValid) {
 
             // extract rotors from body parameter
