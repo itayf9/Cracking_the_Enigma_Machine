@@ -21,7 +21,13 @@ public class CipherTextServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         // get the text from the cody of post request 
-        String textToCipher = req.getParameter("Text").toUpperCase();
+        String textToCipher = req.getParameter("Text");
+
+        if (textToCipher != null) {
+            textToCipher = textToCipher.toUpperCase();
+        } else {
+            // error no Text parameter
+        }
 
         // get userName of uboat 
         String userNameFromSession = SessionUtils.getUsername(req);

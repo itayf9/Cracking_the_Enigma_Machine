@@ -1,5 +1,6 @@
 package engine;
 
+import allie.AllieInfo;
 import battlefield.Battlefield;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;
@@ -1021,6 +1022,45 @@ public class EnigmaEngine implements Engine {
 
     public Map<String, Battlefield> getBattleFieldManager() {
         return uboatName2battleField;
+    }
+
+    public DTOallies getAlliesInfo(String uboatUserName) {
+        boolean isSucceeded = true;
+        Problem details = Problem.NO_PROBLEM;
+
+        List<AllieInfo> alliesInfo = new ArrayList<>();
+
+        for (DecryptManager allie : uboatName2battleField.get(uboatUserName).getAllies()) {
+            String allieName = allie.getAllieName();
+            int numOfAgents = allie.getNumOfAgents();
+            int taskSize = allie.getTaskSize();
+
+            AllieInfo currentAllieInfo = new AllieInfo(allieName, numOfAgents, taskSize);
+            alliesInfo.add(currentAllieInfo);
+        }
+
+        return new DTOallies(isSucceeded, details, alliesInfo);
+    }
+
+    public void setUboatReady(String uboatUserName, boolean isReady) {
+        uboatName2battleField.get(uboatUserName).setIsUboatReady(isReady);
+    }
+
+    public DTOstatus setAllieReady(String allieUserName, String uboatUserName, boolean isReady) {
+        Set<DecryptManager> allies = uboatName2battleField.get(uboatUserName).getAllies();
+        Optional<DecryptManager> myAllie = allies.stream().filter((allie) -> allie.getAllieName().equals(allieUserName)).findFirst();
+        myAllie.ifPresent(decryptManager -> decryptManager.setDMReady(isReady));
+        return new DTOstatus(true, Problem.NO_PROBLEM);
+    }
+
+    public boolean allClientsReady(String uboatName) {
+        final boolean[] isAllReady = {true};
+
+        Set<DecryptManager> allies = uboatName2battleField.get(uboatName).getAllies();
+        Optional<DecryptManager> unreadyDM = allies.stream().filter(allie -> !allie.getDMReady()).findFirst();
+
+        unreadyDM.ifPresent(decryptManager -> isAllReady[0] = false);
+        return isAllReady[0];
     }
 
     @Override

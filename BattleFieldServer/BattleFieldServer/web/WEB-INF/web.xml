@@ -44,4 +44,23 @@
     </servlet-mapping>
 
 
+    <servlet>
+        <servlet-name>FetchAlliesInfoServlet</servlet-name>
+        <servlet-class>servlets.uboat.FetchAlliesInfoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchAlliesInfoServlet</servlet-name>
+        <url-pattern>/fetch/alliesinfo</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ClientIsReadyServlet</servlet-name>
+        <servlet-class>servlets.common.ClientIsReadyServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ClientIsReadyServlet</servlet-name>
+        <url-pattern>/ready</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>

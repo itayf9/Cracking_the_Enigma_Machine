@@ -163,4 +163,12 @@ public interface Engine {
     void addDecryptManager(String alliesName, String uboatUserName);
 
     Map<String, Battlefield> getBattleFieldManager();
+
+    DTOallies getAlliesInfo(String uboatUserName);
+
+    void setUboatReady(String userNameFromSession, boolean b);
+
+    DTOstatus setAllieReady(String userNameFromSession, String uboatName, boolean b);
+
+    boolean allClientsReady(String uboatName);
 }

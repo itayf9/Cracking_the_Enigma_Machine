@@ -45,6 +45,9 @@ public class DecryptManager {
     private final BlockingQueue<Runnable> waitingTasksBlockingQueue;
     private int taskSize;
     private String allieName;
+    private boolean isDMReady;
+
+    private int numOfAgents;
     private BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final BooleanProperty isBruteForceActionCancelled;
     private final BooleanProperty isBruteForceActionPaused;
@@ -56,6 +59,7 @@ public class DecryptManager {
         this.enigmaMachine = battlefield.getMachine();
         this.difficultyLevel = battlefield.getDifficultyLevel();
         this.allieName = allieName;
+        this.numOfAgents = 0;
         this.uboatCandidateQueue = battlefield.getUboatCandidatesQueue();
         this.totalPossibleWindowsPositions = (long) Math.pow(enigmaMachine.getAlphabet().length(), enigmaMachine.getRotorsCount());
 
@@ -212,6 +216,18 @@ public class DecryptManager {
 
     public BooleanProperty isBruteForceActionPausedProperty() {
         return isBruteForceActionPaused;
+    }
+
+    public String getAllieName() {
+        return allieName;
+    }
+
+    public int getNumOfAgents() {
+        return numOfAgents;
+    }
+
+    public int getTaskSize() {
+        return taskSize;
     }
 
     public String getDictionaryExcludeCharacters() {
