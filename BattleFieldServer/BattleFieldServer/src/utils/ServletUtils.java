@@ -12,6 +12,7 @@ import problem.Problem;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 public class ServletUtils {
 
@@ -48,5 +49,16 @@ public class ServletUtils {
             }
         }
         return true;
+    }
+
+    public static Set<String> getLoggedAlliesNames(ServletContext servletContext) {
+        synchronized (allieManagerLock) {
+            if (servletContext.getAttribute(Constants.ENGINE) == null) {
+                servletContext.setAttribute(Constants.ENGINE, new EnigmaEngine());
+            }
+        }
+        Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
+
+        return engine.getLoggedAlliesNamesManager();
     }
 }

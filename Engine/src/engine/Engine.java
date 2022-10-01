@@ -173,4 +173,8 @@ public interface Engine {
     boolean allClientsReady(String uboatName);
 
     DTOagentConclusions fetchNextCandidates(String uboatUserName);
+
+    DTOagentConclusions fetchCandidatesToDisplay(String uboatName, String allieName);
+
+    Set<String> getLoggedAlliesNamesManager();
 }

@@ -49,6 +49,7 @@ public class ClientIsReadyServlet extends HttpServlet {
 
             switch (client) {
                 case UBOAT:
+                    uboatName = userNameFromSession;
                     engine.setUboatReady(userNameFromSession, true);
                     break;
                 case ALLIE:

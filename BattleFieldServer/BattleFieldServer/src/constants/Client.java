@@ -5,6 +5,10 @@ public enum Client {
 
 
     public static Client getClient(String client) {
+        if (client == null) {
+            return UNAUTHORIZED;
+        }
+
         switch (client) {
             case "uboat":
                 return UBOAT;

@@ -5,8 +5,8 @@
          version="4.0">
 
     <servlet>
-        <servlet-name>LightWeightLoginServlet</servlet-name>
-        <servlet-class>servlets.common.LightWeightLoginServlet</servlet-class>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>servlets.common.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LightWeightLoginServlet</servlet-name>
@@ -70,6 +70,15 @@
     <servlet-mapping>
         <servlet-name>FetchCandidatesServlet</servlet-name>
         <url-pattern>/fetch/candidates</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SubscribeToBattlefieldServlet</servlet-name>
+        <servlet-class>servlets.allies.SubscribeToBattlefieldServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SubscribeToBattlefieldServlet</servlet-name>
+        <url-pattern>/subscribe</url-pattern>
     </servlet-mapping>
 
 </web-app>

@@ -40,12 +40,13 @@ public class EnigmaEngine implements Engine {
     private final List<StatisticRecord> machineRecords = new ArrayList<>();
 
     private final Map<String, Battlefield> uboatName2battleField;
+    private final Set<String> loggedAlliesNames;
 
     public static String JAXB_XML_PACKAGE_NAME = "machine.jaxb.generated";
 
     public EnigmaEngine() {
         this.uboatName2battleField = new HashMap<>();
-        System.out.println("inside the default ctor of EnigmaEngine");
+        this.loggedAlliesNames = new HashSet<>();
     }
 
     /**
@@ -1088,6 +1089,24 @@ public class EnigmaEngine implements Engine {
         }
 
         return new DTOagentConclusions(true, Problem.NO_PROBLEM, nextAgentConclusions);
+    }
+
+    @Override
+    public DTOagentConclusions fetchCandidatesToDisplay(String uboatName, String allieName) {
+        Set<DecryptManager> allies = uboatName2battleField.get(uboatName).getAllies();
+        Optional<DecryptManager> myAllie = allies.stream().filter(allie -> allie.getAllieName().equals(allieName)).findFirst();
+
+        if (myAllie.isPresent()) {
+            DecryptManager allie = myAllie.get();
+            return new DTOagentConclusions(true, Problem.NO_PROBLEM, allie.getDecipherCandidates());
+        } else {
+            return new DTOagentConclusions(false, Problem.UNAUTHORIZED_CLIENT_ACCESS, null);
+        }
+    }
+
+    @Override
+    public Set<String> getLoggedAlliesNamesManager() {
+        return loggedAlliesNames;
     }
 
     @Override
