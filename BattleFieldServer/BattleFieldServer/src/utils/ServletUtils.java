@@ -2,6 +2,7 @@ package utils;
 
 import battlefield.Battlefield;
 import com.google.gson.Gson;
+import constants.Client;
 import constants.Constants;
 import dto.DTOstatus;
 import engine.Engine;
@@ -23,12 +24,12 @@ public class ServletUtils {
     Note how the synchronization is done only on the question and\or creation of the relevant managers and once they exists -
     the actual fetch of them is remained un-synchronized for performance POV
      */
-    private static final Object userManagerLock = new Object();
-    private static final Object chatManagerLock = new Object();
+    private static final Object uboatManagerLock = new Object();
+    private static final Object allieManagerLock = new Object();
 
     public static Map<String, Battlefield> getUboatName2battleField(ServletContext servletContext) {
 
-        synchronized (userManagerLock) {
+        synchronized (uboatManagerLock) {
             if (servletContext.getAttribute(Constants.ENGINE) == null) {
                 servletContext.setAttribute(Constants.ENGINE, new EnigmaEngine());
             }
@@ -39,6 +40,7 @@ public class ServletUtils {
     }
 
     public static boolean validateAuthorization(String usernameFromSession, HttpServletResponse resp, Gson gson) {
+
         if (usernameFromSession == null) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             try {

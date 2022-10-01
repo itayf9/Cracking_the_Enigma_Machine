@@ -9,7 +9,7 @@
         <servlet-class>servlets.common.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>LightWeightLoginServlet</servlet-name>
+        <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
 

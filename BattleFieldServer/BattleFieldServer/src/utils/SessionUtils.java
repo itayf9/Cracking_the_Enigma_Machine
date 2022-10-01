@@ -17,9 +17,8 @@ public class SessionUtils {
         request.getSession().invalidate();
     }
 
-    public static String getTypeOfClient(HttpServletRequest request) {
+    public static Client getTypeOfClient(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        Object sessionAttribute = session != null ? session.getAttribute(Constants.CLIENT_TYPE) : null;
-        return sessionAttribute != null ? sessionAttribute.toString() : null;
+        return session != null ? (Client) session.getAttribute(Constants.CLIENT_TYPE) : Client.UNAUTHORIZED;
     }
 }

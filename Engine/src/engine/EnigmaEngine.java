@@ -1027,6 +1027,7 @@ public class EnigmaEngine implements Engine {
         return uboatName2battleField;
     }
 
+    @Override
     public DTOallies getAlliesInfo(String uboatUserName) {
         boolean isSucceeded = true;
         Problem details = Problem.NO_PROBLEM;
@@ -1045,17 +1046,27 @@ public class EnigmaEngine implements Engine {
         return new DTOallies(isSucceeded, details, alliesInfo);
     }
 
+    @Override
     public void setUboatReady(String uboatUserName, boolean isReady) {
         uboatName2battleField.get(uboatUserName).setIsUboatReady(isReady);
     }
 
+    @Override
     public DTOstatus setAllieReady(String allieUserName, String uboatUserName, boolean isReady) {
         Set<DecryptManager> allies = uboatName2battleField.get(uboatUserName).getAllies();
         Optional<DecryptManager> myAllie = allies.stream().filter((allie) -> allie.getAllieName().equals(allieUserName)).findFirst();
-        myAllie.ifPresent(decryptManager -> decryptManager.setDMReady(isReady));
-        return new DTOstatus(true, Problem.NO_PROBLEM);
+
+        if (myAllie.isPresent()) {
+            DecryptManager allie = myAllie.get();
+            allie.setDMReady(isReady);
+            return new DTOstatus(true, Problem.NO_PROBLEM);
+        } else {
+            return new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS);
+        }
+
     }
 
+    @Override
     public boolean allClientsReady(String uboatName) {
         final boolean[] isAllReady = {true};
 

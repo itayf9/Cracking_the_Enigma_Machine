@@ -1,27 +1,33 @@
 package servlets.common;
 
 import battlefield.Battlefield;
+import com.google.gson.Gson;
+import constants.Client;
 import constants.Constants;
+import dto.DTOstatus;
+import engine.Engine;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import problem.Problem;
 import utils.ServletUtils;
 import utils.SessionUtils;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static constants.Client.UNAUTHORIZED;
+import static constants.Client.getClient;
 import static constants.Constants.USERNAME;
 
 public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/plain;charset=UTF-8");
-
-        System.out.println("got to login servlet");
-
+        response.setContentType("application/json");
+        Gson gson = new Gson();
         String usernameFromSession = SessionUtils.getUsername(request);
 
         Client typeOfClient = Client.getClient(request.getParameter(Constants.CLIENT_TYPE));
@@ -35,10 +41,9 @@ public class LoginServlet extends HttpServlet {
         if (usernameFromSession == null) { //user is not logged in yet
             String usernameFromParameter = request.getParameter(Constants.USERNAME);
             if (usernameFromParameter == null || usernameFromParameter.isEmpty()) {
-                //no username in session and no username in parameter - not standard situation. it's a conflict
-
-                // stands for conflict in server state
-                response.setStatus(HttpServletResponse.SC_CONFLICT);
+                // create response for bad request
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_USERNAME)));
             } else {
 
                 switch (typeOfClient) {

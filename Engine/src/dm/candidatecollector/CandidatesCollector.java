@@ -1,9 +1,11 @@
 package dm.candidatecollector;
 
 import candidate.AgentConclusion;
+import candidate.Candidate;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 public class CandidatesCollector implements Runnable {
@@ -11,7 +13,7 @@ public class CandidatesCollector implements Runnable {
     private final BlockingQueue<AgentConclusion> agentReportsOfCandidateQueue;
     BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final long totalPossibleConfigurations;
-
+    private final List<AgentConclusion> allConclusions;
     private LongProperty totalTimeDecryptProperty;
     private final BooleanProperty isBruteForceActionPaused;
     private final BooleanProperty isBruteForceActionCancelled;
@@ -20,7 +22,7 @@ public class CandidatesCollector implements Runnable {
 
     public CandidatesCollector(BlockingQueue<AgentConclusion> agentReportsOfCandidateQueue, long totalPossibleConfigurations,
                                LongProperty totalTimeDecryptProperty, BooleanProperty isBruteForceActionCancelled,
-                               BooleanProperty isBruteForceActionPaused, BlockingQueue<AgentConclusion> uboatCandidateQueue) {
+                               BooleanProperty isBruteForceActionPaused, BlockingQueue<AgentConclusion> uboatCandidateQueue, List<AgentConclusion> allConclusions) {
         this.agentReportsOfCandidateQueue = agentReportsOfCandidateQueue;
         this.uboatCandidateQueue = uboatCandidateQueue;
         this.totalPossibleConfigurations = totalPossibleConfigurations;
@@ -28,6 +30,7 @@ public class CandidatesCollector implements Runnable {
         this.isBruteForceActionPaused = isBruteForceActionPaused;
         this.isBruteForceActionCancelled = isBruteForceActionCancelled;
         this.pauseMeasuring = 0;
+        this.allConclusions = allConclusions;
     }
 
     @Override
@@ -66,9 +69,10 @@ public class CandidatesCollector implements Runnable {
 
             if (queueTakenCandidates.getCandidates().size() != 0) {
 
+                allConclusions.add(queueTakenCandidates);
+
                 // pushing the conclusion back to the uboat queue
                 try {
-
                     uboatCandidateQueue.put(queueTakenCandidates);
                 } catch (InterruptedException ignored) {
 

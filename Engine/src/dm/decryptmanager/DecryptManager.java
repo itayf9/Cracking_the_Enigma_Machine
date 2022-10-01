@@ -27,7 +27,7 @@ public class DecryptManager {
 
     private BlockingQueue<AgentConclusion> agentReportsOfCandidatesQueue;
     private Thread collector;
-    private final List<Candidate> allCandidates = new ArrayList<>();
+    private final List<AgentConclusion> allConclusions = new ArrayList<>();
     private Thread taskProducer;
 
 
@@ -123,7 +123,7 @@ public class DecryptManager {
 
         // setting up the collector of the candidates
         collector = new Thread(new CandidatesCollector(agentReportsOfCandidatesQueue, totalPossibleConfigurations,
-                totalTimeDecryptProperty, isBruteForceActionCancelledProperty(), isBruteForceActionPaused, uboatCandidateQueue));
+                totalTimeDecryptProperty, isBruteForceActionCancelledProperty(), isBruteForceActionPaused, uboatCandidateQueue, allConclusions));
         collector.setName("THE_COLLECTOR");
 
         // starting the thread pool
@@ -177,8 +177,8 @@ public class DecryptManager {
         }
     }
 
-    public List<Candidate> getDecipherCandidates() {
-        return allCandidates;
+    public List<AgentConclusion> getDecipherCandidates() {
+        return allConclusions;
     }
 
     public Set<String> getDictionaryWords() {

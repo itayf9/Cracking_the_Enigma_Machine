@@ -25,21 +25,9 @@ public class ClientIsReadyServlet extends HttpServlet {
 
         // get userName of uboat
         String userNameFromSession = SessionUtils.getUsername(req);
-        String typeOfClient = SessionUtils.getTypeOfClient(req);
-        Client client = getClient(typeOfClient);
+        Client typeOfClient = SessionUtils.getTypeOfClient(req);
 
         String uboatName = "";
-
-        if (client.equals(UBOAT)) {
-            uboatName = userNameFromSession;
-        } else if (client.equals(ALLIE)) {
-            uboatName = req.getParameter("uboat-name");
-            if (uboatName == null) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
-                return;
-            }
-        }
 
         resp.setContentType("application/json");
         boolean isValid = validateAuthorization(userNameFromSession, resp, gson);
@@ -47,12 +35,18 @@ public class ClientIsReadyServlet extends HttpServlet {
             // get engine from context
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
 
-            switch (client) {
+            switch (typeOfClient) {
                 case UBOAT:
                     uboatName = userNameFromSession;
                     engine.setUboatReady(userNameFromSession, true);
                     break;
                 case ALLIE:
+                    uboatName = req.getParameter("uboat-name");
+                    if (uboatName == null) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
+                        return;
+                    }
                     engine.setAllieReady(userNameFromSession, uboatName, true);
                     break;
                 case AGENT:

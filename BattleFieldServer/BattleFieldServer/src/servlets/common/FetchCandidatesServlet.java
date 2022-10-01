@@ -5,11 +5,13 @@ import constants.Client;
 import constants.Constants;
 import dto.DTOagentConclusions;
 import dto.DTOallies;
+import dto.DTOstatus;
 import engine.Engine;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import problem.Problem;
 import utils.SessionUtils;
 
 import java.io.IOException;
@@ -28,24 +30,28 @@ public class FetchCandidatesServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         String usernameFromSession = SessionUtils.getUsername(req);
-        String typeOfClient = SessionUtils.getTypeOfClient(req);
-        Client client = getClient(typeOfClient);
+        Client typeOfClient = SessionUtils.getTypeOfClient(req);
 
         boolean isValid = validateAuthorization(usernameFromSession, resp, gson);
 
         if (isValid) {
-            switch (client) {
+            switch (typeOfClient) {
                 case UBOAT:
                     DTOagentConclusions agentConclusionsStatus = engine.fetchNextCandidates(usernameFromSession);
                     resp.setStatus(HttpServletResponse.SC_OK);
                     resp.getWriter().println(gson.toJson(agentConclusionsStatus));
                     break;
                 case ALLIE:
-                    //engine.fetchAllCandidates()
-                    break;
-
+                    String uboatName = req.getParameter("uboat-name");
+                    if (uboatName == null) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
+                    } else {
+                        resp.setStatus(HttpServletResponse.SC_OK);
+                        resp.getWriter().println(gson.toJson(engine.fetchCandidatesToDisplay(uboatName, usernameFromSession)));
+                        break;
+                    }
             }
-
         }
     }
 }
