@@ -2,6 +2,7 @@ package engine;
 
 import allie.AllieInfo;
 import battlefield.Battlefield;
+import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;
 import dm.difficultylevel.DifficultyLevel;
@@ -22,6 +23,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
 
 
 import static dm.difficultylevel.DifficultyLevel.getDifficultyLevelFromString;

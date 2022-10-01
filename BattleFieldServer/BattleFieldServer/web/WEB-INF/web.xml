@@ -50,7 +50,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>FetchAlliesInfoServlet</servlet-name>
-        <url-pattern>/fetch/alliesinfo</url-pattern>
+        <url-pattern>/fetch/allies-info</url-pattern>
     </servlet-mapping>
 
     <servlet>
