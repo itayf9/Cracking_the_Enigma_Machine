@@ -63,4 +63,13 @@
     </servlet-mapping>
 
 
+    <servlet>
+        <servlet-name>FetchCandidatesServlet</servlet-name>
+        <servlet-class>servlets.common.FetchCandidatesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchCandidatesServlet</servlet-name>
+        <url-pattern>/fetch/candidates</url-pattern>
+    </servlet-mapping>
+
 </web-app>

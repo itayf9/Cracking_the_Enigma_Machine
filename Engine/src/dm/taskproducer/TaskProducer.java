@@ -1,6 +1,6 @@
 package dm.taskproducer;
 
-import dm.agent.AgentConclusion;
+import candidate.AgentConclusion;
 import dm.agent.AgentTask;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;

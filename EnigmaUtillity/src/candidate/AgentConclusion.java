@@ -1,4 +1,4 @@
-package dm.agent;
+package candidate;
 
 import candidate.Candidate;
 

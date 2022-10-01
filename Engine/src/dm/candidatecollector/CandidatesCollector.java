@@ -1,6 +1,6 @@
 package dm.candidatecollector;
 
-import dm.agent.AgentConclusion;
+import candidate.AgentConclusion;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 

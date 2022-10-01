@@ -1063,6 +1063,31 @@ public class EnigmaEngine implements Engine {
         return isAllReady[0];
     }
 
+    /**
+     * get candidates from the uboatCandidateQueue in order to send the candidates to the uboat.
+     *
+     * @param uboatUserName uboat name
+     * @return dto of candidates
+     */
+    public DTOagentConclusions fetchNextCandidates(String uboatUserName) {
+        final int CONCLUSION_LIMIT = 50;
+        BlockingQueue<AgentConclusion> uboatCandidatesQueue = uboatName2battleField.get(uboatUserName).getUboatCandidatesQueue();
+        List<AgentConclusion> nextAgentConclusions = new ArrayList<>();
+        int conclusionCounter = 0;
+        boolean isThereMoreCandidates = true;
+        while (isThereMoreCandidates && conclusionCounter < CONCLUSION_LIMIT) {
+            AgentConclusion nextConclusion = uboatCandidatesQueue.poll();
+            if (nextConclusion == null) {
+                isThereMoreCandidates = false;
+            } else {
+                conclusionCounter++;
+                nextAgentConclusions.add(nextConclusion);
+            }
+        }
+
+        return new DTOagentConclusions(true, Problem.NO_PROBLEM, nextAgentConclusions);
+    }
+
     @Override
     public String toString() {
         return "engine.EnigmaEngine{" +

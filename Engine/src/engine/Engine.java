@@ -171,4 +171,6 @@ public interface Engine {
     DTOstatus setAllieReady(String userNameFromSession, String uboatName, boolean b);
 
     boolean allClientsReady(String uboatName);
+
+    DTOagentConclusions fetchNextCandidates(String uboatUserName);
 }

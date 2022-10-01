@@ -1,6 +1,6 @@
 package battlefield;
 
-import dm.agent.AgentConclusion;
+import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;
 import dm.difficultylevel.DifficultyLevel;

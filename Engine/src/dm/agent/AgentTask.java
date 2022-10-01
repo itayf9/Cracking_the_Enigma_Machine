@@ -1,5 +1,6 @@
 package dm.agent;
 
+import candidate.AgentConclusion;
 import candidate.Candidate;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;
@@ -7,7 +8,6 @@ import machine.Machine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 import static utill.Utility.decimalToRoman;
