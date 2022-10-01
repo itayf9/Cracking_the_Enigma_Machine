@@ -1,11 +1,10 @@
 package engine;
 
 import battlefield.Battlefield;
-import dm.difficultylevel.DifficultyLevel;
+import difficultylevel.DifficultyLevel;
 import dto.*;
 import ui.adapter.UIAdapter;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -178,4 +177,6 @@ public interface Engine {
     DTOagentConclusions fetchCandidatesToDisplay(String uboatName, String allieName);
 
     Set<String> getLoggedAlliesNamesManager();
+
+    DTObattlefields getBattleFieldsInfo();
 }

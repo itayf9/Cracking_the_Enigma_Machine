@@ -1,11 +1,10 @@
 package dm.decryptmanager;
 
 import battlefield.Battlefield;
-import candidate.Candidate;
 import candidate.AgentConclusion;
 import dm.candidatecollector.CandidatesCollector;
 import dm.dictionary.Dictionary;
-import dm.difficultylevel.DifficultyLevel;
+import difficultylevel.DifficultyLevel;
 import dm.taskproducer.TaskProducer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;

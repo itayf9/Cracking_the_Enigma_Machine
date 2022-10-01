@@ -4,7 +4,7 @@ import candidate.AgentConclusion;
 import dm.agent.AgentTask;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;
-import dm.difficultylevel.DifficultyLevel;
+import difficultylevel.DifficultyLevel;
 import machine.EnigmaMachine;
 import machine.Machine;
 

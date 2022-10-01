@@ -3,7 +3,7 @@ package battlefield;
 import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;
-import dm.difficultylevel.DifficultyLevel;
+import difficultylevel.DifficultyLevel;
 import machine.Machine;
 
 import java.util.HashSet;
@@ -94,5 +94,17 @@ public class Battlefield {
 
     public void addDecryptManager(String allieName) {
         allies.add(new DecryptManager(allieName, this));
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public boolean isBattlefieldConfigured() {
+        return isBattlefieldConfigured;
+    }
+
+    public void setBattlefieldConfigured(boolean battlefieldConfigured) {
+        isBattlefieldConfigured = battlefieldConfigured;
     }
 }

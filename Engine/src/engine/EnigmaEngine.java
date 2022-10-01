@@ -2,10 +2,11 @@ package engine;
 
 import allie.AllieInfo;
 import battlefield.Battlefield;
+import battlefield.BattlefieldInfo;
 import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;
-import dm.difficultylevel.DifficultyLevel;
+import difficultylevel.DifficultyLevel;
 import dto.*;
 import javafx.util.Pair;
 import machine.EnigmaMachine;
@@ -26,7 +27,7 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 
 
-import static dm.difficultylevel.DifficultyLevel.getDifficultyLevelFromString;
+import static difficultylevel.DifficultyLevel.getDifficultyLevelFromString;
 import static utill.Utility.*;
 
 
@@ -450,7 +451,7 @@ public class EnigmaEngine implements Engine {
         uboatName2battleField.get(userName).setDictionary(new Dictionary(words, excludeChars));
 
         // initializes number of allies
-        uboatName2battleField.get(userName).setNumOfAllies(cteEnigma.getCTEBattlefield().getAllies());
+        uboatName2battleField.get(userName).setNumOfRequiredAllies(cteEnigma.getCTEBattlefield().getAllies());
 
         // initializes battle name
         uboatName2battleField.get(userName).setBattlefieldName(cteEnigma.getCTEBattlefield().getBattleName());
@@ -1118,6 +1119,28 @@ public class EnigmaEngine implements Engine {
     @Override
     public Set<String> getLoggedAlliesNamesManager() {
         return loggedAlliesNames;
+    }
+
+    @Override
+    public DTObattlefields getBattleFieldsInfo() {
+        List<BattlefieldInfo> allBattlefieldsInfo = new ArrayList<>();
+
+        for (Map.Entry<String, Battlefield> entry : uboatName2battleField.entrySet()) {
+
+            if (!entry.getValue().isBattlefieldConfigured()) {
+                continue;
+            }
+
+            String battlefieldName = entry.getValue().getBattlefieldName();
+            boolean isActive = entry.getValue().isActive();
+            DifficultyLevel difficultyLevel = entry.getValue().getDifficultyLevel();
+            int numOfRequiredAllies = entry.getValue().getNumOfRequiredAllies();
+            int numOfLoggedAllies = entry.getValue().getAllies().size();
+            allBattlefieldsInfo.add(new BattlefieldInfo(battlefieldName, entry.getKey(), isActive,
+                    difficultyLevel, numOfRequiredAllies, numOfLoggedAllies));
+        }
+
+        return new DTObattlefields(true, Problem.NO_PROBLEM, allBattlefieldsInfo);
     }
 
     @Override
