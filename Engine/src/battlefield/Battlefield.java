@@ -17,15 +17,20 @@ public class Battlefield {
     private Set<DecryptManager> allies;
     private Dictionary dictionary;
     private String battlefieldName;
-    private int numOfAllies;
+    private int numOfRequiredAllies;
     private DifficultyLevel difficultyLevel;
     private BlockingQueue<AgentConclusion> uboatCandidatesQueue;
     private boolean isUboatReady;
+    private boolean isActive;
+    private boolean isBattlefieldConfigured;
 
     public Battlefield() {
         this.allies = new HashSet<>();
         this.battlefieldName = "";
         this.isUboatReady = false;
+        this.isActive = false;
+        this.difficultyLevel = DifficultyLevel.UNDEFINED;
+        this.isBattlefieldConfigured = false;
     }
 
     public Machine getMachine() {
@@ -44,8 +49,8 @@ public class Battlefield {
         return battlefieldName;
     }
 
-    public int getNumOfAllies() {
-        return numOfAllies;
+    public int getNumOfRequiredAllies() {
+        return numOfRequiredAllies;
     }
 
     public DifficultyLevel getDifficultyLevel() {
@@ -84,8 +89,8 @@ public class Battlefield {
         this.battlefieldName = battlefieldName;
     }
 
-    public void setNumOfAllies(int numOfAllies) {
-        this.numOfAllies = numOfAllies;
+    public void setNumOfRequiredAllies(int numOfRequiredAllies) {
+        this.numOfRequiredAllies = numOfRequiredAllies;
     }
 
     public void setDifficultyLevel(DifficultyLevel difficultyLevel) {

@@ -459,6 +459,9 @@ public class EnigmaEngine implements Engine {
         // initializes difficulty level
         uboatName2battleField.get(userName).setDifficultyLevel(getDifficultyLevelFromString(cteEnigma.getCTEBattlefield().getLevel()));
 
+        // sets the isConfigured flag of that battlefield
+        uboatName2battleField.get(userName).setBattlefieldConfigured(true);
+
         return problem; // for code readability -> problem = Problem.NO_PROBLEM;
     }
 

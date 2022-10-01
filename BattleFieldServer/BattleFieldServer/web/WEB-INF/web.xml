@@ -72,6 +72,7 @@
         <url-pattern>/fetch/candidates</url-pattern>
     </servlet-mapping>
 
+
     <servlet>
         <servlet-name>SubscribeToBattlefieldServlet</servlet-name>
         <servlet-class>servlets.allies.SubscribeToBattlefieldServlet</servlet-class>
@@ -79,6 +80,16 @@
     <servlet-mapping>
         <servlet-name>SubscribeToBattlefieldServlet</servlet-name>
         <url-pattern>/subscribe</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>FetchBattlefieldsInfoServlet</servlet-name>
+        <servlet-class>servlets.allies.FetchBattlefieldsInfoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchBattlefieldsInfoServlet</servlet-name>
+        <url-pattern>/fetch/battlefields</url-pattern>
     </servlet-mapping>
 
 </web-app>
