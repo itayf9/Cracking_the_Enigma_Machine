@@ -1,5 +1,6 @@
 package servlets.common;
 
+import agent.AgentInfo;
 import battlefield.Battlefield;
 import com.google.gson.Gson;
 import constants.Client;
@@ -14,13 +15,9 @@ import utils.ServletUtils;
 import utils.SessionUtils;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static constants.Client.UNAUTHORIZED;
-import static constants.Client.getClient;
-import static constants.Constants.USERNAME;
 
 public class LoginServlet extends HttpServlet {
 
@@ -68,7 +65,7 @@ public class LoginServlet extends HttpServlet {
                         Map<String, Set<AgentInfo>> loggedAlliesNames = ServletUtils.getLoggedAlliesNames(getServletContext());
 
                         synchronized (this) {
-                            if (loggedAlliesNames.contains(usernameFromParameter)) {
+                            if (loggedAlliesNames.containsKey(usernameFromParameter)) {
                                 // the username already exists
                                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                                 response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.USERNAME_ALREADY_EXIST)));
@@ -76,13 +73,42 @@ public class LoginServlet extends HttpServlet {
                             }
 
                             //add the new user to the allies list
-                            loggedAlliesNames.add(usernameFromParameter);
+                            loggedAlliesNames.put(usernameFromParameter, new HashSet<>());
                         }
                         break;
                     case AGENT:
+                        String agentName = request.getParameter(Constants.USERNAME);
+                        String allieNameToJoin = request.getParameter(Constants.ALLIE_NAME);
+                        int numOfThreads;
+                        try {
+                            numOfThreads = Integer.parseInt(request.getParameter(Constants.NUM_OF_THREADS));
+                        } catch (NullPointerException | NumberFormatException e) {
+                            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                            response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
+                            return;
+                        }
+                        int numOfMissionsToPull;
+                        try {
+                            numOfMissionsToPull = Integer.parseInt(request.getParameter(Constants.MISSION_COUNT));
+                        } catch (NullPointerException | NumberFormatException e) {
+                            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                            response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
+                            return;
+                        }
+
+                        if (agentName != null && allieNameToJoin != null && numOfThreads > 0 && numOfThreads < 5 && numOfMissionsToPull > 0) {
+
+                            Engine engine = ServletUtils.getEngine(getServletContext());
+                            DTOstatus assignStatus = engine.assignAgentToAllie(agentName, allieNameToJoin, numOfThreads, numOfMissionsToPull);
+                            if (!assignStatus.isSucceed()) {
+                                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                                response.getWriter().println(gson.toJson(assignStatus));
+                                return;
+                            }
+                        }
                         break;
                 }
-                System.out.println("client " + typeOfClient + "with name of " + usernameFromParameter + " logged successfully to the server");
+                System.out.println("client " + typeOfClient + " with name of " + usernameFromParameter + " logged successfully to the server");
                 // assuming we got here then all ok
                 request.getSession(true).setAttribute(Constants.USERNAME, usernameFromParameter);
                 request.getSession(true).setAttribute(Constants.CLIENT_TYPE, typeOfClient);

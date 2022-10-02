@@ -1,6 +1,7 @@
 package servlets.uboat;
 
 import com.google.gson.Gson;
+import constants.Client;
 import constants.Constants;
 import dto.DTOciphertext;
 import dto.DTOstatus;

@@ -2,6 +2,7 @@ package servlets.uboat;
 
 import battlefield.Battlefield;
 import com.google.gson.Gson;
+import constants.Client;
 import constants.Constants;
 import dto.DTOstatus;
 import engine.Engine;
@@ -13,6 +14,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import problem.Problem;
+import utils.ServletUtils;
 import utils.SessionUtils;
 
 import java.io.IOException;
@@ -29,7 +32,7 @@ public class LoadXMLServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        Gson gson = new Gson();
         String usernameFromSession = SessionUtils.getUsername(req);
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, new Gson());
         Client typeOFClient = SessionUtils.getTypeOfClient(req);
@@ -64,6 +67,7 @@ public class LoadXMLServlet extends HttpServlet {
                     } else { // all ok
                         resp.setStatus(HttpServletResponse.SC_OK);
                     }
+                    resp.getWriter().println(gson.toJson(loadXMLstatus));
 
                 } else { // more parts than 1
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -71,7 +75,7 @@ public class LoadXMLServlet extends HttpServlet {
                 }
             } else { // if no key in map
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                resp.getWriter().println("no UBoat Client exist with that name specified");
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
             }
         }
     }

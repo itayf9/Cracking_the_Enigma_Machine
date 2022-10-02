@@ -42,7 +42,7 @@ public class EnigmaEngine implements Engine {
     private final List<StatisticRecord> machineRecords = new ArrayList<>();
 
     private final Map<String, Battlefield> uboatName2battleField;
-    private final Set<String> loggedAlliesNames;
+    private final Map<String, Set<AgentInfo>> loggedAllieName2loggedAgents;
 
     public static String JAXB_XML_PACKAGE_NAME = "machine.jaxb.generated";
 
@@ -1057,12 +1057,13 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
-    public DTOstatus setAllieReady(String allieUserName, String uboatUserName, boolean isReady) {
+    public DTOstatus setAllieReady(String allieUserName, String uboatUserName, boolean isReady, int taskSize) {
         Set<DecryptManager> allies = uboatName2battleField.get(uboatUserName).getAllies();
         Optional<DecryptManager> myAllie = allies.stream().filter((allie) -> allie.getAllieName().equals(allieUserName)).findFirst();
 
         if (myAllie.isPresent()) {
             DecryptManager allie = myAllie.get();
+            allie.setTaskSize(taskSize);
             allie.setDMReady(isReady);
             return new DTOstatus(true, Problem.NO_PROBLEM);
         } else {
@@ -1121,8 +1122,8 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
-    public Set<String> getLoggedAlliesNamesManager() {
-        return loggedAlliesNames;
+    public Map<String, Set<AgentInfo>> getLoggedAlliesNamesManager() {
+        return loggedAllieName2loggedAgents;
     }
 
     @Override

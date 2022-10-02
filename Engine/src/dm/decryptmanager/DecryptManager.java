@@ -14,6 +14,7 @@ import machine.Machine;
 import ui.adapter.UIAdapter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -23,28 +24,20 @@ import static utill.Utility.nCk;
 
 public class DecryptManager {
 
-
     private BlockingQueue<AgentConclusion> agentReportsOfCandidatesQueue;
     private Thread collector;
     private final List<AgentConclusion> allConclusions = new ArrayList<>();
     private Thread taskProducer;
-
-
     private final Machine enigmaMachine;
     private final Dictionary dictionary;
     private DifficultyLevel difficultyLevel;
-
-
     private long totalPossibleConfigurations;
     private final long totalPossibleWindowsPositions;
     private LongProperty totalTimeDecryptProperty;
-
-
     private final BlockingQueue<Runnable> waitingTasksBlockingQueue;
     private int taskSize;
     private String allieName;
     private boolean isDMReady;
-
     private int numOfAgents;
     private BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final BooleanProperty isBruteForceActionCancelled;
@@ -52,7 +45,7 @@ public class DecryptManager {
     private final int UNDEFINED = 0;
 
     public DecryptManager(String allieName, Battlefield battlefield) {
-        int LIMIT_NUMBER_OF_TASK = 1000;
+        final int LIMIT_NUMBER_OF_TASK = 1000;
         this.waitingTasksBlockingQueue = new LinkedBlockingQueue<>(LIMIT_NUMBER_OF_TASK);
         this.dictionary = battlefield.getDictionary();
         this.enigmaMachine = battlefield.getMachine();

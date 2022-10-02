@@ -19,7 +19,6 @@ public class FetchBattlefieldsInfoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
         Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
-
         resp.setContentType("application/json");
 
         String usernameFromSession = SessionUtils.getUsername(req);

@@ -1,5 +1,6 @@
 package engine;
 
+import agent.AgentInfo;
 import battlefield.Battlefield;
 import difficultylevel.DifficultyLevel;
 import dto.*;
@@ -168,7 +169,7 @@ public interface Engine {
 
     void setUboatReady(String userNameFromSession, boolean b);
 
-    DTOstatus setAllieReady(String userNameFromSession, String uboatName, boolean b);
+    DTOstatus setAllieReady(String userNameFromSession, String uboatName, boolean b, int taskSize);
 
     boolean allClientsReady(String uboatName);
 
@@ -179,4 +180,10 @@ public interface Engine {
     Map<String, Set<AgentInfo>> getLoggedAlliesNamesManager();
 
     DTObattlefields getBattleFieldsInfo();
+
+    DTOloggedAgents getLoggedAgentsOfAllie(String usernameFromSession);
+
+    DTOloggedAllies fetchAllLoggedAllies();
+
+    DTOstatus assignAgentToAllie(String agentName, String allieNameToJoin, int numOfThreads, int numOfMissionsToPull);
 }

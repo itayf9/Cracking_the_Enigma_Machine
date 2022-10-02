@@ -47,7 +47,15 @@ public class ClientIsReadyServlet extends HttpServlet {
                         resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
                         return;
                     }
-                    engine.setAllieReady(userNameFromSession, uboatName, true);
+                    int taskSize;
+                    try {
+                        taskSize = Integer.parseInt(req.getParameter(Constants.TASK_SIZE));
+                    } catch (NumberFormatException e) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
+                        return;
+                    }
+                    engine.setAllieReady(userNameFromSession, uboatName, true, taskSize);
                     break;
                 case AGENT:
                 case UNAUTHORIZED:

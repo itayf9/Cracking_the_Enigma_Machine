@@ -1,8 +1,8 @@
 package utils;
 
+import agent.AgentInfo;
 import battlefield.Battlefield;
 import com.google.gson.Gson;
-import constants.Client;
 import constants.Constants;
 import dto.DTOstatus;
 import engine.Engine;
@@ -26,6 +26,7 @@ public class ServletUtils {
      */
     private static final Object uboatManagerLock = new Object();
     private static final Object allieManagerLock = new Object();
+    private static final Object engineLock = new Object();
 
     public static Map<String, Battlefield> getUboatName2battleField(ServletContext servletContext) {
 
@@ -62,5 +63,14 @@ public class ServletUtils {
         Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
 
         return engine.getLoggedAlliesNamesManager();
+    }
+
+    public static Engine getEngine(ServletContext servletContext) {
+        synchronized (engineLock) {
+            if (servletContext.getAttribute(Constants.ENGINE) == null) {
+                servletContext.setAttribute(Constants.ENGINE, new EnigmaEngine());
+            }
+        }
+        return (Engine) servletContext.getAttribute(Constants.ENGINE);
     }
 }
