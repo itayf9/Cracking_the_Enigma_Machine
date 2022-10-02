@@ -179,7 +179,7 @@ public interface Engine {
 
     Map<String, Set<AgentInfo>> getLoggedAlliesNamesManager();
 
-    DTObattlefields getBattleFieldsInfo();
+    DTObattlefields getBattleFieldsInfo(String uboatUserName, boolean onlyMy);
 
     DTOloggedAgents getLoggedAgentsOfAllie(String usernameFromSession);
 

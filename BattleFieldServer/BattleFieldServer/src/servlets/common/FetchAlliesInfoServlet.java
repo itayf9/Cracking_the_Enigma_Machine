@@ -31,7 +31,7 @@ public class FetchAlliesInfoServlet extends HttpServlet {
 
         if (isValidSession) {
 
-            if (!typeOfClient.equals(Client.UBOAT)) {
+            if (!typeOfClient.equals(Client.UBOAT) && !typeOfClient.equals(Client.ALLIE)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
                 return;

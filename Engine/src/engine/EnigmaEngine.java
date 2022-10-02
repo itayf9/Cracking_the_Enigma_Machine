@@ -1127,22 +1127,39 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
-    public DTObattlefields getBattleFieldsInfo() {
+    public DTObattlefields getBattleFieldsInfo(String uboatUserName, boolean onlyMy) {
         List<BattlefieldInfo> allBattlefieldsInfo = new ArrayList<>();
 
-        for (Map.Entry<String, Battlefield> entry : uboatName2battleField.entrySet()) {
-
-            if (!entry.getValue().isBattlefieldConfigured()) {
-                continue;
+        if (onlyMy) { // fetching the info of a specific battlefield
+            Battlefield battlefield = uboatName2battleField.get(uboatUserName);
+            if (battlefield == null) {
+                return new DTObattlefields(false, Problem.MISSING_QUERY_PARAMETER, allBattlefieldsInfo);
+            } else if (!battlefield.isBattlefieldConfigured()) {
+                return new DTObattlefields(false, Problem.BATTLEFIELD_NOT_CONFIGURED, allBattlefieldsInfo);
+            } else {
+                String battlefieldName = battlefield.getBattlefieldName();
+                boolean isActive = battlefield.isActive();
+                DifficultyLevel difficultyLevel = battlefield.getDifficultyLevel();
+                int numOfRequiredAllies = battlefield.getNumOfRequiredAllies();
+                int numOfLoggedAllies = battlefield.getAllies().size();
+                allBattlefieldsInfo.add(new BattlefieldInfo(battlefieldName, uboatUserName, isActive,
+                        difficultyLevel, numOfRequiredAllies, numOfLoggedAllies));
             }
+        } else { // fetching the info of all battlefields
+            for (Map.Entry<String, Battlefield> entry : uboatName2battleField.entrySet()) {
 
-            String battlefieldName = entry.getValue().getBattlefieldName();
-            boolean isActive = entry.getValue().isActive();
-            DifficultyLevel difficultyLevel = entry.getValue().getDifficultyLevel();
-            int numOfRequiredAllies = entry.getValue().getNumOfRequiredAllies();
-            int numOfLoggedAllies = entry.getValue().getAllies().size();
-            allBattlefieldsInfo.add(new BattlefieldInfo(battlefieldName, entry.getKey(), isActive,
-                    difficultyLevel, numOfRequiredAllies, numOfLoggedAllies));
+                if (!entry.getValue().isBattlefieldConfigured()) {
+                    continue;
+                }
+
+                String battlefieldName = entry.getValue().getBattlefieldName();
+                boolean isActive = entry.getValue().isActive();
+                DifficultyLevel difficultyLevel = entry.getValue().getDifficultyLevel();
+                int numOfRequiredAllies = entry.getValue().getNumOfRequiredAllies();
+                int numOfLoggedAllies = entry.getValue().getAllies().size();
+                allBattlefieldsInfo.add(new BattlefieldInfo(battlefieldName, entry.getKey(), isActive,
+                        difficultyLevel, numOfRequiredAllies, numOfLoggedAllies));
+            }
         }
 
         return new DTObattlefields(true, Problem.NO_PROBLEM, allBattlefieldsInfo);

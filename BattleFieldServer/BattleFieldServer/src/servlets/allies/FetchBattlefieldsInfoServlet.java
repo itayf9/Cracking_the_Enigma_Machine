@@ -1,6 +1,7 @@
 package servlets.allies;
 
 import com.google.gson.Gson;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import constants.Constants;
 import dto.DTObattlefields;
 import dto.DTOstatus;
