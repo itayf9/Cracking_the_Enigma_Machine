@@ -176,7 +176,7 @@ public interface Engine {
 
     DTOagentConclusions fetchCandidatesToDisplay(String uboatName, String allieName);
 
-    Set<String> getLoggedAlliesNamesManager();
+    Map<String, Set<AgentInfo>> getLoggedAlliesNamesManager();
 
     DTObattlefields getBattleFieldsInfo();
 }

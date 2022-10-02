@@ -30,8 +30,8 @@ public class ClientIsReadyServlet extends HttpServlet {
         String uboatName = "";
 
         resp.setContentType("application/json");
-        boolean isValid = validateAuthorization(userNameFromSession, resp, gson);
-        if (isValid) {
+        boolean isValidSession = validateAuthorization(userNameFromSession, resp, gson);
+        if (isValidSession) {
             // get engine from context
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
 
@@ -41,7 +41,7 @@ public class ClientIsReadyServlet extends HttpServlet {
                     engine.setUboatReady(userNameFromSession, true);
                     break;
                 case ALLIE:
-                    uboatName = req.getParameter("uboat-name");
+                    uboatName = req.getParameter(Constants.UBOAT_NAME);
                     if (uboatName == null) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));

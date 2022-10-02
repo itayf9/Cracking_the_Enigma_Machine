@@ -23,9 +23,9 @@ public class FetchBattlefieldsInfoServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         String usernameFromSession = SessionUtils.getUsername(req);
-        boolean isValid = validateAuthorization(usernameFromSession, resp, gson);
+        boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
 
-        if (isValid) {
+        if (isValidSession) {
             DTObattlefields battlefields = engine.getBattleFieldsInfo();
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().println(gson.toJson(battlefields));

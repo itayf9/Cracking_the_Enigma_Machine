@@ -19,24 +19,37 @@ import static utils.ServletUtils.validateAuthorization;
 public class CipherTextServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        // get the text from the cody of post request 
-        String textToCipher = req.getParameter("Text");
-
-        if (textToCipher != null) {
-            textToCipher = textToCipher.toUpperCase();
-        } else {
-            // error no Text parameter
-        }
-
-        // get userName of uboat 
-        String userNameFromSession = SessionUtils.getUsername(req);
         Gson gson = new Gson();
         resp.setContentType("application/json");
-        boolean isValid = validateAuthorization(userNameFromSession, resp, gson);
-        if (isValid) {
-            // get engine from context
-            Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
+
+        // get engine from context
+        Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
+
+
+        // get userName of uboat
+        String userNameFromSession = SessionUtils.getUsername(req);
+        boolean isValidSession = validateAuthorization(userNameFromSession, resp, gson);
+        Client typeOfClient = SessionUtils.getTypeOfClient(req);
+
+        if (isValidSession) {
+
+            if (!typeOfClient.equals(Client.UBOAT)) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
+                return;
+            }
+
+            // get the text from the cody of post request
+            String textToCipher = req.getParameter("text");
+
+            if (textToCipher != null) {
+                textToCipher = textToCipher.toUpperCase();
+            } else {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
+                return;
+            }
+
             // validate the text to cipher
             if (engine.isAllWordsInDictionary(textToCipher, userNameFromSession)) {
                 DTOciphertext cipherStatus = engine.cipherInputText(textToCipher, userNameFromSession);

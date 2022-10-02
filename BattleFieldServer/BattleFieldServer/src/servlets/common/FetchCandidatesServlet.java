@@ -32,9 +32,9 @@ public class FetchCandidatesServlet extends HttpServlet {
         String usernameFromSession = SessionUtils.getUsername(req);
         Client typeOfClient = SessionUtils.getTypeOfClient(req);
 
-        boolean isValid = validateAuthorization(usernameFromSession, resp, gson);
+        boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
 
-        if (isValid) {
+        if (isValidSession) {
             switch (typeOfClient) {
                 case UBOAT:
                     DTOagentConclusions agentConclusionsStatus = engine.fetchNextCandidates(usernameFromSession);

@@ -31,10 +31,17 @@ public class LoadXMLServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String usernameFromSession = SessionUtils.getUsername(req);
+        boolean isValidSession = validateAuthorization(usernameFromSession, resp, new Gson());
+        Client typeOFClient = SessionUtils.getTypeOfClient(req);
 
-        boolean isValid = validateAuthorization(usernameFromSession, resp, new Gson());
+        if (isValidSession) {
 
-        if (isValid) {
+            if (!typeOFClient.equals(Client.UBOAT)) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
+                return;
+            }
+
             // check if username is valid/existing Uboat client
             ServletContext servletContext = getServletContext();
             Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
@@ -54,15 +61,13 @@ public class LoadXMLServlet extends HttpServlet {
 
                     if (!loadXMLstatus.isSucceed()) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        resp.getWriter().println(loadXMLstatus.getDetails().name());
                     } else { // all ok
                         resp.setStatus(HttpServletResponse.SC_OK);
-                        resp.getWriter().println("build successfully.");
                     }
 
                 } else { // more parts than 1
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    resp.getWriter().println("please upload only 1 file");
+                    resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MORE_THAN_ONE_FILE)));
                 }
             } else { // if no key in map
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

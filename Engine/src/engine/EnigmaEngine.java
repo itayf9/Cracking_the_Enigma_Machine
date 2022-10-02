@@ -1,5 +1,6 @@
 package engine;
 
+import agent.AgentInfo;
 import allie.AllieInfo;
 import battlefield.Battlefield;
 import battlefield.BattlefieldInfo;
@@ -47,7 +48,7 @@ public class EnigmaEngine implements Engine {
 
     public EnigmaEngine() {
         this.uboatName2battleField = new HashMap<>();
-        this.loggedAlliesNames = new HashSet<>();
+        this.loggedAllieName2loggedAgents = new HashMap<>();
     }
 
     /**
@@ -1144,6 +1145,30 @@ public class EnigmaEngine implements Engine {
         }
 
         return new DTObattlefields(true, Problem.NO_PROBLEM, allBattlefieldsInfo);
+    }
+
+    @Override
+    public DTOloggedAgents getLoggedAgentsOfAllie(String usernameFromSession) {
+        Set<AgentInfo> agents = this.loggedAllieName2loggedAgents.get(usernameFromSession);
+
+        return new DTOloggedAgents(true, Problem.NO_PROBLEM, agents);
+    }
+
+    @Override
+    public DTOloggedAllies fetchAllLoggedAllies() {
+        Set<String> allies = this.loggedAllieName2loggedAgents.keySet();
+
+        return new DTOloggedAllies(true, Problem.NO_PROBLEM, allies);
+    }
+
+    @Override
+    public DTOstatus assignAgentToAllie(String agentName, String allieNameToJoin, int numOfThreads, int numOfMissionsToPull) {
+        Set<AgentInfo> agents = loggedAllieName2loggedAgents.get(allieNameToJoin);
+        if (agents == null) {
+            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUNT);
+        }
+        agents.add(new AgentInfo(agentName, numOfThreads, numOfMissionsToPull));
+        return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
     @Override

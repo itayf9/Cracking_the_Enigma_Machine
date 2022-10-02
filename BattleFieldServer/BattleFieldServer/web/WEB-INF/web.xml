@@ -92,4 +92,15 @@
         <url-pattern>/fetch/battlefields</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>FetchLoggedAgentsInfoServlet</servlet-name>
+        <servlet-class>servlets.allies.FetchLoggedAgentsInfoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchLoggedAgentsInfoServlet</servlet-name>
+        <url-pattern>/fetch/agents</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>

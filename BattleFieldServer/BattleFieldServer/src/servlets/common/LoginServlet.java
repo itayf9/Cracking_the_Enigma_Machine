@@ -65,7 +65,7 @@ public class LoginServlet extends HttpServlet {
                         }
                         break;
                     case ALLIE: //
-                        Set<String> loggedAlliesNames = ServletUtils.getLoggedAlliesNames(getServletContext());
+                        Map<String, Set<AgentInfo>> loggedAlliesNames = ServletUtils.getLoggedAlliesNames(getServletContext());
 
                         synchronized (this) {
                             if (loggedAlliesNames.contains(usernameFromParameter)) {

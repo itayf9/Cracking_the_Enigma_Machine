@@ -24,9 +24,17 @@ public class FetchAlliesInfoServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         String usernameFromSession = SessionUtils.getUsername(req);
-        boolean isValid = validateAuthorization(usernameFromSession, resp, gson);
+        boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
+        Client typeOfClient = SessionUtils.getTypeOfClient(req);
 
-        if (isValid) {
+        if (isValidSession) {
+
+            if (!typeOfClient.equals(Client.UBOAT)) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
+                return;
+            }
+            
             DTOallies alliesInfoStatus = engine.getAlliesInfo(usernameFromSession);
 
             if (!alliesInfoStatus.isSucceed()) {

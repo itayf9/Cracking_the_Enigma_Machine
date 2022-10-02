@@ -49,6 +49,7 @@ public class DecryptManager {
     private BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final BooleanProperty isBruteForceActionCancelled;
     private final BooleanProperty isBruteForceActionPaused;
+    private final int UNDEFINED = 0;
 
     public DecryptManager(String allieName, Battlefield battlefield) {
         int LIMIT_NUMBER_OF_TASK = 1000;
@@ -61,6 +62,7 @@ public class DecryptManager {
         this.uboatCandidateQueue = battlefield.getUboatCandidatesQueue();
         this.totalPossibleWindowsPositions = (long) Math.pow(enigmaMachine.getAlphabet().length(), enigmaMachine.getRotorsCount());
         this.isDMReady = false;
+        this.taskSize = UNDEFINED;
 
         // maybe delete those later
         this.totalTimeDecryptProperty = new SimpleLongProperty();

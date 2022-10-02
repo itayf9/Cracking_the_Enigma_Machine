@@ -53,7 +53,7 @@ public class ServletUtils {
         return true;
     }
 
-    public static Set<String> getLoggedAlliesNames(ServletContext servletContext) {
+    public static Map<String, Set<AgentInfo>> getLoggedAlliesNames(ServletContext servletContext) {
         synchronized (allieManagerLock) {
             if (servletContext.getAttribute(Constants.ENGINE) == null) {
                 servletContext.setAttribute(Constants.ENGINE, new EnigmaEngine());
