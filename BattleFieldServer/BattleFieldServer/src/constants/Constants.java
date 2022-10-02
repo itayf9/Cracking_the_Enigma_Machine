@@ -18,5 +18,6 @@ public class Constants {
     public static final String NUM_OF_THREADS = "threads";
     public static final String MISSION_COUNT = "mission-count";
     public static final String TASK_SIZE = "task-size";
+    public static final String ONLY_MY = "only-my";
     public static String CLIENT_TYPE = "type";
 }

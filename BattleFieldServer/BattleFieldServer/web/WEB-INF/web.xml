@@ -46,7 +46,7 @@
 
     <servlet>
         <servlet-name>FetchAlliesInfoServlet</servlet-name>
-        <servlet-class>servlets.uboat.FetchAlliesInfoServlet</servlet-class>
+        <servlet-class>servlets.common.FetchAlliesInfoServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>FetchAlliesInfoServlet</servlet-name>

@@ -32,7 +32,7 @@ public class FetchLoggedAgentsInfoServlet extends HttpServlet {
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
                 return;
             }
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().println(gson.toJson(engine.getLoggedAgentsOfAllie(usernameFromSession)));
         }
     }

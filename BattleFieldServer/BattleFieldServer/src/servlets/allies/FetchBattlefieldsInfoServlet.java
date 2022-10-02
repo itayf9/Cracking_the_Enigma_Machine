@@ -3,11 +3,13 @@ package servlets.allies;
 import com.google.gson.Gson;
 import constants.Constants;
 import dto.DTObattlefields;
+import dto.DTOstatus;
 import engine.Engine;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import problem.Problem;
 import utils.SessionUtils;
 
 import java.io.IOException;
@@ -25,9 +27,23 @@ public class FetchBattlefieldsInfoServlet extends HttpServlet {
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
 
         if (isValidSession) {
-            DTObattlefields battlefields = engine.getBattleFieldsInfo();
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().println(gson.toJson(battlefields));
+            String onlyMyBattlefield = req.getParameter(Constants.ONLY_MY);
+            String uboatName = req.getParameter(Constants.UBOAT_NAME);
+
+            boolean isOnlyMyBattlefield = Boolean.parseBoolean(onlyMyBattlefield);
+
+            if (!isOnlyMyBattlefield || uboatName == null) {
+                isOnlyMyBattlefield = false;
+            }
+
+            DTObattlefields battlefieldsStatus = engine.getBattleFieldsInfo(uboatName, isOnlyMyBattlefield);
+            if (!battlefieldsStatus.isSucceed()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().println(gson.toJson(battlefieldsStatus));
+            } else {
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().println(gson.toJson(battlefieldsStatus));
+            }
         }
     }
 }
