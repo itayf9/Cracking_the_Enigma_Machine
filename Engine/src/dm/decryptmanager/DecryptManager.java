@@ -4,7 +4,7 @@ import agent.AgentInfo;
 import battlefield.Battlefield;
 import candidate.AgentConclusion;
 import dm.candidatecollector.CandidatesCollector;
-import dm.dictionary.Dictionary;
+import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
 import dm.taskproducer.TaskProducer;
 import javafx.beans.property.BooleanProperty;

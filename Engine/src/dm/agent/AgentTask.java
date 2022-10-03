@@ -3,7 +3,7 @@ package dm.agent;
 import candidate.AgentConclusion;
 import candidate.Candidate;
 import dm.decryptmanager.DecryptManager;
-import dm.dictionary.Dictionary;
+import dictionary.Dictionary;
 import javafx.beans.property.BooleanProperty;
 import machine.Machine;
 

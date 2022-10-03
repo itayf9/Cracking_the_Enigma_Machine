@@ -3,7 +3,7 @@ package battlefield;
 import agent.AgentInfo;
 import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
-import dm.dictionary.Dictionary;
+import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
 import machine.Machine;
 

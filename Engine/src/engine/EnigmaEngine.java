@@ -6,7 +6,7 @@ import battlefield.Battlefield;
 import battlefield.BattlefieldInfo;
 import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
-import dm.dictionary.Dictionary;
+import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
 import dto.*;
 import javafx.util.Pair;
@@ -1148,11 +1148,12 @@ public class EnigmaEngine implements Engine {
                 String battlefieldName = battlefield.getBattlefieldName();
                 boolean isActive = battlefield.isActive();
                 DifficultyLevel difficultyLevel = battlefield.getDifficultyLevel();
+                Dictionary dictionary = battlefield.getDictionary();
                 int numOfRequiredAllies = battlefield.getNumOfRequiredAllies();
                 int numOfLoggedAllies = battlefield.getAllies().size();
                 String textToDecipher = battlefield.getTextToDecipher();
                 allBattlefieldsInfo.add(new BattlefieldInfo(battlefieldName, uboatUserName, isActive,
-                        difficultyLevel, numOfRequiredAllies, numOfLoggedAllies, textToDecipher));
+                        difficultyLevel, dictionary, numOfRequiredAllies, numOfLoggedAllies, textToDecipher));
             }
         } else { // fetching the info of all battlefields
             for (Map.Entry<String, Battlefield> entry : uboatName2battleField.entrySet()) {
@@ -1164,12 +1165,13 @@ public class EnigmaEngine implements Engine {
                 String battlefieldName = entry.getValue().getBattlefieldName();
                 boolean isActive = entry.getValue().isActive();
                 DifficultyLevel difficultyLevel = entry.getValue().getDifficultyLevel();
+                Dictionary dictionary = entry.getValue().getDictionary();
                 int numOfRequiredAllies = entry.getValue().getNumOfRequiredAllies();
                 int numOfLoggedAllies = entry.getValue().getAllies().size();
                 String textToDecipher = entry.getValue().getTextToDecipher();
 
                 allBattlefieldsInfo.add(new BattlefieldInfo(battlefieldName, entry.getKey(), isActive,
-                        difficultyLevel, numOfRequiredAllies, numOfLoggedAllies, textToDecipher));
+                        difficultyLevel, dictionary, numOfRequiredAllies, numOfLoggedAllies, textToDecipher));
             }
         }
 

@@ -1,4 +1,4 @@
-package dm.dictionary;
+package dictionary;
 
 import java.util.HashSet;
 import java.util.Set;
