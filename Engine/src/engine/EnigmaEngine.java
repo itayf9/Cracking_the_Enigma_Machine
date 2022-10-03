@@ -43,12 +43,14 @@ public class EnigmaEngine implements Engine {
 
     private final Map<String, Battlefield> uboatName2battleField;
     private final Map<String, Set<AgentInfo>> loggedAllieName2loggedAgents;
+    private final Map<String, AgentInfo> agentName2agentInfo;
 
     public static String JAXB_XML_PACKAGE_NAME = "machine.jaxb.generated";
 
     public EnigmaEngine() {
         this.uboatName2battleField = new HashMap<>();
         this.loggedAllieName2loggedAgents = new HashMap<>();
+        this.agentName2agentInfo = new HashMap<>();
     }
 
     /**
@@ -663,6 +665,13 @@ public class EnigmaEngine implements Engine {
             problem = Problem.CIPHER_INPUT_EMPTY_STRING;
             return new DTOciphertext(false, problem, outputText);
         }
+
+        // check battlefield existence
+        Battlefield battlefield = uboatName2battleField.get(userName);
+        if (battlefield == null) {
+            return new DTOciphertext(false, Problem.UBOAT_NAME_DOESNT_EXIST, "");
+        }
+
         // check valid ABC
         problem = isAllCharsInAlphabet(inputText, userName);
 
@@ -677,6 +686,9 @@ public class EnigmaEngine implements Engine {
                 Pair<Pair<String, String>, Long> inputTextToOutputTextToTimeElapsed = new Pair<>(new Pair<>(inputText, outputText), timeElapsed);
 
                 machineRecords.get(machineRecords.size() - 1).getCipherHistory().add(inputTextToOutputTextToTimeElapsed);
+
+                // sets the text to decipher in the battlefield
+                battlefield.setTextToDecipher(outputText);
             } else {
                 // cipher in char-by-char mode
                 long startMeasureTime = System.nanoTime();
@@ -1023,11 +1035,6 @@ public class EnigmaEngine implements Engine {
         return uboatName2battleField.get(userName).getDictionary().isAllWordsInDictionary(text);
     }
 
-    @Override
-    public void addDecryptManager(String alliesName, String uboatUserName) {
-        uboatName2battleField.get(uboatUserName).addDecryptManager(alliesName);
-    }
-
     public Map<String, Battlefield> getBattleFieldManager() {
         return uboatName2battleField;
     }
@@ -1181,11 +1188,16 @@ public class EnigmaEngine implements Engine {
 
     @Override
     public DTOstatus assignAgentToAllie(String agentName, String allieNameToJoin, int numOfThreads, int numOfMissionsToPull) {
-        Set<AgentInfo> agents = loggedAllieName2loggedAgents.get(allieNameToJoin);
-        if (agents == null) {
-            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUNT);
+        Set<AgentInfo> agentsOfAllie = loggedAllieName2loggedAgents.get(allieNameToJoin);
+        if (agentsOfAllie == null) {
+            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND);
         }
-        agents.add(new AgentInfo(agentName, numOfThreads, numOfMissionsToPull));
+
+        AgentInfo agentInfoToInsert = new AgentInfo(agentName, numOfThreads, numOfMissionsToPull);
+
+        agentsOfAllie.add(agentInfoToInsert);
+        agentName2agentInfo.put(agentName, agentInfoToInsert);
+
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 

@@ -1,9 +1,10 @@
 package dm.candidatecollector;
 
+import agent.AgentInfo;
 import candidate.AgentConclusion;
-import candidate.Candidate;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
+import jobprogress.JobProgressInfo;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -17,6 +18,8 @@ public class CandidatesCollector implements Runnable {
     private LongProperty totalTimeDecryptProperty;
     private final BooleanProperty isBruteForceActionPaused;
     private final BooleanProperty isBruteForceActionCancelled;
+    private JobProgressInfo jobProgressInfo;
+    private Map<String, AgentInfo> agentName2agentInfo;
 
     private long pauseMeasuring;
 
@@ -29,6 +32,8 @@ public class CandidatesCollector implements Runnable {
         this.totalTimeDecryptProperty = totalTimeDecryptProperty;
         this.isBruteForceActionPaused = isBruteForceActionPaused;
         this.isBruteForceActionCancelled = isBruteForceActionCancelled;
+        this.jobProgressInfo = jobProgressInfo;
+        this.agentName2agentInfo = agentName2agentInfo;
         this.pauseMeasuring = 0;
         this.allConclusions = allConclusions;
     }
@@ -44,27 +49,17 @@ public class CandidatesCollector implements Runnable {
 //        uiAdapter.updateTotalConfigsPossible(totalPossibleConfigurations);
 //        uiAdapter.updateTaskStatus("Searching...");
 
-        while (scannedConfigsCount < totalPossibleConfigurations && !isBruteForceActionCancelled.getValue()) {
-            AgentConclusion queueTakenCandidates;
+        while (scannedConfigsCount < totalPossibleConfigurations && !isBruteForceActionCancelled.get()) {
+            AgentConclusion currentConclusion;
             try {
-                queueTakenCandidates = agentReportsOfCandidateQueue.take();
+                currentConclusion = agentReportsOfCandidateQueue.take();
                 tasksCounter++;
                 totalTasksProcessTime += queueTakenCandidates.getTimeTakenToDoTask();
                 averageTasksProcessTime = (double) totalTasksProcessTime / (double) tasksCounter;
-//                uiAdapter.updateAverageTasksProcessTime(averageTasksProcessTime);
-                scannedConfigsCount += queueTakenCandidates.getNumOfScannedConfigurations();
-
-//                uiAdapter.updateProgressBar((double) scannedConfigsCount / (double) totalPossibleConfigurations);
-//                uiAdapter.updateTotalProcessedConfigurations(queueTakenCandidates.getNumOfScannedConfigurations());
+                scannedConfigsCount += currentConclusion.getNumOfScannedConfigurations();
 
             } catch (InterruptedException e) {
-                if (scannedConfigsCount >= totalPossibleConfigurations) {
-                    return;
-                } else {
-//                    uiAdapter.updateTaskStatus("Stopped...");
-//                    uiAdapter.updateTotalTimeDecrypt(System.nanoTime() - totalTimeDecryptProperty.getValue() + pauseMeasuring);
-                    return;
-                }
+                return;
             }
 
             if (queueTakenCandidates.getCandidates().size() != 0) {
@@ -73,44 +68,11 @@ public class CandidatesCollector implements Runnable {
 
                 // pushing the conclusion back to the uboat queue
                 try {
-                    uboatCandidateQueue.put(queueTakenCandidates);
+                    uboatCandidateQueue.put(currentConclusion);
                 } catch (InterruptedException ignored) {
 
                 }
-
-//                for (Candidate candidate : queueTakenCandidates.getCandidates()) {
-//                    uiAdapter.addNewCandidate(candidate);
-//                }
             }
-
-//            if (isBruteForceActionPaused.getValue()) {
-//                synchronized (isBruteForceActionPaused) {
-//                    while (isBruteForceActionPaused.getValue()) {
-//                        try {
-//                            uiAdapter.updateTaskStatus("Paused...");
-//                            pauseMeasuring += System.nanoTime() - totalTimeDecryptProperty.getValue();
-//                            isBruteForceActionPaused.wait();
-//                        } catch (InterruptedException ignored) {
-//                            uiAdapter.updateTaskStatus("Stopped...");
-//                            uiAdapter.updateTotalTimeDecrypt(System.nanoTime() - totalTimeDecryptProperty.getValue() + pauseMeasuring);
-//                            return;
-//                        }
-//                    }
-//                    uiAdapter.updateTaskStatus("Searching...");
-//                    totalTimeDecryptProperty.set(System.nanoTime());
-//                }
-//            }
-
-//            try {
-//                Thread.sleep(25);
-//            } catch (InterruptedException ignored) {
-//                uiAdapter.updateTaskStatus("Stopped...");
-//                uiAdapter.updateTotalTimeDecrypt(System.nanoTime() - totalTimeDecryptProperty.getValue() + pauseMeasuring);
-//                return;
-//            }
         }
-//        uiAdapter.updateTaskActiveStatus(false);
-//        uiAdapter.updateTaskStatus("Done...");
-//        uiAdapter.updateTotalTimeDecrypt(System.nanoTime() - totalTimeDecryptProperty.getValue() + pauseMeasuring);
     }
 }

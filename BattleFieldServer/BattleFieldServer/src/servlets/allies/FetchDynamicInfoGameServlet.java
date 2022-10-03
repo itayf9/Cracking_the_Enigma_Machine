@@ -1,9 +1,9 @@
 package servlets.allies;
 
-import battlefield.Battlefield;
 import com.google.gson.Gson;
 import constants.Client;
 import constants.Constants;
+import dto.DTOdynamicContestInfo;
 import dto.DTOstatus;
 import engine.Engine;
 import jakarta.servlet.ServletException;
@@ -17,43 +17,38 @@ import java.io.IOException;
 
 import static utils.ServletUtils.validateAuthorization;
 
-public class SubscribeToBattlefieldServlet extends HttpServlet {
+public class FetchDynamicInfoGameServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
-        Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
-
         resp.setContentType("application/json");
-
         String usernameFromSession = SessionUtils.getUsername(req);
         Client typeOfClient = SessionUtils.getTypeOfClient(req);
-
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
 
         if (isValidSession) {
+            Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
             if (!typeOfClient.equals(Client.ALLIE)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
                 return;
             }
 
-
-            String uboatNameToRegister = req.getParameter(Constants.UBOAT_NAME);
-            if (uboatNameToRegister == null) {
+            String uboatName = req.getParameter(Constants.UBOAT_NAME);
+            if (uboatName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
                 return;
             }
 
-            Battlefield wantedBattlefield = engine.getBattleFieldManager().get(uboatNameToRegister);
-            if (wantedBattlefield == null) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST)));
-                return;
-            }
 
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().println(gson.toJson(new DTOstatus(true, Problem.NO_PROBLEM)));
+            DTOdynamicContestInfo dynamicContestInfo = engine.getDynamicContestInfo(uboatName, usernameFromSession);
+            if (!dynamicContestInfo.isSucceed()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            } else {
+                resp.setStatus(HttpServletResponse.SC_OK);
+            }
+            resp.getWriter().println(gson.toJson(dynamicContestInfo));
         }
     }
 }

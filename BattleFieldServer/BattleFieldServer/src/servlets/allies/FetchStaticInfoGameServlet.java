@@ -3,6 +3,7 @@ package servlets.allies;
 import com.google.gson.Gson;
 import constants.Client;
 import constants.Constants;
+import dto.DTOstaticContestInfo;
 import dto.DTOstatus;
 import engine.Engine;
 import jakarta.servlet.ServletException;
@@ -33,8 +34,19 @@ public class FetchStaticInfoGameServlet extends HttpServlet {
                 return;
             }
 
-
+            String uboatName = req.getParameter(Constants.UBOAT_NAME);
+            if (uboatName == null) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
+                return;
+            }
+            DTOstaticContestInfo staticContestInfo = engine.getStaticContestInfo(uboatName);
+            if (!staticContestInfo.isSucceed()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            } else {
+                resp.setStatus(HttpServletResponse.SC_OK);
+            }
+            resp.getWriter().println(gson.toJson(staticContestInfo));
         }
-
     }
 }

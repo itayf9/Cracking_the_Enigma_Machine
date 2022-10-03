@@ -1,7 +1,5 @@
 package candidate;
 
-import candidate.Candidate;
-
 import java.util.List;
 
 public class AgentConclusion {
@@ -10,10 +8,12 @@ public class AgentConclusion {
     private int numOfScannedConfigurations;
     private long timeTakenToDoTask;
 
-    public AgentConclusion(List<Candidate> candidates, int numOfScannedConfigurations, long timeTakenToDoTask) {
+    public AgentConclusion(List<Candidate> candidates, int numOfScannedConfigurations, long timeTakenToDoTask, String agentName, String allieName) {
         this.candidates = candidates;
         this.numOfScannedConfigurations = numOfScannedConfigurations;
         this.timeTakenToDoTask = timeTakenToDoTask;
+        this.agentName = agentName;
+        this.allieName = allieName;
     }
 
     public List<Candidate> getCandidates() {

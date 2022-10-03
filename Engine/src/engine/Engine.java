@@ -161,8 +161,6 @@ public interface Engine {
 
     boolean isAllWordsInDictionary(String textToCipher, String userName);
 
-    void addDecryptManager(String alliesName, String uboatUserName);
-
     Map<String, Battlefield> getBattleFieldManager();
 
     DTOallies getAlliesInfo(String uboatUserName);

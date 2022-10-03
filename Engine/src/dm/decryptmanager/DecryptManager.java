@@ -10,11 +10,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
+import jobprogress.JobProgressInfo;
 import machine.Machine;
 import ui.adapter.UIAdapter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -39,12 +39,14 @@ public class DecryptManager {
     private String allieName;
     private boolean isDMReady;
     private int numOfAgents;
+    private JobProgressInfo jobProgressInfo;
     private BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final BooleanProperty isBruteForceActionCancelled;
     private final BooleanProperty isBruteForceActionPaused;
     private final int UNDEFINED = 0;
 
-    public DecryptManager(String allieName, Battlefield battlefield) {
+    public DecryptManager(String allieName, Battlefield battlefield, Map<String, AgentInfo> agentName2agentInfo) {
+        this.agentName2agentInfo = agentName2agentInfo;
         final int LIMIT_NUMBER_OF_TASK = 1000;
         this.waitingTasksBlockingQueue = new LinkedBlockingQueue<>(LIMIT_NUMBER_OF_TASK);
         this.dictionary = battlefield.getDictionary();
@@ -56,6 +58,9 @@ public class DecryptManager {
         this.totalPossibleWindowsPositions = (long) Math.pow(enigmaMachine.getAlphabet().length(), enigmaMachine.getRotorsCount());
         this.isDMReady = false;
         this.taskSize = UNDEFINED;
+        this.jobProgressInfo = new JobProgressInfo();
+        this.textToDecipher = battlefield.getTextToDecipher();
+
 
         // maybe delete those later
         this.totalTimeDecryptProperty = new SimpleLongProperty();
@@ -102,10 +107,9 @@ public class DecryptManager {
     /**
      * initiates the thread needed to start the brute force process
      *
-     * @param textToDecipher the text that agents trying to cipher
-     * @param uiAdapter      ui adapter to update the ui
+     * @param uiAdapter ui adapter to update the ui
      */
-    public void startDecrypt(String textToDecipher, UIAdapter uiAdapter) {
+    public void startDecrypt(UIAdapter uiAdapter) {
 
         this.agentReportsOfCandidatesQueue = new LinkedBlockingQueue<>();
         isBruteForceActionCancelled.set(false);
@@ -117,7 +121,8 @@ public class DecryptManager {
 
         // setting up the collector of the candidates
         collector = new Thread(new CandidatesCollector(agentReportsOfCandidatesQueue, totalPossibleConfigurations,
-                totalTimeDecryptProperty, isBruteForceActionCancelledProperty(), isBruteForceActionPaused, uboatCandidateQueue, allConclusions));
+                totalTimeDecryptProperty, isBruteForceActionCancelledProperty(), isBruteForceActionPaused, uboatCandidateQueue,
+                allConclusions, jobProgressInfo, agentName2agentInfo));
         collector.setName("THE_COLLECTOR");
 
         // starting the thread pool
@@ -137,7 +142,7 @@ public class DecryptManager {
         });*/
 
         // setting a thread that produces tasks
-        taskProducer = new Thread(new TaskProducer(this, taskSize, difficultyLevel, textToDecipher));
+        taskProducer = new Thread(new TaskProducer(this));
         taskProducer.setName("TASK_PRODUCER");
 
         // trigger the threads
@@ -241,5 +246,21 @@ public class DecryptManager {
 
     public boolean getDMReady() {
         return isDMReady;
+    }
+
+    public JobProgressInfo getJobProgressInfo() {
+        return jobProgressInfo;
+    }
+
+    public List<AgentConclusion> getAllConclusions() {
+        return allConclusions;
+    }
+
+    public DifficultyLevel getDifficultyLevel() {
+        return difficultyLevel;
+    }
+
+    public String getTextToDecipher() {
+        return textToDecipher;
     }
 }

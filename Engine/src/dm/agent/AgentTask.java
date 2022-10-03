@@ -4,6 +4,7 @@ import candidate.AgentConclusion;
 import candidate.Candidate;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;
+import javafx.beans.property.BooleanProperty;
 import machine.Machine;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class AgentTask implements Runnable {
 
     private Machine machine;
     private final int taskSize;
-    private final Dictionary dictionary;
+    private Dictionary dictionary;
     private final String textToDecipher;
     private final List<Integer> rotorsIDs;
     private final List<Integer> windowOffsets;
@@ -28,14 +29,14 @@ public class AgentTask implements Runnable {
                      Machine copyOfMachine, DecryptManager dm, int taskSize, String textToDecipher, Dictionary dictionary,
                      BlockingQueue<AgentConclusion> candidatesQueue) {
         this.machine = copyOfMachine;
-        this.taskSize = taskSize;
-        this.textToDecipher = textToDecipher;
-        this.dictionary = dictionary;
+        this.taskSize = dm.getTaskSize();
+        this.textToDecipher = dm.getTextToDecipher();
         this.windowOffsets = windowOffsets;
         this.rotorsIDs = rotorsIDs;
         this.inUseReflectorID = inUseReflectorID;
-        this.dm = dm;
-        this.candidatesQueue = candidatesQueue;
+        this.agentName = "";
+        this.allieName = dm.getAllieName();
+
     }
 
     private String decipherLine(String LineToDecipher) {
@@ -67,6 +68,32 @@ public class AgentTask implements Runnable {
                 break;
             }
         }
+    }
+
+    public void setAgentName(String agentName) {
+        this.agentName = agentName;
+    }
+
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
+    }
+
+    public void setIsIsBruteForceActionCancelledProperty(boolean isIsBruteForceActionCancelledProperty) {
+        this.isIsBruteForceActionCancelledProperty.set(isIsBruteForceActionCancelledProperty);
+    }
+
+    public void setCandidatesQueue(BlockingQueue<AgentConclusion> candidatesQueue) {
+        this.candidatesQueue = candidatesQueue;
+    }
+
+
+    private boolean AllWindowsOffsetsAtBeginning() {
+        for (Integer offset : windowOffsets) {
+            if (offset != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -132,7 +159,7 @@ public class AgentTask implements Runnable {
             if (candidates.size() > 0) {
             }
             long timeElapsed = System.nanoTime() - startMeasureTime;
-            candidatesQueue.put(new AgentConclusion(candidates, numOfConfigScanned, timeElapsed));
+            candidatesQueue.put(new AgentConclusion(candidates, numOfConfigScanned, timeElapsed, agentName, allieName));
         } catch (InterruptedException ignored) {
 
         }

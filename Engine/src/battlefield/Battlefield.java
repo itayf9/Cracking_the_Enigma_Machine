@@ -22,6 +22,7 @@ public class Battlefield {
     private BlockingQueue<AgentConclusion> uboatCandidatesQueue;
     private boolean isUboatReady;
     private boolean isActive;
+    private String textToDecipher;
     private boolean isBattlefieldConfigured;
 
     public Battlefield() {
@@ -97,8 +98,8 @@ public class Battlefield {
         this.difficultyLevel = difficultyLevel;
     }
 
-    public void addDecryptManager(String allieName) {
-        allies.add(new DecryptManager(allieName, this));
+    public void addDecryptManager(String allieName, Map<String, AgentInfo> agentName2agentInfo) {
+        allies.add(new DecryptManager(allieName, this, agentName2agentInfo));
     }
 
     public boolean isActive() {
@@ -111,5 +112,13 @@ public class Battlefield {
 
     public void setBattlefieldConfigured(boolean battlefieldConfigured) {
         isBattlefieldConfigured = battlefieldConfigured;
+    }
+
+    public String getTextToDecipher() {
+        return textToDecipher;
+    }
+
+    public void setTextToDecipher(String textToDecipher) {
+        this.textToDecipher = textToDecipher;
     }
 }
