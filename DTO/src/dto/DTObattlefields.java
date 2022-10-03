@@ -1,6 +1,6 @@
 package dto;
 
-import battlefield.BattlefieldInfo;
+import info.battlefield.BattlefieldInfo;
 import problem.Problem;
 
 import java.util.List;

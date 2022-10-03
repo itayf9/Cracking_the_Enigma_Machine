@@ -1,7 +1,7 @@
 package dto;
 
-import allie.AllieInfo;
-import battlefield.BattlefieldInfo;
+import info.allie.AllieInfo;
+import info.battlefield.BattlefieldInfo;
 import problem.Problem;
 
 import java.util.List;

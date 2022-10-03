@@ -1,11 +1,8 @@
 package engine;
 
-import agent.AgentInfo;
-import allie.AllieInfo;
+import info.agent.AgentInfo;
 import battlefield.Battlefield;
-import difficultylevel.DifficultyLevel;
 import dto.*;
-import ui.adapter.UIAdapter;
 
 import java.util.Map;
 import java.util.Set;

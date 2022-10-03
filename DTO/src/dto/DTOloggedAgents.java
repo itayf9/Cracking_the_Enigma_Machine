@@ -1,6 +1,6 @@
 package dto;
 
-import agent.AgentInfo;
+import info.agent.AgentInfo;
 import problem.Problem;
 
 import java.util.Set;

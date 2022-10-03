@@ -2,7 +2,6 @@ package servlets.agent;
 
 import com.google.gson.Gson;
 import constants.Constants;
-import dto.DTOloggedAgents;
 import dto.DTOloggedAllies;
 import dto.DTOstatus;
 import engine.Engine;
@@ -22,7 +21,7 @@ public class FetchAllLoggedAlliesServlet extends HttpServlet {
         Gson gson = new Gson();
         String clientTypeStr = req.getParameter(Constants.CLIENT_TYPE);
 
-        if (clientTypeStr != null && clientTypeStr.equals("agent")) {
+        if (clientTypeStr != null && clientTypeStr.equals("info/agent")) {
 
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
             if (engine != null) { // if engine exist we send all logged allies info

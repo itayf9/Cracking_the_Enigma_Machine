@@ -1,13 +1,11 @@
 package battlefield;
 
-import agent.AgentInfo;
-import allie.AllieInfo;
+import info.agent.AgentInfo;
+import info.allie.AllieInfo;
 import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
 import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import machine.Machine;
 
 import java.util.HashSet;

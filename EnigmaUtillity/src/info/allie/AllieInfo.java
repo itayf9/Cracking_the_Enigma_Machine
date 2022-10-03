@@ -1,4 +1,4 @@
-package allie;
+package info.allie;
 
 public class AllieInfo {
 

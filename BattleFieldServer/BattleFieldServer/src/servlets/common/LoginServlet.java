@@ -1,6 +1,6 @@
 package servlets.common;
 
-import agent.AgentInfo;
+import info.agent.AgentInfo;
 import battlefield.Battlefield;
 import com.google.gson.Gson;
 import constants.Client;

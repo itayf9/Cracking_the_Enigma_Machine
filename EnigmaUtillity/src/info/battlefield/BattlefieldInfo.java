@@ -1,4 +1,4 @@
-package battlefield;
+package info.battlefield;
 
 import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;

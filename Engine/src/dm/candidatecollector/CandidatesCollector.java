@@ -1,6 +1,6 @@
 package dm.candidatecollector;
 
-import agent.AgentInfo;
+import info.agent.AgentInfo;
 import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
 import javafx.beans.property.BooleanProperty;

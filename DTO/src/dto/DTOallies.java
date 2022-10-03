@@ -1,6 +1,6 @@
 package dto;
 
-import allie.AllieInfo;
+import info.allie.AllieInfo;
 import problem.Problem;
 
 import java.util.List;

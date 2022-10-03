@@ -1,6 +1,6 @@
 package dm.decryptmanager;
 
-import agent.AgentInfo;
+import info.agent.AgentInfo;
 import battlefield.Battlefield;
 import candidate.AgentConclusion;
 import dm.candidatecollector.CandidatesCollector;
@@ -13,7 +13,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
 import jobprogress.JobProgressInfo;
 import machine.Machine;
-import ui.adapter.UIAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package dto;
 
-import agent.AgentInfo;
+import info.agent.AgentInfo;
 import candidate.AgentConclusion;
 import jobprogress.JobProgressInfo;
 import problem.Problem;

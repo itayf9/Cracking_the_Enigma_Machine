@@ -12,9 +12,9 @@ public enum Client {
         switch (client) {
             case "uboat":
                 return UBOAT;
-            case "allie":
+            case "info/allie":
                 return ALLIE;
-            case "agent":
+            case "info/agent":
                 return AGENT;
             default:
                 return UNAUTHORIZED;

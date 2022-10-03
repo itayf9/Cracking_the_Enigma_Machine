@@ -1,9 +1,9 @@
 package engine;
 
-import agent.AgentInfo;
-import allie.AllieInfo;
+import info.agent.AgentInfo;
+import info.allie.AllieInfo;
 import battlefield.Battlefield;
-import battlefield.BattlefieldInfo;
+import info.battlefield.BattlefieldInfo;
 import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
 import dictionary.Dictionary;
@@ -19,7 +19,6 @@ import machine.component.Rotor;
 import machine.jaxb.generated.*;
 import problem.Problem;
 import statistics.StatisticRecord;
-import ui.adapter.UIAdapter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

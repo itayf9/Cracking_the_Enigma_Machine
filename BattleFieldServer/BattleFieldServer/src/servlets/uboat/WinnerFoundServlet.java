@@ -1,13 +1,11 @@
 package servlets.uboat;
 
-import allie.AllieInfo;
 import battlefield.Battlefield;
 import com.google.gson.Gson;
 
 import constants.Client;
 import constants.Constants;
 import dm.decryptmanager.DecryptManager;
-import dto.DTOallies;
 import dto.DTOstatus;
 import engine.Engine;
 import jakarta.servlet.ServletException;
