@@ -23,9 +23,6 @@ public class CipherTextServlet extends HttpServlet {
         Gson gson = new Gson();
         resp.setContentType("application/json");
 
-
-
-
         // get userName of uboat
         String userNameFromSession = SessionUtils.getUsername(req);
         boolean isValidSession = validateAuthorization(userNameFromSession, resp, gson);
@@ -67,5 +64,4 @@ public class CipherTextServlet extends HttpServlet {
             }
         }
     }
-
 }

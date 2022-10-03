@@ -1,6 +1,7 @@
 package engine;
 
 import agent.AgentInfo;
+import allie.AllieInfo;
 import battlefield.Battlefield;
 import difficultylevel.DifficultyLevel;
 import dto.*;
@@ -128,14 +129,11 @@ public interface Engine {
      */
     void doneCurrentCipherProcess();
 
+
     /**
-     * @param uiAdapter       object that updates the ui element
-     * @param textToDecipher  the text to decipher
-     * @param difficultyLevel the difficulty level
-     * @param taskSize        size of task
+     * @param uboatUserName uboat name
      */
-    void startBruteForceProcess(UIAdapter uiAdapter, String textToDecipher, DifficultyLevel difficultyLevel,
-                                int taskSize, int numOfSelectedAgents, String userName);
+    void startBruteForceProcess(String uboatUserName);
 
     /**
      * get all words in dictionary

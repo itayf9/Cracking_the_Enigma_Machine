@@ -140,12 +140,10 @@ public class EnigmaEngine implements Engine {
             if (details != Problem.NO_PROBLEM) {
                 isSucceeded = false;
             }
-
         } catch (JAXBException e) {
             details = Problem.JAXB_ERROR;
             isSucceeded = false;
         }
-
         // resets the statistics when loading a new machine
         if (isSucceeded) {
             machineRecords.clear();
@@ -351,6 +349,10 @@ public class EnigmaEngine implements Engine {
      * @return a Problem describing the problem that occurred. if valid, returns Problem.NO_PROBLEM
      */
     private Problem buildEnigmaFromCTEEnigma(CTEEnigma cteEnigma, String userName) {
+
+        if (uboatName2battleField.get(userName).isBattlefieldConfigured()) {
+            return Problem.BATTLEFIELD_ALREADY_CONFIGURED;
+        }
 
         Problem problem = validateCTEEnigma(cteEnigma);
         if (problem != Problem.NO_PROBLEM) {
@@ -950,21 +952,35 @@ public class EnigmaEngine implements Engine {
      * @param uboatUserName uboat name
      */
     @Override
-    public void startBruteForceProcess(UIAdapter uiAdapter, String textToDecipher, DifficultyLevel difficultyLevel,
-                                       int taskSize, int numOfSelectedAgents, String userName) {
+    public void startBruteForceProcess(String uboatUserName) {
 
-        Set<DecryptManager> allies = uboatName2battleField.get(userName).getAllies();
-
-        // allies.for each DM need to start produce tasks
-        // decryptManager.startDecrypt(taskSize, numOfSelectedAgents, textToDecipher, difficultyLevel, uiAdapter);
+        // assuming battlefield is configured because all participants are ready.
+        // participants can be ready only for configured battlefields.
+        Battlefield battlefield = uboatName2battleField.get(uboatUserName);
+        battlefield.setActive(true);
+        Set<DecryptManager> allies = battlefield.getAllies();
+        allies.forEach(DecryptManager::startDecrypt);
     }
 
+    /**
+     * stop all BLOCKED THREADS from executing
+     *
+     * @param userName the username of the uboat, to find the battlefield and the agents that are registered to it.
+     * @return DTOstatus that represents the status of the stop action
+     */
     @Override
-    public void stopBruteForceProcess(String userName) {
-        Set<DecryptManager> allies = uboatName2battleField.get(userName).getAllies();
+    public DTOstatus stopBruteForceProcess(String userName) {
+        Battlefield battlefield = uboatName2battleField.get(userName);
 
-        // allies.for each DM need to stop all tasks
-        // decryptManager.stopDecrypt();
+        if (battlefield == null) {
+            return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
+        }
+        battlefield.setActive(false); // stopping collector and producer from executing anymore
+
+        // take care of all BLOCKED collector and producer
+        Set<DecryptManager> allies = battlefield.getAllies();
+        allies.forEach(DecryptManager::stopDecrypt);
+        return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
     @Override
@@ -982,7 +998,6 @@ public class EnigmaEngine implements Engine {
         // allies.for each DM need to stop all tasks
         // decryptManager.resumeDecrypt();
     }
-
 
     /**
      * @return the machine's alphabet as a String
@@ -1155,7 +1170,7 @@ public class EnigmaEngine implements Engine {
                 return new DTObattlefields(false, Problem.BATTLEFIELD_NOT_CONFIGURED, allBattlefieldsInfo);
             } else {
                 String battlefieldName = battlefield.getBattlefieldName();
-                boolean isActive = battlefield.isActive();
+                boolean isActive = battlefield.isActive().get();
                 DifficultyLevel difficultyLevel = battlefield.getDifficultyLevel();
                 Dictionary dictionary = battlefield.getDictionary();
                 int numOfRequiredAllies = battlefield.getNumOfRequiredAllies();
@@ -1172,7 +1187,7 @@ public class EnigmaEngine implements Engine {
                 }
 
                 String battlefieldName = entry.getValue().getBattlefieldName();
-                boolean isActive = entry.getValue().isActive();
+                boolean isActive = entry.getValue().isActive().get();
                 DifficultyLevel difficultyLevel = entry.getValue().getDifficultyLevel();
                 Dictionary dictionary = entry.getValue().getDictionary();
                 int numOfRequiredAllies = entry.getValue().getNumOfRequiredAllies();
@@ -1282,6 +1297,44 @@ public class EnigmaEngine implements Engine {
 
         battlefield.addDecryptManager(alliesName, agentName2agentInfo); // cant fail..
         return new DTOstatus(true, Problem.NO_PROBLEM);
+    }
+
+    @Override
+    public DTOstatus setAllieWinnerInfo(String uboatName, String allieName) {
+        Battlefield battlefield = uboatName2battleField.get(uboatName);
+        if (battlefield == null) {
+            return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
+        }
+
+        Set<DecryptManager> allies = battlefield.getAllies();
+
+        Optional<DecryptManager> allieMaybe = allies.stream().filter(decryptManager -> decryptManager.getAllieName().equals(allieName)).findFirst();
+        if (!allieMaybe.isPresent()) {
+            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND);
+        }
+
+        DecryptManager allie = allieMaybe.get();
+
+        int numOfAgents = allie.getNumOfAgents();
+        int taskSize = allie.getTaskSize();
+        AllieInfo winnerAllieInfo = new AllieInfo(allieName, numOfAgents, taskSize);
+
+        battlefield.setWinnerAllieInfo(winnerAllieInfo);
+
+        return new DTOstatus(true, Problem.NO_PROBLEM);
+
+    }
+
+    @Override
+    public DTOallies getAllieWinnerInfo(String usernameFromSession, String allieName) {
+
+        List<AllieInfo> allieInfos = new ArrayList<>();
+        Battlefield battlefield = uboatName2battleField.get(usernameFromSession);
+        if (battlefield == null) {
+            return new DTOallies(false, Problem.UBOAT_NAME_DOESNT_EXIST, allieInfos);
+        }
+        allieInfos.add(battlefield.getWinnerAllieInfo());
+        return new DTOallies(true, Problem.NO_PROBLEM, allieInfos);
     }
 
     @Override

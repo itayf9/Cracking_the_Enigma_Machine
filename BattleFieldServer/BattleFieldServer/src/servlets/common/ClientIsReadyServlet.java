@@ -20,7 +20,7 @@ import static utils.ServletUtils.validateAuthorization;
 
 public class ClientIsReadyServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
 
         // get userName of uboat
@@ -32,8 +32,16 @@ public class ClientIsReadyServlet extends HttpServlet {
         resp.setContentType("application/json");
         boolean isValidSession = validateAuthorization(userNameFromSession, resp, gson);
         if (isValidSession) {
+
+
             // get engine from context
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
+
+            if (!typeOfClient.equals(Client.UBOAT) && !typeOfClient.equals(Client.ALLIE)) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
+                return;
+            }
 
             switch (typeOfClient) {
                 case UBOAT:
@@ -57,14 +65,9 @@ public class ClientIsReadyServlet extends HttpServlet {
                     }
                     engine.setAllieReady(userNameFromSession, uboatName, true, taskSize);
                     break;
-                case AGENT:
-                case UNAUTHORIZED:
-                    resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
-                    return;
             }
-            if (engine.allClientsReady(uboatName)) {
-                // redirect to Start contest Servlet..
+            if (engine.allClientsReady(uboatName) && engine.getIsUboatReady(uboatName)) {
+                engine.startBruteForceProcess(uboatName);
             }
 
 

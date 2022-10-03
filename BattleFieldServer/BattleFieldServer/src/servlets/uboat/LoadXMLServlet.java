@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import problem.Problem;
-import utils.ServletUtils;
 import utils.SessionUtils;
 
 import java.io.IOException;
@@ -49,30 +48,25 @@ public class LoadXMLServlet extends HttpServlet {
             ServletContext servletContext = getServletContext();
             Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
             Map<String, Battlefield> userName2battlefield = engine.getBattleFieldManager();
+            if (userName2battlefield.containsKey(usernameFromSession) && req.getParts().size() == 1) { // username exists and exactly 1 file was sent
 
-            if (userName2battlefield.containsKey(usernameFromSession)) {
-                if (req.getParts().size() == 1) {
-                    Collection<Part> parts = req.getParts();
+                Collection<Part> parts = req.getParts();
+                String fileContent = "";
 
-                    String fileContent = "";
-                    for (Part file : parts) {
-                        //to write the content of the file to a string
-                        fileContent = readFromInputStream(file.getInputStream());
-                    }
-
-                    DTOstatus loadXMLstatus = engine.buildMachineFromXmlFile(fileContent, usernameFromSession);
-
-                    if (!loadXMLstatus.isSucceed()) {
-                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    } else { // all ok
-                        resp.setStatus(HttpServletResponse.SC_OK);
-                    }
-                    resp.getWriter().println(gson.toJson(loadXMLstatus));
-
-                } else { // more parts than 1
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MORE_THAN_ONE_FILE)));
+                for (Part file : parts) {
+                    //to write the content of the file to a string
+                    fileContent = readFromInputStream(file.getInputStream());
                 }
+                DTOstatus loadStatus = engine.buildMachineFromXmlFile(fileContent, usernameFromSession);
+                if (!loadStatus.isSucceed()) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                } else { // all ok
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                }
+                resp.getWriter().println(gson.toJson(loadStatus));
+            } else if (userName2battlefield.containsKey(usernameFromSession)) { // more parts than 1
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MORE_THAN_ONE_FILE)));
             } else { // if no key in map
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));

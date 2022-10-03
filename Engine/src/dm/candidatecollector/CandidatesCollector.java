@@ -2,6 +2,7 @@ package dm.candidatecollector;
 
 import agent.AgentInfo;
 import candidate.AgentConclusion;
+import dm.decryptmanager.DecryptManager;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 import jobprogress.JobProgressInfo;
@@ -9,6 +10,7 @@ import jobprogress.JobProgressInfo;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CandidatesCollector implements Runnable {
 
@@ -16,9 +18,9 @@ public class CandidatesCollector implements Runnable {
     BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final long totalPossibleConfigurations;
     private final List<AgentConclusion> allConclusions;
-    private LongProperty totalTimeDecryptProperty;
+    private final LongProperty totalTimeDecryptProperty;
     private final BooleanProperty isBruteForceActionPaused;
-    private final BooleanProperty isBruteForceActionCancelled;
+    private final AtomicBoolean isBruteForceActionCancelled;
     private JobProgressInfo jobProgressInfo;
     private Map<String, AgentInfo> agentName2agentInfo;
 
@@ -34,7 +36,7 @@ public class CandidatesCollector implements Runnable {
         this.jobProgressInfo = dm.getJobProgressInfo();
         this.agentName2agentInfo = dm.getAgentName2agentInfo();
         this.pauseMeasuring = 0;
-        this.allConclusions = allConclusions;
+        this.allConclusions = dm.getAllConclusions();
     }
 
     @Override

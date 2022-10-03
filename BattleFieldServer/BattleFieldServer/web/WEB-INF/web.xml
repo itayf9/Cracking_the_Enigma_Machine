@@ -120,5 +120,23 @@
         <url-pattern>/fetch/contest/dynamic</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>FetchAllLoggedAlliesServlet</servlet-name>
+        <servlet-class>servlets.agent.FetchAllLoggedAlliesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchAllLoggedAlliesServlet</servlet-name>
+        <url-pattern>/fetch/allies-names</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>WinnerFoundServlet</servlet-name>
+        <servlet-class>servlets.uboat.WinnerFoundServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WinnerFoundServlet</servlet-name>
+        <url-pattern>/fetch/contest/status</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>

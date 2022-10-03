@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static utill.Utility.factorial;
 import static utill.Utility.nCk;
@@ -32,21 +33,20 @@ public class DecryptManager {
     private Thread taskProducer;
     private final Machine enigmaMachine;
     private final Dictionary dictionary;
-    private DifficultyLevel difficultyLevel;
+    private final DifficultyLevel difficultyLevel;
     private long totalPossibleConfigurations;
     private final long totalPossibleWindowsPositions;
     private LongProperty totalTimeDecryptProperty;
     private final BlockingQueue<Runnable> waitingTasksBlockingQueue;
     private int taskSize;
-    private String allieName;
+    private final String allieName;
     private boolean isDMReady;
-    private int numOfAgents;
-    private JobProgressInfo jobProgressInfo;
-    private BlockingQueue<AgentConclusion> uboatCandidateQueue;
-    private final BooleanProperty isBruteForceActionCancelled;
+    private final int numOfAgents;
+    private final JobProgressInfo jobProgressInfo;
+    private final BlockingQueue<AgentConclusion> uboatCandidateQueue;
+    private final AtomicBoolean isBruteForceActionCancelled;
     private final BooleanProperty isBruteForceActionPaused;
-    private final int UNDEFINED = 0;
-    private Map<String, AgentInfo> agentName2agentInfo;
+    private final Map<String, AgentInfo> agentName2agentInfo;
     private String textToDecipher;
 
     public DecryptManager(String allieName, Battlefield battlefield, Map<String, AgentInfo> agentName2agentInfo) {
@@ -61,14 +61,14 @@ public class DecryptManager {
         this.uboatCandidateQueue = battlefield.getUboatCandidatesQueue();
         this.totalPossibleWindowsPositions = (long) Math.pow(enigmaMachine.getAlphabet().length(), enigmaMachine.getRotorsCount());
         this.isDMReady = false;
+        int UNDEFINED = 0;
         this.taskSize = UNDEFINED;
         this.jobProgressInfo = new JobProgressInfo();
         this.textToDecipher = battlefield.getTextToDecipher();
-
+        this.isBruteForceActionCancelled = battlefield.isActive();
 
         // maybe delete those later
         this.totalTimeDecryptProperty = new SimpleLongProperty();
-        this.isBruteForceActionCancelled = new SimpleBooleanProperty(false);
         this.isBruteForceActionPaused = new SimpleBooleanProperty(false);
     }
 
@@ -95,10 +95,10 @@ public class DecryptManager {
      * cancel the bruteForce execution
      */
     public void stopDecrypt() {
-        isBruteForceActionPaused.setValue(false);
+        // isBruteForceActionPaused.setValue(false);
 
         // stopping the thread pool
-        isBruteForceActionCancelled.set(true);
+        // isBruteForceActionCancelled.set(true);
         // threadExecutor.shutdownNow();
 
         //  stopping the collector Task / Thread
@@ -122,9 +122,7 @@ public class DecryptManager {
         setTotalConfigs(difficultyLevel);
 
         // setting up the collector of the candidates
-        collector = new Thread(new CandidatesCollector(agentReportsOfCandidatesQueue, totalPossibleConfigurations,
-                totalTimeDecryptProperty, isBruteForceActionCancelledProperty(), isBruteForceActionPaused, uboatCandidateQueue,
-                allConclusions, jobProgressInfo, agentName2agentInfo));
+        collector = new Thread(new CandidatesCollector(this));
         collector.setName("THE_COLLECTOR");
 
         // starting the thread pool
@@ -206,12 +204,12 @@ public class DecryptManager {
         return isBruteForceActionCancelled.get();
     }
 
-    public BooleanProperty isBruteForceActionCancelledProperty() {
+    public AtomicBoolean isBruteForceActionCancelledProperty() {
         return isBruteForceActionCancelled;
     }
 
-    public boolean getIsBruteForceActionPaused() {
-        return isBruteForceActionPaused.get();
+    public BooleanProperty getIsBruteForceActionPaused() {
+        return isBruteForceActionPaused;
     }
 
     public BooleanProperty isBruteForceActionPausedProperty() {

@@ -2,6 +2,7 @@ package servlets.common;
 
 import com.google.gson.Gson;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import constants.Client;
 import constants.Constants;
 import dto.DTObattlefields;
 import dto.DTOstatus;
@@ -25,7 +26,7 @@ public class FetchBattlefieldsInfoServlet extends HttpServlet {
 
         String usernameFromSession = SessionUtils.getUsername(req);
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
-
+        Client typeOfClient = SessionUtils.getTypeOfClient(req);
         if (isValidSession) {
             if (!typeOfClient.equals(Client.AGENT) && !typeOfClient.equals(Client.ALLIE)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -37,7 +38,6 @@ public class FetchBattlefieldsInfoServlet extends HttpServlet {
 
             String onlyMyBattlefield = req.getParameter(Constants.ONLY_MY);
             String uboatName = req.getParameter(Constants.UBOAT_NAME);
-
             boolean isOnlyMyBattlefield = Boolean.parseBoolean(onlyMyBattlefield);
 
             if (!isOnlyMyBattlefield || uboatName == null) {
@@ -47,11 +47,10 @@ public class FetchBattlefieldsInfoServlet extends HttpServlet {
             DTObattlefields battlefieldsStatus = engine.getBattleFieldsInfo(uboatName, isOnlyMyBattlefield);
             if (!battlefieldsStatus.isSucceed()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println(gson.toJson(battlefieldsStatus));
             } else {
                 resp.setStatus(HttpServletResponse.SC_OK);
-                resp.getWriter().println(gson.toJson(battlefieldsStatus));
             }
+            resp.getWriter().println(gson.toJson(battlefieldsStatus));
         }
     }
 }
