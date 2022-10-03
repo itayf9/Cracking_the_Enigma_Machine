@@ -23,8 +23,7 @@ public class CipherTextServlet extends HttpServlet {
         Gson gson = new Gson();
         resp.setContentType("application/json");
 
-        // get engine from context
-        Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
+
 
 
         // get userName of uboat
@@ -34,6 +33,8 @@ public class CipherTextServlet extends HttpServlet {
 
         if (isValidSession) {
 
+            // get engine from context
+            Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
             if (!typeOfClient.equals(Client.UBOAT)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
@@ -57,7 +58,6 @@ public class CipherTextServlet extends HttpServlet {
                 if (!cipherStatus.isSucceed()) {
                     // can happen? when putting words manual which has chars not in alphabet
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
                 } else {
                     resp.setStatus(HttpServletResponse.SC_OK);
                 }

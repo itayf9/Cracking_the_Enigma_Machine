@@ -1,6 +1,5 @@
 package servlets.allies;
 
-import battlefield.Battlefield;
 import com.google.gson.Gson;
 import constants.Client;
 import constants.Constants;
@@ -21,16 +20,13 @@ public class SubscribeToBattlefieldServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
-        Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
-
         resp.setContentType("application/json");
-
         String usernameFromSession = SessionUtils.getUsername(req);
         Client typeOfClient = SessionUtils.getTypeOfClient(req);
-
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
 
         if (isValidSession) {
+            Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
             if (!typeOfClient.equals(Client.ALLIE)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
@@ -45,15 +41,15 @@ public class SubscribeToBattlefieldServlet extends HttpServlet {
                 return;
             }
 
-            Battlefield wantedBattlefield = engine.getBattleFieldManager().get(uboatNameToRegister);
-            if (wantedBattlefield == null) {
+            DTOstatus assignStatus = engine.assignAllieToBattlefield(usernameFromSession, uboatNameToRegister);
+            if (!assignStatus.isSucceed()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST)));
+                resp.getWriter().println(gson.toJson(assignStatus));
                 return;
             }
 
             resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().println(gson.toJson(new DTOstatus(true, Problem.NO_PROBLEM)));
+            resp.getWriter().println(gson.toJson(assignStatus));
         }
     }
 }

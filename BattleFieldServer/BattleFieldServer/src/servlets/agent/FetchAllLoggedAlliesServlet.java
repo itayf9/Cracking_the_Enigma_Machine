@@ -25,7 +25,7 @@ public class FetchAllLoggedAlliesServlet extends HttpServlet {
         if (clientTypeStr != null && clientTypeStr.equals("agent")) {
 
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
-            if (engine != null) {
+            if (engine != null) { // if engine exist we send all logged allies info
                 resp.getWriter().println(gson.toJson(engine.fetchAllLoggedAllies()));
             } else { // when there is no engine it means there are no logged allies and the returned value is an empty set
                 resp.getWriter().println(gson.toJson(new DTOloggedAllies(true, Problem.NO_PROBLEM, new HashSet<>())));

@@ -26,7 +26,7 @@ public class ServletUtils {
      */
     private static final Object uboatManagerLock = new Object();
     private static final Object allieManagerLock = new Object();
-    private static final Object engineLock = new Object();
+    private static final Object agentManagerLock = new Object();
 
     public static Map<String, Battlefield> getUboatName2battleField(ServletContext servletContext) {
 

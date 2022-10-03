@@ -7,6 +7,7 @@ import javafx.beans.property.LongProperty;
 import jobprogress.JobProgressInfo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 public class CandidatesCollector implements Runnable {
@@ -25,7 +26,8 @@ public class CandidatesCollector implements Runnable {
 
     public CandidatesCollector(BlockingQueue<AgentConclusion> agentReportsOfCandidateQueue, long totalPossibleConfigurations,
                                LongProperty totalTimeDecryptProperty, BooleanProperty isBruteForceActionCancelled,
-                               BooleanProperty isBruteForceActionPaused, BlockingQueue<AgentConclusion> uboatCandidateQueue, List<AgentConclusion> allConclusions) {
+                               BooleanProperty isBruteForceActionPaused, BlockingQueue<AgentConclusion> uboatCandidateQueue,
+                               List<AgentConclusion> allConclusions, JobProgressInfo jobProgressInfo, Map<String, AgentInfo> agentName2agentInfo) {
         this.agentReportsOfCandidateQueue = agentReportsOfCandidateQueue;
         this.uboatCandidateQueue = uboatCandidateQueue;
         this.totalPossibleConfigurations = totalPossibleConfigurations;
@@ -46,15 +48,13 @@ public class CandidatesCollector implements Runnable {
         long tasksCounter = 0;
         double averageTasksProcessTime;
 
-//        uiAdapter.updateTotalConfigsPossible(totalPossibleConfigurations);
-//        uiAdapter.updateTaskStatus("Searching...");
-
         while (scannedConfigsCount < totalPossibleConfigurations && !isBruteForceActionCancelled.get()) {
             AgentConclusion currentConclusion;
             try {
                 currentConclusion = agentReportsOfCandidateQueue.take();
                 tasksCounter++;
-                totalTasksProcessTime += queueTakenCandidates.getTimeTakenToDoTask();
+                jobProgressInfo.setNumberOfTasksDone(tasksCounter);
+                totalTasksProcessTime += currentConclusion.getTimeTakenToDoTask();
                 averageTasksProcessTime = (double) totalTasksProcessTime / (double) tasksCounter;
                 scannedConfigsCount += currentConclusion.getNumOfScannedConfigurations();
 
@@ -62,9 +62,10 @@ public class CandidatesCollector implements Runnable {
                 return;
             }
 
-            if (queueTakenCandidates.getCandidates().size() != 0) {
-
-                allConclusions.add(queueTakenCandidates);
+            if (currentConclusion.getCandidates().size() != 0) {
+                String agentName = currentConclusion.getAgentName();
+                agentName2agentInfo.get(agentName).updateNumOfFoundCandidate(currentConclusion.getCandidates().size());
+                allConclusions.add(currentConclusion);
 
                 // pushing the conclusion back to the uboat queue
                 try {

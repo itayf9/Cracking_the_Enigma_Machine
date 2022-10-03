@@ -20,13 +20,14 @@ public class FetchLoggedAgentsInfoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
-        Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
         resp.setContentType("application/json");
         String usernameFromSession = SessionUtils.getUsername(req);
         Client typeOfClient = SessionUtils.getTypeOfClient(req);
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
 
         if (isValidSession) {
+            Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
+
             if (!typeOfClient.equals(Client.ALLIE)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));

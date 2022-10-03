@@ -15,19 +15,21 @@ import static utill.Utility.decimalToRoman;
 
 public class AgentTask implements Runnable {
 
-    private Machine machine;
+    private final Machine machine;
     private final int taskSize;
     private Dictionary dictionary;
     private final String textToDecipher;
     private final List<Integer> rotorsIDs;
     private final List<Integer> windowOffsets;
     private final int inUseReflectorID;
-    private final DecryptManager dm;
-    private final BlockingQueue<AgentConclusion> candidatesQueue;
+    private BlockingQueue<AgentConclusion> candidatesQueue;
 
-    public AgentTask(List<Integer> rotorsIDs, List<Integer> windowOffsets, int inUseReflectorID,
-                     Machine copyOfMachine, DecryptManager dm, int taskSize, String textToDecipher, Dictionary dictionary,
-                     BlockingQueue<AgentConclusion> candidatesQueue) {
+    private BooleanProperty isIsBruteForceActionCancelledProperty;
+    private String agentName;
+
+    private String allieName;
+
+    public AgentTask(List<Integer> rotorsIDs, List<Integer> windowOffsets, int inUseReflectorID, Machine copyOfMachine, DecryptManager dm) {
         this.machine = copyOfMachine;
         this.taskSize = dm.getTaskSize();
         this.textToDecipher = dm.getTextToDecipher();
@@ -103,7 +105,7 @@ public class AgentTask implements Runnable {
         List<Candidate> candidates = new ArrayList<>();
         int numOfConfigScanned = 0;
 
-        for (int i = 0; i < taskSize && !dm.isIsBruteForceActionCancelled(); i++) {
+        for (int i = 0; i < taskSize && !isIsBruteForceActionCancelledProperty.get(); i++) {
             numOfConfigScanned++;
 
             // sets machine to the next configuration
@@ -127,7 +129,7 @@ public class AgentTask implements Runnable {
                 // fetch the current thread's name
                 String processedByAgentName = Thread.currentThread().getName();
 
-                Candidate nextCandidate = new Candidate(decipherResult, rotorsIDs, windowCharacters, nextCandidateReflectorSymbol, notchPositions, processedByAgentName);
+                Candidate nextCandidate = new Candidate(decipherResult, rotorsIDs, windowCharacters, nextCandidateReflectorSymbol, notchPositions);
                 candidates.add(nextCandidate);
             }
 
@@ -136,41 +138,17 @@ public class AgentTask implements Runnable {
             // moves to the next configuration
             advanceWindow();
 
-
+            // if we reached the end of the offset then we do not go any further
             if (AllWindowsOffsetsAtBeginning()) {
                 break;
-            }
-
-            if (dm.getIsBruteForceActionPaused()) {
-
-                // need to bring back that boolean property
-                synchronized (dm.isBruteForceActionPausedProperty()) {
-                    while (dm.getIsBruteForceActionPaused()) {
-                        try {
-                            dm.isBruteForceActionPausedProperty().wait();
-                        } catch (InterruptedException ignored) {
-                        }
-                    }
-                }
             }
         }
         // send conclusion to DM
         try {
-            if (candidates.size() > 0) {
-            }
             long timeElapsed = System.nanoTime() - startMeasureTime;
             candidatesQueue.put(new AgentConclusion(candidates, numOfConfigScanned, timeElapsed, agentName, allieName));
         } catch (InterruptedException ignored) {
 
         }
-    }
-
-    private boolean AllWindowsOffsetsAtBeginning() {
-        for (Integer offset : windowOffsets) {
-            if (offset != 0) {
-                return false;
-            }
-        }
-        return true;
     }
 }

@@ -10,6 +10,7 @@ import dm.dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
 import dto.*;
 import javafx.util.Pair;
+import jobprogress.JobProgressInfo;
 import machine.EnigmaMachine;
 
 import machine.Machine;
@@ -1149,8 +1150,9 @@ public class EnigmaEngine implements Engine {
                 DifficultyLevel difficultyLevel = battlefield.getDifficultyLevel();
                 int numOfRequiredAllies = battlefield.getNumOfRequiredAllies();
                 int numOfLoggedAllies = battlefield.getAllies().size();
+                String textToDecipher = battlefield.getTextToDecipher();
                 allBattlefieldsInfo.add(new BattlefieldInfo(battlefieldName, uboatUserName, isActive,
-                        difficultyLevel, numOfRequiredAllies, numOfLoggedAllies));
+                        difficultyLevel, numOfRequiredAllies, numOfLoggedAllies, textToDecipher));
             }
         } else { // fetching the info of all battlefields
             for (Map.Entry<String, Battlefield> entry : uboatName2battleField.entrySet()) {
@@ -1164,8 +1166,10 @@ public class EnigmaEngine implements Engine {
                 DifficultyLevel difficultyLevel = entry.getValue().getDifficultyLevel();
                 int numOfRequiredAllies = entry.getValue().getNumOfRequiredAllies();
                 int numOfLoggedAllies = entry.getValue().getAllies().size();
+                String textToDecipher = entry.getValue().getTextToDecipher();
+
                 allBattlefieldsInfo.add(new BattlefieldInfo(battlefieldName, entry.getKey(), isActive,
-                        difficultyLevel, numOfRequiredAllies, numOfLoggedAllies));
+                        difficultyLevel, numOfRequiredAllies, numOfLoggedAllies, textToDecipher));
             }
         }
 
@@ -1198,6 +1202,74 @@ public class EnigmaEngine implements Engine {
         agentsOfAllie.add(agentInfoToInsert);
         agentName2agentInfo.put(agentName, agentInfoToInsert);
 
+        return new DTOstatus(true, Problem.NO_PROBLEM);
+    }
+
+    @Override
+    public DTOstaticContestInfo getStaticContestInfo(String uboatName) {
+        DTObattlefields battlefields = getBattleFieldsInfo(uboatName, true);
+        DTOallies allies = getAlliesInfo(uboatName);
+
+        List<AllieInfo> alliesList = new ArrayList<>();
+        BattlefieldInfo battlefieldInfo = new BattlefieldInfo();
+
+        if (!battlefields.isSucceed() || !allies.isSucceed()) {
+            // uboat Name probably is trash
+            return new DTOstaticContestInfo(false, Problem.UBOAT_NAME_DOESNT_EXIST, alliesList, battlefieldInfo);
+        } else {
+            alliesList = allies.getAllies();
+            battlefieldInfo = battlefields.getAllBattlefields().get(0); // assuming there is only 1 battlefield
+
+            return new DTOstaticContestInfo(true, Problem.NO_PROBLEM, alliesList, battlefieldInfo);
+        }
+    }
+
+    @Override
+    public Map<String, AgentInfo> getLoggedAgentNamesManager() {
+        return agentName2agentInfo;
+    }
+
+    @Override
+    public DTOdynamicContestInfo getDynamicContestInfo(String uboatName, String allieName) {
+        Set<AgentInfo> agentsInfo = new HashSet<>();
+        List<AgentConclusion> allConclusions = new ArrayList<>();
+        JobProgressInfo jobProgressInfo = new JobProgressInfo();
+
+        Battlefield battlefield = uboatName2battleField.get(uboatName);
+        if (battlefield == null) {
+            return new DTOdynamicContestInfo(false, Problem.UBOAT_NAME_DOESNT_EXIST, agentsInfo, allConclusions, jobProgressInfo);
+        }
+
+        Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream()
+                .filter(decryptManager -> decryptManager.getAllieName().equals(allieName)).findFirst();
+
+        if (!allieMaybe.isPresent()) {
+            return new DTOdynamicContestInfo(false, Problem.ALLIE_NAME_NOT_FOUND, agentsInfo, allConclusions, jobProgressInfo);
+        }
+
+        DecryptManager allie = allieMaybe.get();
+
+        // fetch my agents info
+        agentsInfo = loggedAllieName2loggedAgents.get(allieName);
+
+        // fetch all candidates
+        allConclusions = allie.getAllConclusions();
+
+        // fetch overall progress
+        jobProgressInfo = allie.getJobProgressInfo();
+
+        return new DTOdynamicContestInfo(true, Problem.NO_PROBLEM, agentsInfo, allConclusions, jobProgressInfo);
+    }
+
+    @Override
+    public DTOstatus assignAllieToBattlefield(String alliesName, String uboatUserName) {
+        Battlefield battlefield = uboatName2battleField.get(uboatUserName);
+
+        if (battlefield == null) {
+            return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
+        }
+
+        battlefield.addDecryptManager(alliesName, agentName2agentInfo); // cant fail..
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 

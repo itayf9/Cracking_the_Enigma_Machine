@@ -21,13 +21,14 @@ public class FetchBattlefieldsInfoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
-        Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
         resp.setContentType("application/json");
 
         String usernameFromSession = SessionUtils.getUsername(req);
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
 
         if (isValidSession) {
+            Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
+
             String onlyMyBattlefield = req.getParameter(Constants.ONLY_MY);
             String uboatName = req.getParameter(Constants.UBOAT_NAME);
 

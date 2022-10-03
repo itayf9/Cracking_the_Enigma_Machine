@@ -25,7 +25,6 @@ public class FetchCandidatesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
-        Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
 
         resp.setContentType("application/json");
 
@@ -35,6 +34,8 @@ public class FetchCandidatesServlet extends HttpServlet {
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
 
         if (isValidSession) {
+            Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
+
             switch (typeOfClient) {
                 case UBOAT:
                     DTOagentConclusions agentConclusionsStatus = engine.fetchNextCandidates(usernameFromSession);

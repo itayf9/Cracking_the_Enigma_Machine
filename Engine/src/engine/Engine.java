@@ -184,4 +184,12 @@ public interface Engine {
     DTOloggedAllies fetchAllLoggedAllies();
 
     DTOstatus assignAgentToAllie(String agentName, String allieNameToJoin, int numOfThreads, int numOfMissionsToPull);
+
+    DTOstaticContestInfo getStaticContestInfo(String uboatName);
+
+    Map<String, AgentInfo> getLoggedAgentNamesManager();
+
+    DTOdynamicContestInfo getDynamicContestInfo(String uboatName, String usernameFromSession);
+
+    DTOstatus assignAllieToBattlefield(String alliesName, String uboatUserName);
 }

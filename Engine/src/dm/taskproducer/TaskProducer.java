@@ -20,21 +20,21 @@ public class TaskProducer implements Runnable {
     private final int taskSize;
     private final DifficultyLevel difficulty;
     private final String textToDecipher;
-    private final Dictionary dictionary;
     private final BlockingQueue<AgentConclusion> candidatesQueue;
     private final DecryptManager dm;
+    private int taskCounter;
 
 
-    public TaskProducer(DecryptManager dm, int taskSize, DifficultyLevel difficultyLevel, String textToDecipher) {
+    public TaskProducer(DecryptManager dm) {
         this.dm = dm;
         this.agentTaskQueue = dm.getWaitingTasksBlockingQueue();
         this.machine = dm.getEnigmaMachine();
         this.alphabet = machine.getAlphabet();
-        this.taskSize = taskSize;
-        this.difficulty = difficultyLevel;
-        this.textToDecipher = textToDecipher;
-        this.dictionary = dm.getDictionary();
+        this.taskSize = dm.getTaskSize();
+        this.difficulty = dm.getDifficultyLevel();
+        this.textToDecipher = dm.getTextToDecipher();
         this.candidatesQueue = dm.getCandidatesQueue();
+        this.taskCounter = 0;
     }
 
     public void run() {
@@ -91,8 +91,9 @@ public class TaskProducer implements Runnable {
 
         // set up first agentTask
         try {
-            agentTaskQueue.put(new AgentTask(rotorsIDs, new ArrayList<>(currentWindowsOffsets), reflectorID,
-                    copyOfMachine, dm, taskSize, textToDecipher, dictionary, candidatesQueue));
+            taskCounter++;
+            dm.getJobProgressInfo().setNumberOfTasksProduced(taskCounter);
+            agentTaskQueue.put(new AgentTask(rotorsIDs, new ArrayList<>(currentWindowsOffsets), reflectorID, copyOfMachine, dm));
         } catch (InterruptedException ignored) {
             //throw new RuntimeException(e);
         }
@@ -114,8 +115,9 @@ public class TaskProducer implements Runnable {
             currentWindowsOffsets.addAll(nextWindowsOffsets);
 
             try {
-                agentTaskQueue.put(new AgentTask(rotorsIDs, nextWindowsOffsets, reflectorID,
-                        copyOfMachine, dm, taskSize, textToDecipher, dictionary, candidatesQueue));
+                taskCounter++;
+                dm.getJobProgressInfo().setNumberOfTasksProduced(taskCounter);
+                agentTaskQueue.put(new AgentTask(rotorsIDs, nextWindowsOffsets, reflectorID, copyOfMachine, dm));
             } catch (InterruptedException e) {
                 // producer Stopped so need to die
                 return;
@@ -123,6 +125,13 @@ public class TaskProducer implements Runnable {
         }
     }
 
+    /**
+     * get all combination of N over K (nCk)
+     *
+     * @param n
+     * @param k
+     * @return all combination
+     */
     public List<List<Integer>> generateCombinations(int n, int k) {
         ArrayList<Integer> combination = new ArrayList<>();
 
@@ -153,6 +162,12 @@ public class TaskProducer implements Runnable {
         return combinations;
     }
 
+    /**
+     * get list of permutations
+     *
+     * @param nums init list
+     * @return
+     */
     public List<List<Integer>> permute(List<Integer> nums) {
         List<List<Integer>> results = new ArrayList<>();
         if (nums == null || nums.size() == 0) {
@@ -198,6 +213,12 @@ public class TaskProducer implements Runnable {
         return nextWindowsOffsets;
     }
 
+    /**
+     * rotate the window one step
+     *
+     * @param windowOffset
+     * @return
+     */
     private int rotateWindow(Integer windowOffset) {
         return (windowOffset + 1 + alphabet.length()) % alphabet.length();
     }

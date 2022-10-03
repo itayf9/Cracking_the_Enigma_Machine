@@ -98,13 +98,25 @@ public class LoginServlet extends HttpServlet {
 
                         if (agentName != null && allieNameToJoin != null && numOfThreads > 0 && numOfThreads < 5 && numOfMissionsToPull > 0) {
 
-                            Engine engine = ServletUtils.getEngine(getServletContext());
-                            DTOstatus assignStatus = engine.assignAgentToAllie(agentName, allieNameToJoin, numOfThreads, numOfMissionsToPull);
-                            if (!assignStatus.isSucceed()) {
-                                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                                response.getWriter().println(gson.toJson(assignStatus));
-                                return;
+                            Map<String, AgentInfo> agentInfoMap = ServletUtils.getLoggedAgentNames(getServletContext());
+
+                            synchronized (this) {
+                                if (agentInfoMap.containsKey(usernameFromParameter)) {
+                                    // the username already exists
+                                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                    response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.USERNAME_ALREADY_EXIST)));
+                                    return;
+                                }
+
+                                Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
+                                DTOstatus assignStatus = engine.assignAgentToAllie(agentName, allieNameToJoin, numOfThreads, numOfMissionsToPull);
+                                if (!assignStatus.isSucceed()) {
+                                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                                    response.getWriter().println(gson.toJson(assignStatus));
+                                    return;
+                                }
                             }
+
                         }
                         break;
                 }
@@ -115,11 +127,11 @@ public class LoginServlet extends HttpServlet {
 
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().println(gson.toJson(new DTOstatus(true, Problem.NO_PROBLEM)));
+
             }
         } else {
             //user is already logged in
             response.setStatus(HttpServletResponse.SC_OK);
         }
     }
-
 }

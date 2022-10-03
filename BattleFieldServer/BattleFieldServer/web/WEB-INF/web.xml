@@ -102,5 +102,23 @@
         <url-pattern>/fetch/agents</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>FetchStaticInfoGameServlet</servlet-name>
+        <servlet-class>servlets.allies.FetchStaticInfoGameServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchStaticInfoGameServlet</servlet-name>
+        <url-pattern>/fetch/contest/static</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>FetchDynamicInfoGameServlet</servlet-name>
+        <servlet-class>servlets.allies.FetchDynamicInfoGameServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchDynamicInfoGameServlet</servlet-name>
+        <url-pattern>/fetch/contest/dynamic</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>

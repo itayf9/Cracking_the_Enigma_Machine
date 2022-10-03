@@ -1,5 +1,6 @@
 package dm.decryptmanager;
 
+import agent.AgentInfo;
 import battlefield.Battlefield;
 import candidate.AgentConclusion;
 import dm.candidatecollector.CandidatesCollector;
@@ -16,6 +17,7 @@ import ui.adapter.UIAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
 
@@ -44,6 +46,8 @@ public class DecryptManager {
     private final BooleanProperty isBruteForceActionCancelled;
     private final BooleanProperty isBruteForceActionPaused;
     private final int UNDEFINED = 0;
+    private Map<String, AgentInfo> agentName2agentInfo;
+    private String textToDecipher;
 
     public DecryptManager(String allieName, Battlefield battlefield, Map<String, AgentInfo> agentName2agentInfo) {
         this.agentName2agentInfo = agentName2agentInfo;
@@ -238,6 +242,7 @@ public class DecryptManager {
 
     public void setTaskSize(int taskSize) {
         this.taskSize = taskSize;
+        jobProgressInfo.setTotalAmountOfTasks(totalPossibleConfigurations / taskSize);
     }
 
     public void setDMReady(boolean isReady) {

@@ -1,5 +1,6 @@
 package battlefield;
 
+import agent.AgentInfo;
 import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
 import dm.dictionary.Dictionary;
@@ -7,6 +8,7 @@ import difficultylevel.DifficultyLevel;
 import machine.Machine;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
@@ -32,6 +34,7 @@ public class Battlefield {
         this.isActive = false;
         this.difficultyLevel = DifficultyLevel.UNDEFINED;
         this.isBattlefieldConfigured = false;
+        this.textToDecipher = "";
     }
 
     public Machine getMachine() {

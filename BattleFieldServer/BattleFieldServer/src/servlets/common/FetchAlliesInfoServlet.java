@@ -22,7 +22,6 @@ public class FetchAlliesInfoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
-        Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
         resp.setContentType("application/json");
 
         String usernameFromSession = SessionUtils.getUsername(req);
@@ -30,6 +29,7 @@ public class FetchAlliesInfoServlet extends HttpServlet {
         Client typeOfClient = SessionUtils.getTypeOfClient(req);
 
         if (isValidSession) {
+            Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
 
             if (!typeOfClient.equals(Client.UBOAT) && !typeOfClient.equals(Client.ALLIE)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
