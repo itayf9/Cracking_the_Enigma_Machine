@@ -345,6 +345,7 @@ public class EnigmaEngine implements Engine {
 
     /**
      * converts all data from jaxb classes to the normal classes.
+     * a machine can be built only once per username.
      *
      * @param cteEnigma the engine generated from jaxb
      * @return a Problem describing the problem that occurred. if valid, returns Problem.NO_PROBLEM
@@ -945,6 +946,9 @@ public class EnigmaEngine implements Engine {
         return uboatName2battleField.get(userName).getMachine().isConfigured();
     }
 
+    /**
+     * @param uboatUserName uboat name
+     */
     @Override
     public void startBruteForceProcess(UIAdapter uiAdapter, String textToDecipher, DifficultyLevel difficultyLevel,
                                        int taskSize, int numOfSelectedAgents, String userName) {
@@ -1057,6 +1061,11 @@ public class EnigmaEngine implements Engine {
         }
 
         return new DTOallies(isSucceeded, details, alliesInfo);
+    }
+
+    @Override
+    public boolean getIsUboatReady(String uboatName) {
+        return uboatName2battleField.get(uboatName).getIsUboatReady();
     }
 
     @Override

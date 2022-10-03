@@ -85,7 +85,7 @@
 
     <servlet>
         <servlet-name>FetchBattlefieldsInfoServlet</servlet-name>
-        <servlet-class>servlets.allies.FetchBattlefieldsInfoServlet</servlet-class>
+        <servlet-class>servlets.common.FetchBattlefieldsInfoServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>FetchBattlefieldsInfoServlet</servlet-name>

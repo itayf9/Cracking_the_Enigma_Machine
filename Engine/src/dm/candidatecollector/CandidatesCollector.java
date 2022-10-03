@@ -24,18 +24,15 @@ public class CandidatesCollector implements Runnable {
 
     private long pauseMeasuring;
 
-    public CandidatesCollector(BlockingQueue<AgentConclusion> agentReportsOfCandidateQueue, long totalPossibleConfigurations,
-                               LongProperty totalTimeDecryptProperty, BooleanProperty isBruteForceActionCancelled,
-                               BooleanProperty isBruteForceActionPaused, BlockingQueue<AgentConclusion> uboatCandidateQueue,
-                               List<AgentConclusion> allConclusions, JobProgressInfo jobProgressInfo, Map<String, AgentInfo> agentName2agentInfo) {
-        this.agentReportsOfCandidateQueue = agentReportsOfCandidateQueue;
-        this.uboatCandidateQueue = uboatCandidateQueue;
-        this.totalPossibleConfigurations = totalPossibleConfigurations;
-        this.totalTimeDecryptProperty = totalTimeDecryptProperty;
-        this.isBruteForceActionPaused = isBruteForceActionPaused;
-        this.isBruteForceActionCancelled = isBruteForceActionCancelled;
-        this.jobProgressInfo = jobProgressInfo;
-        this.agentName2agentInfo = agentName2agentInfo;
+    public CandidatesCollector(DecryptManager dm) {
+        this.agentReportsOfCandidateQueue = dm.getCandidatesQueue();
+        this.uboatCandidateQueue = dm.getUboatCandidateQueue();
+        this.totalPossibleConfigurations = dm.getTotalPossibleConfigurations();
+        this.totalTimeDecryptProperty = dm.getTotalTimeDecryptProperty();
+        this.isBruteForceActionPaused = dm.getIsBruteForceActionPaused();
+        this.isBruteForceActionCancelled = dm.getIsBruteForceActionCancelled();
+        this.jobProgressInfo = dm.getJobProgressInfo();
+        this.agentName2agentInfo = dm.getAgentName2agentInfo();
         this.pauseMeasuring = 0;
         this.allConclusions = allConclusions;
     }

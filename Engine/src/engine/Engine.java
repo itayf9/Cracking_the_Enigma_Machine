@@ -147,7 +147,7 @@ public interface Engine {
     /**
      * cancel the thread pool execution
      */
-    void stopBruteForceProcess(String userName);
+    DTOstatus stopBruteForceProcess(String userName);
 
     /**
      * pause the thread pool execution
@@ -192,4 +192,10 @@ public interface Engine {
     DTOdynamicContestInfo getDynamicContestInfo(String uboatName, String usernameFromSession);
 
     DTOstatus assignAllieToBattlefield(String alliesName, String uboatUserName);
+
+    DTOstatus setAllieWinnerInfo(String uboatName, String allieName);
+
+    DTOallies getAllieWinnerInfo(String usernameFromSession, String allieName);
+
+    boolean getIsUboatReady(String uboatName);
 }

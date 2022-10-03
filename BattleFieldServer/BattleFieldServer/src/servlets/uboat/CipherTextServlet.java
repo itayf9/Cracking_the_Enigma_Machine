@@ -42,15 +42,14 @@ public class CipherTextServlet extends HttpServlet {
             }
 
             // get the text from the cody of post request
-            String textToCipher = req.getParameter("text");
-
-            if (textToCipher != null) {
-                textToCipher = textToCipher.toUpperCase();
-            } else {
+            String textToCipher = req.getParameter(Constants.TEXT_TO_CIPHER);
+            if (textToCipher == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
                 return;
             }
+
+            textToCipher = textToCipher.toUpperCase();
 
             // validate the text to cipher
             if (engine.isAllWordsInDictionary(textToCipher, userNameFromSession)) {

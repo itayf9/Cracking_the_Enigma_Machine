@@ -110,10 +110,8 @@ public class DecryptManager {
 
     /**
      * initiates the thread needed to start the brute force process
-     *
-     * @param uiAdapter ui adapter to update the ui
      */
-    public void startDecrypt(UIAdapter uiAdapter) {
+    public void startDecrypt() {
 
         this.agentReportsOfCandidatesQueue = new LinkedBlockingQueue<>();
         isBruteForceActionCancelled.set(false);
@@ -267,5 +265,33 @@ public class DecryptManager {
 
     public String getTextToDecipher() {
         return textToDecipher;
+    }
+
+    public long getTotalPossibleConfigurations() {
+        return totalPossibleConfigurations;
+    }
+
+    public LongProperty getTotalTimeDecryptProperty() {
+        return totalTimeDecryptProperty;
+    }
+
+    public LongProperty totalTimeDecryptPropertyProperty() {
+        return totalTimeDecryptProperty;
+    }
+
+    public BlockingQueue<AgentConclusion> getUboatCandidateQueue() {
+        return uboatCandidateQueue;
+    }
+
+    public AtomicBoolean getIsBruteForceActionCancelled() {
+        return isBruteForceActionCancelled;
+    }
+
+    public boolean isIsBruteForceActionPaused() {
+        return isBruteForceActionPaused.get();
+    }
+
+    public Map<String, AgentInfo> getAgentName2agentInfo() {
+        return agentName2agentInfo;
     }
 }

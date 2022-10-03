@@ -1,16 +1,20 @@
 package battlefield;
 
 import agent.AgentInfo;
+import allie.AllieInfo;
 import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
 import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import machine.Machine;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Battlefield {
 
@@ -23,7 +27,9 @@ public class Battlefield {
     private DifficultyLevel difficultyLevel;
     private BlockingQueue<AgentConclusion> uboatCandidatesQueue;
     private boolean isUboatReady;
-    private boolean isActive;
+    private AtomicBoolean isActive;
+
+    private AllieInfo winnerAllieInfo;
     private String textToDecipher;
     private boolean isBattlefieldConfigured;
 
@@ -31,7 +37,7 @@ public class Battlefield {
         this.allies = new HashSet<>();
         this.battlefieldName = "";
         this.isUboatReady = false;
-        this.isActive = false;
+        this.isActive = new AtomicBoolean(false);
         this.difficultyLevel = DifficultyLevel.UNDEFINED;
         this.isBattlefieldConfigured = false;
         this.textToDecipher = "";
@@ -105,8 +111,20 @@ public class Battlefield {
         allies.add(new DecryptManager(allieName, this, agentName2agentInfo));
     }
 
-    public boolean isActive() {
+    public AtomicBoolean isActive() {
         return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive.set(isActive);
+    }
+
+    public AllieInfo getWinnerAllieInfo() {
+        return winnerAllieInfo;
+    }
+
+    public void setWinnerAllieInfo(AllieInfo winnerAllieInfo) {
+        this.winnerAllieInfo = winnerAllieInfo;
     }
 
     public boolean isBattlefieldConfigured() {

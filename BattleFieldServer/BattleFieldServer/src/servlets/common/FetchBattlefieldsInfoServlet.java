@@ -1,4 +1,4 @@
-package servlets.allies;
+package servlets.common;
 
 import com.google.gson.Gson;
 import com.sun.org.apache.xpath.internal.operations.Bool;
@@ -27,6 +27,12 @@ public class FetchBattlefieldsInfoServlet extends HttpServlet {
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
 
         if (isValidSession) {
+            if (!typeOfClient.equals(Client.AGENT) && !typeOfClient.equals(Client.ALLIE)) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
+                return;
+            }
+
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
 
             String onlyMyBattlefield = req.getParameter(Constants.ONLY_MY);
