@@ -42,7 +42,6 @@ public class LoginServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_USERNAME)));
             } else {
-
                 switch (typeOfClient) {
                     case UBOAT:
                         Map<String, Battlefield> uboatName2battleField = ServletUtils.getUboatName2battleField(getServletContext());
@@ -50,7 +49,7 @@ public class LoginServlet extends HttpServlet {
                         //normalize the username value
                         usernameFromParameter = usernameFromParameter.trim();
                         synchronized (this) {
-                            if (uboatName2battleField.containsKey(usernameFromParameter)) {
+                            if (!ServletUtils.checkNameValidity(getServletContext(), usernameFromParameter)) {
                                 // the username already exists
                                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                                 response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.USERNAME_ALREADY_EXIST)));
@@ -65,7 +64,7 @@ public class LoginServlet extends HttpServlet {
                         Map<String, Set<AgentInfo>> loggedAlliesNames = ServletUtils.getLoggedAlliesNames(getServletContext());
 
                         synchronized (this) {
-                            if (loggedAlliesNames.containsKey(usernameFromParameter)) {
+                            if (!ServletUtils.checkNameValidity(getServletContext(), usernameFromParameter)) {
                                 // the username already exists
                                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                                 response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.USERNAME_ALREADY_EXIST)));
@@ -101,7 +100,7 @@ public class LoginServlet extends HttpServlet {
                             Map<String, AgentInfo> agentInfoMap = ServletUtils.getLoggedAgentNames(getServletContext());
 
                             synchronized (this) {
-                                if (agentInfoMap.containsKey(usernameFromParameter)) {
+                                if (!ServletUtils.checkNameValidity(getServletContext(), usernameFromParameter)) {
                                     // the username already exists
                                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                                     response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.USERNAME_ALREADY_EXIST)));

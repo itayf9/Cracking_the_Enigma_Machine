@@ -21,7 +21,6 @@ import machine.component.Rotor;
 import machine.jaxb.generated.*;
 import problem.Problem;
 import statistics.StatisticRecord;
-import sun.management.Agent;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -38,11 +37,11 @@ import static utill.Utility.*;
 public class EnigmaEngine implements Engine {
 
     // The engine contains Machine instance and machine records object.
-    private boolean charByCharState = false;
+    private boolean charByCharState;
     private long currentCipherProcessTimeElapsed;
     private String currentCipherProcessOutputText;
     private String currentCipherProcessInputText;
-    private final List<StatisticRecord> machineRecords = new ArrayList<>();
+    private final List<StatisticRecord> machineRecords;
 
     private final Map<String, Battlefield> uboatName2battleField;
     private final Map<String, Set<AgentInfo>> loggedAllieName2loggedAgents;
@@ -51,9 +50,12 @@ public class EnigmaEngine implements Engine {
     private final Object waitingTasksQueueLock;
     private final Object conclusionQueueLock;
 
-    public static String JAXB_XML_PACKAGE_NAME = "machine.jaxb.generated";
+    public static String JAXB_XML_PACKAGE_NAME;
 
     public EnigmaEngine() {
+        JAXB_XML_PACKAGE_NAME = "machine.jaxb.generated";
+        this.charByCharState = false;
+        this.machineRecords = new ArrayList<>();
         this.uboatName2battleField = new HashMap<>();
         this.loggedAllieName2loggedAgents = new HashMap<>();
         this.agentName2agentInfo = new HashMap<>();
@@ -1407,12 +1409,14 @@ public class EnigmaEngine implements Engine {
 
         int numOfTaskPerPull = agentInfo.getNumOfTasksPerPull();
 
-        for (int i = 0; i < numOfTaskPerPull && hasTasks; i++) {
-            AgentTask nextTask = (AgentTask) allieMaybe.get().getWaitingTasksBlockingQueue().poll();
-            if (nextTask == null) {
-                hasTasks = false;
-            } else {
-                taskList.add(nextTask);
+        synchronized (waitingTasksQueueLock) {
+            for (int i = 0; i < numOfTaskPerPull && hasTasks; i++) {
+                AgentTask nextTask = (AgentTask) allieMaybe.get().getWaitingTasksBlockingQueue().poll();
+                if (nextTask == null) {
+                    hasTasks = false;
+                } else {
+                    taskList.add(nextTask);
+                }
             }
         }
 
@@ -1433,14 +1437,22 @@ public class EnigmaEngine implements Engine {
 
         BlockingQueue<AgentConclusion> conclusionQueue = allieMaybe.get().getCandidatesQueue();
 
-        for (int i = 0; i < conclusions.size(); i++) {
-            try {
-                conclusionQueue.put(conclusions.get(i));
-            } catch (InterruptedException ignored) {
+        synchronized (conclusionQueueLock) {
+            for (AgentConclusion conclusion : conclusions) {
+                try {
+                    conclusionQueue.put(conclusion);
+                } catch (InterruptedException ignored) {
 
+                }
             }
         }
+
         return new DTOstatus(true, Problem.NO_PROBLEM);
+    }
+
+    @Override
+    public boolean checkNameValidity(String username) {
+        return !uboatName2battleField.containsKey(username) && !loggedAllieName2loggedAgents.containsKey(username) && !agentName2agentInfo.containsKey(username);
     }
 
     @Override

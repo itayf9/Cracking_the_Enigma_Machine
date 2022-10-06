@@ -206,4 +206,6 @@ public interface Engine {
     DTOstatus submitConclusions(List<AgentConclusion> conclusions, String allieName, String uboatName);
 
     DTOtasks getNextTasks(String agentName, String allieName, String uboatName);
+
+    boolean checkNameValidity(String usernameFromSession);
 }

@@ -27,6 +27,8 @@ public class ServletUtils {
     private static final Object uboatManagerLock = new Object();
     private static final Object allieManagerLock = new Object();
     private static final Object agentManagerLock = new Object();
+    private static final Object engineLock = new Object();
+
 
     public static Map<String, Battlefield> getUboatName2battleField(ServletContext servletContext) {
 
@@ -75,4 +77,15 @@ public class ServletUtils {
 
         return engine.getLoggedAgentNamesManager();
     }
+
+    public static boolean checkNameValidity(ServletContext servletContext, String usernameFromSession) {
+        synchronized (engineLock) {
+            if (servletContext.getAttribute(Constants.ENGINE) == null) {
+                servletContext.setAttribute(Constants.ENGINE, new EnigmaEngine());
+            }
+        }
+        Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
+        return engine.checkNameValidity(usernameFromSession);
+    }
+
 }
