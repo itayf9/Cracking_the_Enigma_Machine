@@ -197,4 +197,6 @@ public interface Engine {
     DTOactive getAllieApprovalStatus(String allieName, String uboatName);
 
     DTOstatus setAllieApprovalStatus(boolean isApprove, String allieName, String uboatName);
+
+    DTOstatus removeBattlefield(String uboatName);
 }

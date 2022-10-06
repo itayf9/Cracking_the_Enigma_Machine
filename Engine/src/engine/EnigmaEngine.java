@@ -1368,6 +1368,16 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
+    public DTOstatus removeBattlefield(String uboatName) {
+        Battlefield removedBattlefield = uboatName2battleField.remove(uboatName);
+        if (removedBattlefield == null) {
+            return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
+        }
+
+        return new DTOstatus(true, Problem.NO_PROBLEM);
+    }
+
+    @Override
     public String toString() {
         return "engine.EnigmaEngine{" +
                 "machine=" + uboatName2battleField +
