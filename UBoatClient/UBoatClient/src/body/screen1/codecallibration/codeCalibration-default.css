@@ -1,0 +1,41 @@
+.sub-component-with-background .code-calibration-combo-box *.list-cell {
+    -fx-border-color: #3c3f41;
+    -fx-border-width: 1 0 1 1;
+}
+
+.sub-component-with-background .code-calibration-combo-box *.arrow-button {
+    -fx-border-color: #3c3f41;
+    -fx-border-width: 1 1 1 0;
+}
+
+.sub-component-with-background .code-calibration-combo-box *.arrow {
+    -fx-background-color: #3c3f41;
+}
+
+.sub-component-with-background .code-calibration-combo-box *.combo-box-popup *.scroll-bar *.thumb {
+    -fx-background-color: grey;
+}
+
+.sub-component-with-background .code-calibration-combo-box *.combo-box-popup *.scroll-bar *.decrement-button *.decrement-arrow {
+    -fx-background-color: grey;
+}
+
+.sub-component-with-background .code-calibration-combo-box *.combo-box-popup *.scroll-bar *.increment-button *.increment-arrow {
+    -fx-background-color: grey;
+}
+
+
+.sub-component-with-background .code-calibration-combo-box *.combo-box-popup *.list-view *.list-cell {
+    -fx-border-width: 0;
+}
+
+.sub-component-with-background .code-calibration-combo-box *.combo-box-popup *.list-view *.list-cell:hover {
+    /* -fx-border-width: 0;*/
+    -fx-background-color: #c0c0c0;
+}
+
+.sub-component-with-background .code-calibration-combo-box *.combo-box-popup *.list-view *.list-cell:pressed {
+    /*-fx-border-width: 0;*/
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: white;
+}

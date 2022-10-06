@@ -1,0 +1,47 @@
+.settings-btn:hover {
+    -fx-background-color: #e7e7e7;
+}
+
+.header-gridpane {
+    -fx-background-color: white;
+}
+
+.settings-btn {
+    -fx-background-color: transparent;
+}
+
+.settings-btn *.arrow {
+    -fx-background-color: #000001;
+}
+
+.settings-btn *.menu-item:hover {
+    -fx-background-color: #0095ff;
+}
+
+.settings-btn *.menu-item:hover .label {
+    -fx-text-fill: white;
+}
+
+.settings-btn *.menu-item:focused {
+    -fx-background-color: #0095ff;
+}
+
+.settings-btn *.menu-item:focused .label {
+    -fx-text-fill: white;
+}
+
+
+.file-path-label {
+    -fx-font-size: 15px;
+}
+
+.file-path-area {
+    -fx-background-color: #e7e7e7;
+}
+
+.enigma-title {
+    -fx-text-fill: #0095ff;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+

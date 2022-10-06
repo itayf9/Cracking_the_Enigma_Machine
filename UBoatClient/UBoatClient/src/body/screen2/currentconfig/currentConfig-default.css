@@ -1,0 +1,32 @@
+.config-label {
+    -fx-font-size: 18px;
+
+}
+
+.config-flowpane {
+    -fx-background-color: #e7e7e7;
+}
+
+.config-scrollpane {
+    -fx-background-color: #e7e7e7;
+}
+
+.config-label#rotors {
+    -fx-text-fill: #c72323;
+}
+
+.config-label#windows-characters {
+    -fx-text-fill: #8000a8;
+}
+
+.config-label#reflector {
+    -fx-text-fill: #003a9a;
+}
+
+.config-label#plugs {
+    -fx-text-fill: #de9c00;
+}
+
+.config-label#noConfigMsg {
+    -fx-text-fill: black;
+}

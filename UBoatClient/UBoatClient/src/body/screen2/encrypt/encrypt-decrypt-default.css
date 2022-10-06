@@ -1,0 +1,80 @@
+.char-by-char-ts:selected .thumb-area {
+    -fx-background-color: #0095ff;
+}
+
+.char-by-char-ts .thumb-area {
+    -fx-background-color: #e7e7e7;
+}
+
+.char-by-char-ts .thumb {
+    -fx-background-color: white;
+    -fx-border-color: #e7e7e7;
+    -fx-border-radius: 90deg;
+}
+
+.ciphered-text-headline-label {
+    -fx-text-fill: grey;
+}
+
+
+.clear-btn {
+    /*-fx-background-color: #6674ce;*/
+    -fx-border-color: #0095ff;
+    -fx-border-radius: 5;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-text-fill: #0095ff;
+    -fx-font-weight: bold;
+}
+
+.clear-btn:hover {
+    -fx-background-color: #0095ff;
+    -fx-text-fill: white;
+    -fx-border-color: #048ec2;
+}
+
+.reset-btn {
+    -fx-background-color: white;
+    -fx-text-fill: #cc5454;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5;
+    -fx-border-color: #cc5454;
+    -fx-border-width: 2px;
+    -fx-background-radius: 5;
+}
+
+.reset-btn:hover {
+    -fx-background-color: #cc5454;
+    -fx-text-fill: white;
+    -fx-border-color: #9a0000;
+}
+
+.light-bulbs-area {
+    -fx-background-color: #e7e7e7;
+}
+
+.light-bulbs-area .light-bulb {
+    -fx-background-color: #e7e7e7;
+    -fx-border-color: black;
+    -fx-font-size: 15;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    /*-fx-alignment: center;*/
+}
+
+.light-bulbs-area .light-bulb:hover {
+    -fx-background-color: #c0c0c0;
+    -fx-border-width: 2;
+    -fx-cursor: hand;
+}
+
+.light-bulbs-area .light-bulb:pressed {
+    -fx-background-color: #3c3f41;
+    -fx-border-color: #c0c0c0;
+    -fx-text-fill: white;
+}
+
+.light-bulbs-area .light-on {
+    -fx-background-color: #ffff00;
+}

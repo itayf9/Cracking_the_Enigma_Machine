@@ -1,0 +1,49 @@
+.search-text-field {
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-background-color: #e7e7e7;
+    -fx-border-width: 0;
+    -fx-border-color: #b1b4b9;
+}
+
+.search-text-field:focused {
+    -fx-border-color: #0095ff;
+    -fx-border-width: 1;
+    -fx-background-color: white;
+
+}
+
+.words-area .word-label {
+    -fx-border-width: 1;
+    -fx-background-color: #e7e7e7;
+    -fx-border-color: black;
+    -fx-border-radius: 10;
+}
+
+.words-area .word-label:hover {
+    -fx-border-color: #5d5d5d;
+    -fx-background-color: #c0c0c0;
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-cursor: HAND;
+}
+
+.words-area .word-label:pressed {
+    -fx-background-color: #3c3f41;
+    -fx-border-color: #c0c0c0;
+    -fx-text-fill: white;
+}
+
+.words-area .invalid-word-label {
+    -fx-border-width: 1;
+    -fx-background-color: #423F3E;
+    -fx-background-radius: 10;
+    -fx-border-color: black;
+    -fx-border-radius: 10;
+    -fx-strikethrough: true;
+    -fx-text-fill: grey;
+}
+
+.words-area .invalid-word-label *.text {
+    -fx-strikethrough: true;
+}

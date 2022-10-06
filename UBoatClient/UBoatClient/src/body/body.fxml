@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="900.0"
+         styleClass="enigma-tabpane" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171"
+         xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.BodyController">
+    <tabs>
+        <Tab styleClass="enigma-tab" text="Machine">
+            <content>
+                <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308"
+                            maxWidth="1.7976931348623157E308" styleClass="tab-scrollpane">
+                    <content>
+                        <GridPane minHeight="460.0" minWidth="700.0" prefHeight="440.0" prefWidth="900.0"
+                                  styleClass="tab-gridpane">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="100.0"/>
+                                <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="5.0"
+                                                   prefWidth="5.0"/>
+                                <ColumnConstraints hgrow="ALWAYS" maxWidth="500.0" minWidth="60.0"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="292.33331298828125"
+                                                vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0"
+                                                prefHeight="18.66668701171875" vgrow="ALWAYS"/>
+                                <RowConstraints maxHeight="294.0" prefHeight="250.0" vgrow="SOMETIMES"/>
+                            </rowConstraints>
+                            <children>
+                                <fx:include fx:id="machineDetails" layoutX="30.0" layoutY="20.0"
+                                            maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                                            source="screen1/machinedetails/machineDetails.fxml"
+                                            GridPane.columnSpan="3"/>
+                                <fx:include fx:id="codeCalibration" layoutY="270.0" maxHeight="1.7976931348623157E308"
+                                            maxWidth="1.7976931348623157E308"
+                                            source="screen1/codecalibration/codeCalibration.fxml"
+                                            GridPane.rowIndex="2"/>
+                                <fx:include fx:id="currentConfigScreen1" layoutX="350.0" layoutY="260.0"
+                                            maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                                            source="currentconfig/currentConfig.fxml" GridPane.columnIndex="2"
+                                            GridPane.rowIndex="2"/>
+                            </children>
+                        </GridPane>
+                    </content>
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </ScrollPane>
+            </content>
+        </Tab>
+        <Tab styleClass="enigma-tab" text="Encrypt / Decrypt">
+            <content>
+                <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308"
+                            maxWidth="1.7976931348623157E308" styleClass="tab-scrollpane">
+                    <content>
+                        <GridPane minHeight="451.0" minWidth="750.0" prefHeight="451.0" prefWidth="900.0"
+                                  styleClass="tab-gridpane">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="450.0"/>
+                                <ColumnConstraints hgrow="NEVER" maxWidth="5.0" minWidth="5.0" prefWidth="5.0"/>
+                                <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="295.0"
+                                                   prefWidth="295.0"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="150.0" minHeight="90.0" prefHeight="90.0" vgrow="NEVER"/>
+                                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" prefHeight="5.0"
+                                                vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="150.0" prefHeight="150.0"
+                                                vgrow="ALWAYS"/>
+                            </rowConstraints>
+                            <children>
+                                <fx:include fx:id="statistics" layoutX="385.0"
+                                            source="screen2/statistics/statistics.fxml" GridPane.columnIndex="2"
+                                            GridPane.rowSpan="3"/>
+                                <fx:include fx:id="encryptDecrypt" layoutY="180.0"
+                                            source="screen2/encrypt/encrypt-decrypt.fxml" GridPane.rowIndex="2"/>
+                                <fx:include fx:id="currentConfigScreen2" source="currentconfig/currentConfig.fxml"/>
+                            </children>
+                        </GridPane>
+                    </content>
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </ScrollPane>
+            </content>
+        </Tab>
+        <Tab styleClass="enigma-tab" text="Brute Force">
+            <content>
+                <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="470.0" styleClass="tab-scrollpane">
+                    <content>
+                        <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0"
+                                  prefHeight="470.0" prefWidth="900.0" styleClass="tab-gridpane">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="329.3333435058594" minWidth="280.0"
+                                                   prefWidth="280.0"/>
+                                <ColumnConstraints hgrow="NEVER" maxWidth="2.0" minWidth="2.0" prefWidth="2.0"/>
+                                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="370.0"
+                                                   prefWidth="394.3333740234375"/>
+                                <ColumnConstraints hgrow="NEVER" maxWidth="2.0" minWidth="2.0" prefWidth="2.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="150.0"
+                                                   prefWidth="200.0"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="200.0" minHeight="200.0" prefHeight="200.0" vgrow="NEVER"/>
+                                <RowConstraints maxHeight="5.0" minHeight="5.0" prefHeight="5.0" vgrow="NEVER"/>
+                                <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" vgrow="NEVER"/>
+                                <RowConstraints maxHeight="94.66665649414062" minHeight="5.0" prefHeight="5.0"
+                                                vgrow="NEVER"/>
+                                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="75.33334350585938"
+                                                prefHeight="145.33334350585938" vgrow="ALWAYS"/>
+                            </rowConstraints>
+                            <children>
+                                <fx:include fx:id="encryptDecrypt2" source="screen2/encrypt/encrypt-decrypt.fxml"
+                                            GridPane.columnIndex="2"/>
+                                <fx:include fx:id="currentConfigScreen3" source="currentconfig/currentConfig.fxml"/>
+                                <fx:include fx:id="dmOperational" source="screen3/dm/operational/dmOperational.fxml"
+                                            GridPane.columnSpan="5" GridPane.rowIndex="2"/>
+                                <fx:include fx:id="candidatesArea" source="screen3/candidate/area/candidatesArea.fxml"
+                                            GridPane.columnSpan="5" GridPane.rowIndex="4"/>
+                                <fx:include fx:id="dictionary" source="screen3/dictionary/dictionary.fxml"
+                                            GridPane.columnIndex="4"/>
+                                <Separator prefWidth="200.0" GridPane.columnSpan="5" GridPane.rowIndex="1"
+                                           GridPane.valignment="CENTER"/>
+                                <Separator prefWidth="200.0" GridPane.columnSpan="5" GridPane.rowIndex="3"/>
+                            </children>
+                        </GridPane>
+                    </content>
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </ScrollPane>
+            </content>
+        </Tab>
+    </tabs>
+    <stylesheets>
+        <URL value="@../app/app-default.css"/>
+        <URL value="@body-default.css"/>
+    </stylesheets>
+</TabPane>

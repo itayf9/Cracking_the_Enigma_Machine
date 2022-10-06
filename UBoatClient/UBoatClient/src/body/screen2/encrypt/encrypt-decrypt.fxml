@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.ToggleSwitch?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<GridPane minHeight="150.0" minWidth="190.0" prefHeight="300.0" prefWidth="550.0"
+          xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="body.screen2.encrypt.EncryptDecryptController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="370.0"/>
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="50.0" minWidth="5.0" prefWidth="5.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="70.0" prefWidth="70.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="70.0" prefWidth="70.0"/>
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints/>
+      <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+      <RowConstraints maxHeight="27.333328247070312" minHeight="5.0" prefHeight="13.0" vgrow="NEVER"/>
+      <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="NEVER"/>
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0" prefHeight="60.0" vgrow="SOMETIMES"/>
+      <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="NEVER"/>
+      <RowConstraints maxHeight="100.0" minHeight="5.0" prefHeight="5.0" vgrow="NEVER"/>
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="100.0" vgrow="ALWAYS"/>
+   </rowConstraints>
+   <children>
+      <Label fx:id="animationCipherLabel" opacity="0.0" text="animation" GridPane.rowIndex="1"/>
+      <Label styleClass="component-title" text="Cipher Some Text" GridPane.rowIndex="1"/>
+      <TextField fx:id="inputTextField" maxWidth="1.7976931348623157E308" minHeight="40.0"
+                 onKeyPressed="#cipherCharacter" onKeyReleased="#deactivateLightBulb" prefHeight="40.0"
+                 prefWidth="268.0" promptText="Cipher something..." styleClass="input-text-field" GridPane.rowIndex="3"
+                 GridPane.valignment="TOP">
+         <font>
+            <Font size="15.0"/>
+         </font>
+      </TextField>
+      <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="40.0" prefHeight="40.0"
+                  prefWidth="268.0" styleClass="sub-component-with-background" GridPane.rowIndex="5"
+                  GridPane.valignment="TOP">
+         <content>
+            <StackPane>
+               <children>
+                  <Label fx:id="outputLabel" StackPane.alignment="CENTER_LEFT">
+                     <padding>
+                        <Insets top="5.0"/>
+                     </padding>
+                     <StackPane.margin>
+                        <Insets left="5.0"/>
+                     </StackPane.margin>
+                     <font>
+                        <Font size="15.0"/>
+                     </font>
+                  </Label>
+                  <Label fx:id="cipheredOutputHeadline" styleClass="ciphered-text-headline-label"
+                         text="The Ciphered Text Will Be Shown Here" StackPane.alignment="CENTER_LEFT">
+                     <StackPane.margin>
+                        <Insets left="5.0"/>
+                     </StackPane.margin>
+                     <font>
+                        <Font size="15.0"/>
+                     </font>
+                  </Label>
+               </children>
+            </StackPane>
+         </content>
+      </ScrollPane>
+
+      <Button fx:id="processButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+              minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onMouseClicked="#processHandler"
+              styleClass="action-btn" text="Process / Done" textAlignment="CENTER" wrapText="true"
+              GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
+         <cursor>
+            <Cursor fx:constant="HAND"/>
+         </cursor>
+         <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="resetButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="25.0"
+              minWidth="25.0" mnemonicParsing="false" onMouseClicked="#ResetConfiguration" styleClass="reset-btn"
+              text="Reset" GridPane.columnIndex="3" GridPane.rowIndex="5" GridPane.rowSpan="2">
+         <cursor>
+            <Cursor fx:constant="HAND"/>
+         </cursor>
+         <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="clearButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="25.0"
+              minWidth="25.0" mnemonicParsing="false" onMouseClicked="#clearCurrentCipher" styleClass="clear-btn"
+              text="Clear" GridPane.columnIndex="2" GridPane.rowIndex="5" GridPane.rowSpan="2">
+         <cursor>
+            <Cursor fx:constant="HAND"/>
+         </cursor>
+         <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </GridPane.margin>
+      </Button>
+      <ToggleSwitch fx:id="cipherModeTS" onMouseClicked="#setCipherMode" prefHeight="30.0" prefWidth="22.0"
+                    styleClass="char-by-char-ts" text="Char-By-Char Mode" GridPane.columnIndex="2"
+                    GridPane.rowIndex="1">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </padding>
+      </ToggleSwitch>
+      <ScrollPane fx:id="lightBulbsScrollPane" fitToWidth="true" maxHeight="200.0"
+                  styleClass="sub-component-with-background" GridPane.columnSpan="4" GridPane.rowIndex="7">
+         <content>
+            <FlowPane fx:id="lightBulbs" alignment="TOP_CENTER" hgap="5.0" maxHeight="200.0" prefHeight="95.0"
+                      styleClass="light-bulbs-area" vgap="5.0">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+               </padding>
+            </FlowPane>
+         </content>
+      </ScrollPane>
+      <Line fx:id="lineCipher" endX="-275.4800109863281" endY="17.292892456054688" opacity="0.0"
+            startX="-275.4800109863281" startY="-65.92998504638672" GridPane.halignment="CENTER" GridPane.rowIndex="4"/>
+   </children>
+   <stylesheets>
+      <URL value="@../../../app/app-default.css"/>
+      <URL value="@encrypt-decrypt-default.css"/>
+   </stylesheets>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+   </padding>
+   <styleClass>
+      <String fx:value="component-with-border"/>
+      <String fx:value="component-with-background"/>
+   </styleClass>
+</GridPane>
