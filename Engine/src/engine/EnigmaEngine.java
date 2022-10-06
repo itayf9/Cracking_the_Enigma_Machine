@@ -48,12 +48,17 @@ public class EnigmaEngine implements Engine {
     private final Map<String, Set<AgentInfo>> loggedAllieName2loggedAgents;
     private final Map<String, AgentInfo> agentName2agentInfo;
 
+    private final Object waitingTasksQueueLock;
+    private final Object conclusionQueueLock;
+
     public static String JAXB_XML_PACKAGE_NAME = "machine.jaxb.generated";
 
     public EnigmaEngine() {
         this.uboatName2battleField = new HashMap<>();
         this.loggedAllieName2loggedAgents = new HashMap<>();
         this.agentName2agentInfo = new HashMap<>();
+        this.waitingTasksQueueLock = new Object();
+        this.conclusionQueueLock = new Object();
     }
 
     /**
