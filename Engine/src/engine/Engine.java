@@ -193,4 +193,8 @@ public interface Engine {
     DTOallies getAllieWinnerInfo(String usernameFromSession, String allieName);
 
     boolean getIsUboatReady(String uboatName);
+
+    DTOactive getAllieApprovalStatus(String allieName, String uboatName);
+
+    DTOstatus setAllieApprovalStatus(boolean isApprove, String allieName, String uboatName);
 }

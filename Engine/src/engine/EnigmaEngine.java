@@ -1337,6 +1337,37 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
+    public DTOactive getAllieApprovalStatus(String allieName, String uboatName) {
+        Battlefield battlefield = uboatName2battleField.get(uboatName);
+        if (battlefield == null) {
+            return new DTOactive(false, Problem.UBOAT_NAME_DOESNT_EXIST, false);
+        }
+
+        Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter((decryptManager) -> decryptManager.getAllieName().equals(allieName)).findFirst();
+        if (!allieMaybe.isPresent()) {
+            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
+        }
+
+        return new DTOactive(true, Problem.NO_PROBLEM, allieMaybe.get().isDMapprovedFinishGame());
+    }
+
+    @Override
+    public DTOstatus setAllieApprovalStatus(boolean isApprove, String allieName, String uboatName) {
+        Battlefield battlefield = uboatName2battleField.get(uboatName);
+        if (battlefield == null) {
+            return new DTOactive(false, Problem.UBOAT_NAME_DOESNT_EXIST, false);
+        }
+
+        Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter((decryptManager) -> decryptManager.getAllieName().equals(allieName)).findFirst();
+        if (!allieMaybe.isPresent()) {
+            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
+        }
+
+        allieMaybe.get().setDMapprovedFinishGame(isApprove);
+        return new DTOstatus(true, Problem.NO_PROBLEM);
+    }
+
+    @Override
     public String toString() {
         return "engine.EnigmaEngine{" +
                 "machine=" + uboatName2battleField +

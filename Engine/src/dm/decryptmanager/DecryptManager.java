@@ -48,6 +48,8 @@ public class DecryptManager {
     private final Map<String, AgentInfo> agentName2agentInfo;
     private String textToDecipher;
 
+    private boolean isDMapprovedFinishGame;
+
     public DecryptManager(String allieName, Battlefield battlefield, Map<String, AgentInfo> agentName2agentInfo) {
         this.agentName2agentInfo = agentName2agentInfo;
         final int LIMIT_NUMBER_OF_TASK = 1000;
@@ -65,6 +67,7 @@ public class DecryptManager {
         this.jobProgressInfo = new JobProgressInfo();
         this.textToDecipher = battlefield.getTextToDecipher();
         this.isBruteForceActionCancelled = battlefield.isActive();
+        this.isDMapprovedFinishGame = false;
 
         // maybe delete those later
         this.totalTimeDecryptProperty = new SimpleLongProperty();
@@ -286,6 +289,14 @@ public class DecryptManager {
 
     public boolean isIsBruteForceActionPaused() {
         return isBruteForceActionPaused.get();
+    }
+
+    public boolean isDMapprovedFinishGame() {
+        return isDMapprovedFinishGame;
+    }
+
+    public void setDMapprovedFinishGame(boolean DMapprovedFinishGame) {
+        isDMapprovedFinishGame = DMapprovedFinishGame;
     }
 
     public Map<String, AgentInfo> getAgentName2agentInfo() {
