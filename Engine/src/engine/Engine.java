@@ -1,9 +1,12 @@
 package engine;
 
+import candidate.AgentConclusion;
+import dm.agent.DTOtasks;
 import info.agent.AgentInfo;
 import battlefield.Battlefield;
 import dto.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -199,4 +202,8 @@ public interface Engine {
     DTOstatus setAllieApprovalStatus(boolean isApprove, String allieName, String uboatName);
 
     DTOstatus removeBattlefield(String uboatName);
+
+    DTOstatus submitConclusions(List<AgentConclusion> conclusions, String allieName, String uboatName);
+
+    DTOtasks getNextTasks(String agentName, String allieName, String uboatName);
 }

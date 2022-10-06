@@ -21,6 +21,7 @@ import machine.component.Rotor;
 import machine.jaxb.generated.*;
 import problem.Problem;
 import statistics.StatisticRecord;
+import sun.management.Agent;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -1376,6 +1377,64 @@ public class EnigmaEngine implements Engine {
             return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
         }
 
+        return new DTOstatus(true, Problem.NO_PROBLEM);
+    }
+
+    @Override
+    public DTOtasks getNextTasks(String agentName, String allieName, String uboatName) {
+        List<AgentTask> taskList = new ArrayList<>();
+        boolean hasTasks = true;
+
+        Battlefield battlefield = uboatName2battleField.get(uboatName);
+        if (battlefield == null) {
+            return new DTOtasks(false, Problem.UBOAT_NAME_DOESNT_EXIST, new ArrayList<>());
+        }
+
+        Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter(decryptManager -> decryptManager.getAllieName().equals(allieName)).findFirst();
+        if (!allieMaybe.isPresent()) {
+            return new DTOtasks(false, Problem.ALLIE_NAME_NOT_FOUND, new ArrayList<>());
+        }
+
+        AgentInfo agentInfo = agentName2agentInfo.get(agentName);
+        if (agentInfo == null) {
+            return new DTOtasks(false, Problem.AGENT_NAME_DOESNT_EXIST, new ArrayList<>());
+        }
+
+        int numOfTaskPerPull = agentInfo.getNumOfTasksPerPull();
+
+        for (int i = 0; i < numOfTaskPerPull && hasTasks; i++) {
+            AgentTask nextTask = (AgentTask) allieMaybe.get().getWaitingTasksBlockingQueue().poll();
+            if (nextTask == null) {
+                hasTasks = false;
+            } else {
+                taskList.add(nextTask);
+            }
+        }
+
+        return new DTOtasks(true, Problem.NO_PROBLEM, taskList);
+    }
+
+    @Override
+    public DTOstatus submitConclusions(List<AgentConclusion> conclusions, String allieName, String uboatName) {
+        Battlefield battlefield = uboatName2battleField.get(uboatName);
+        if (battlefield == null) {
+            return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
+        }
+
+        Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter((decryptManager) -> decryptManager.getAllieName().equals(allieName)).findFirst();
+        if (!allieMaybe.isPresent()) {
+            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND);
+        }
+
+        BlockingQueue<AgentConclusion> conclusionQueue = allieMaybe.get().getCandidatesQueue();
+
+        for (int i = 0; i < conclusions.size(); i++) {
+            try {
+                conclusionQueue.put(conclusions.get(i));
+            } catch (InterruptedException ignored) {
+
+            }
+        }
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 

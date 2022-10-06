@@ -5,9 +5,7 @@ public class AgentInfo {
     private String agentName;
     private int numOfThreads;
     private int numOfTasksPerPull;
-
     private int numOfReceivedTasks;
-
     private int numOfFoundCandidates;
 
 

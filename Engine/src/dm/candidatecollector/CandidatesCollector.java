@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CandidatesCollector implements Runnable {
 
     private final BlockingQueue<AgentConclusion> agentReportsOfCandidateQueue;
-    BlockingQueue<AgentConclusion> uboatCandidateQueue;
+    private BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final long totalPossibleConfigurations;
     private final List<AgentConclusion> allConclusions;
     private final LongProperty totalTimeDecryptProperty;

@@ -20,5 +20,6 @@ public class Constants {
     public static final String TASK_SIZE = "task-size";
     public static final String ONLY_MY = "only-my";
     public static final String TEXT_TO_CIPHER = "text";
+    public static final String CONCLUSIONS = "conclusions";
     public static String CLIENT_TYPE = "type";
 }
