@@ -1,5 +1,7 @@
 package engine;
 
+import dm.agent.AgentTask;
+import dm.agent.DTOtasks;
 import info.agent.AgentInfo;
 import info.allie.AllieInfo;
 import battlefield.Battlefield;

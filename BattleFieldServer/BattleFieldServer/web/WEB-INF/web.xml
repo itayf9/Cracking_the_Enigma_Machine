@@ -148,4 +148,24 @@
         <url-pattern>/fetch/allie-approval</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>FetchNextTasksServlet</servlet-name>
+        <servlet-class>servlets.agent.FetchNextTasksServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchNextTasksServlet</servlet-name>
+        <url-pattern>/fetch/next-tasks</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SubmitNextCandidatesServlet</servlet-name>
+        <servlet-class>servlets.agent.SubmitNextCandidatesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SubmitNextCandidatesServlet</servlet-name>
+        <url-pattern>/submit/conclusions</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>
