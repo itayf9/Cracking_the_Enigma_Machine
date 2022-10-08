@@ -7,7 +7,7 @@ import java.util.List;
 
 public class DTOcandidates extends DTOstatus {
 
-    List<Candidate> allCandidates;
+    private List<Candidate> allCandidates;
 
     public DTOcandidates(boolean isSucceed, Problem details, List<Candidate> allCandidates) {
         super(isSucceed, details);

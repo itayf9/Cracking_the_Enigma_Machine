@@ -2,6 +2,8 @@ package dto;
 
 import problem.Problem;
 
+import java.util.List;
+
 public class DTOciphertext extends DTOstatus {
 
     private String cipheredText;

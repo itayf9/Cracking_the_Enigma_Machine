@@ -1,7 +1,7 @@
 package body.screen1.machinedetails;
 
 import body.BodyController;
-import body.currentconfig.CurrentConfigController;
+import body.screen2.currentconfig.CurrentConfigController;
 import dto.DTOspecs;
 import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;

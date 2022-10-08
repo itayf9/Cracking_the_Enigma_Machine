@@ -22,6 +22,9 @@ public class CandidateTileController {
     @FXML
     private Label foundByAgentNameLabel;
 
+    @FXML
+    private Label foundByAllieNameLabel;
+
     public void setDecipheredText(String decipheredText) {
         decipheredTextLabel.setText(decipheredText);
     }
@@ -70,6 +73,10 @@ public class CandidateTileController {
     }
 
     public void setProcessedByAgentName(String processedByAgentName) {
-        foundByAgentNameLabel.setText("#" + processedByAgentName);
+        foundByAgentNameLabel.setText("Agent: " + processedByAgentName);
+    }
+
+    public void setProcessedByAllieName(String processedByAgentName) {
+        foundByAgentNameLabel.setText("Allie: " + processedByAgentName);
     }
 }

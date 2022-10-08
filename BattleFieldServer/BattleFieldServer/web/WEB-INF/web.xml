@@ -167,5 +167,14 @@
         <url-pattern>/submit/conclusions</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>FetchMachineSpecsServlet</servlet-name>
+        <servlet-class>servlets.uboat.FetchMachineSpecsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchMachineSpecsServlet</servlet-name>
+        <url-pattern>/fetch/machine-specs</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>

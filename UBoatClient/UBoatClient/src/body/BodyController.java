@@ -299,29 +299,29 @@ public class BodyController {
 //        machineDetailsController.setComponentsSkin(currentConfigUrl);
 //
 //    }
-//
-//    public void setEncryptExcludeCharsValue(StringProperty dictionaryExcludeCharsProperty) {
-//        encryptDecrypt2Controller.setEncryptExcludeCharsValue(dictionaryExcludeCharsProperty);
-//    }
-//
-//    public boolean isAllWordsInDictionary(String textToCipher) {
-//        return mainController.isAllWordsInDictionary(textToCipher);
-//    }
-//
-//    public void setIsAnimationPropertyEncryptDecrypt(BooleanProperty isAnimationProperty) {
-//        encryptDecryptController.setIsAnimationPropertyEncryptDecrypt(isAnimationProperty);
-//    }
-//
-//    public void setCodeCalibration(int inUseRotorsCount, int availableRotorsCount, String machineAlphabet, int availableReflectorsCount) {
-//        codeCalibrationController.setCodeCalibration(inUseRotorsCount, availableRotorsCount, machineAlphabet, availableReflectorsCount);
-//    }
-//
-//    public String convertProblemToMessage(Problem problem) {
-//        return mainController.convertProblemToMessage(problem);
-//    }
-//
-//    public void clearOldComponents() {
-//        encryptDecryptController.clearTextFields();
-//        encryptDecrypt2Controller.clearTextFields();
-//    }
-//}
+
+    public void setEncryptExcludeCharsValue(StringProperty dictionaryExcludeCharsProperty) {
+        encryptDecryptController.setEncryptExcludeCharsValue(dictionaryExcludeCharsProperty);
+    }
+
+    public void setIsAnimationPropertyEncryptDecrypt(BooleanProperty isAnimationProperty) {
+        encryptDecryptController.setIsAnimationPropertyEncryptDecrypt(isAnimationProperty);
+    }
+
+    public void setCodeCalibration(int inUseRotorsCount, int availableRotorsCount, String machineAlphabet, int availableReflectorsCount) {
+        codeCalibrationController.setCodeCalibration(inUseRotorsCount, availableRotorsCount, machineAlphabet, availableReflectorsCount);
+    }
+
+    public String convertProblemToMessage(Problem problem) {
+        return mainController.convertProblemToMessage(problem);
+    }
+
+    public void clearOldComponents() {
+        encryptDecryptController.clearTextFields();
+        encryptDecryptController.clearTextFields();
+    }
+
+    public void setCipherOutput(DTOciphertext cipherStatus) {
+        encryptDecryptController.setCipherOutput(cipherStatus);
+    }
+}

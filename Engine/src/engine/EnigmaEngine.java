@@ -137,7 +137,7 @@ public class EnigmaEngine implements Engine {
      * @param fileContent string - name of xml file
      * @return DTOstatus object that describes the status of the operation
      */
-    public DTOstatus buildMachineFromXmlFile(String fileContent, String userName) {
+    public DTOspecs buildMachineFromXmlFile(String fileContent, String userName) {
         boolean isSucceeded = true;
         Problem details;
 
@@ -156,9 +156,13 @@ public class EnigmaEngine implements Engine {
         // resets the statistics when loading a new machine
         if (isSucceeded) {
             machineRecords.clear();
+            return displayMachineSpecifications(userName);
         }
 
-        return new DTOstatus(isSucceeded, details);
+        // here we create an undefined DTO in order to send DTOSpecs with the original build problem.
+        return new DTOspecs(false, details, 0, 0, new ArrayList<>(),
+                new ArrayList<>(), 0, 0, new ArrayList<>(),
+                "", "", "", "", "");
     }
 
     /**
@@ -676,14 +680,19 @@ public class EnigmaEngine implements Engine {
 
         if (inputText.length() == 0) {
             problem = Problem.CIPHER_INPUT_EMPTY_STRING;
-            return new DTOciphertext(false, problem, outputText);
+            return new DTOciphertext(false, problem, outputText, "", new ArrayList<>(), 0);
         }
 
         // check battlefield existence
         Battlefield battlefield = uboatName2battleField.get(userName);
         if (battlefield == null) {
-            return new DTOciphertext(false, Problem.UBOAT_NAME_DOESNT_EXIST, "");
+            return new DTOciphertext(false, Problem.UBOAT_NAME_DOESNT_EXIST, outputText, "", new ArrayList<>(), 0);
         }
+
+        if (!battlefield.getMachine().isConfigured()) {
+            return new DTOciphertext(false, Problem.NO_CONFIGURATION, outputText, "", new ArrayList<>(), 0);
+        }
+
 
         // check valid ABC
         problem = isAllCharsInAlphabet(inputText, userName);
@@ -714,7 +723,11 @@ public class EnigmaEngine implements Engine {
 
         }
 
-        return new DTOciphertext(isSucceed, problem, outputText);
+        String currentWindowCharacters = uboatName2battleField.get(userName).getMachine().getCurrentWindowsCharacters();
+        List<Integer> currentNotchDistances = uboatName2battleField.get(userName).getMachine().getInUseNotchDistanceToWindow();
+        int cipherCounter = uboatName2battleField.get(userName).getMachine().getCipherCounter();
+
+        return new DTOciphertext(isSucceed, problem, outputText, currentWindowCharacters, currentNotchDistances, cipherCounter);
     }
 
     /**

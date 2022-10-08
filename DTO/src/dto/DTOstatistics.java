@@ -5,7 +5,7 @@ import problem.Problem;
 import java.util.List;
 
 public class DTOstatistics extends DTOstatus {
-    List<StatisticRecord> stats;
+    private List<StatisticRecord> stats;
 
 
     public DTOstatistics(boolean isSucceeded, Problem details, List<StatisticRecord> stats) {
