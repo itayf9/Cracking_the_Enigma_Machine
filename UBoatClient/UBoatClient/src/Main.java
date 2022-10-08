@@ -11,7 +11,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("The Enigma Machine");
+        primaryStage.setTitle("UBoat");
 
         Parent load = FXMLLoader.load(getClass().getResource("app/app.fxml"));
         Scene scene = new Scene(load, 900, 625);

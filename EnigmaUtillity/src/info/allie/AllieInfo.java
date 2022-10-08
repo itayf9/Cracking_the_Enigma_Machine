@@ -2,9 +2,9 @@ package info.allie;
 
 public class AllieInfo {
 
-    private String allieName;
-    private int numOfAgents;
-    private int taskSize;
+    private final String allieName;
+    private final int numOfAgents;
+    private final int taskSize;
 
     public AllieInfo(String allieName, int numOfAgents, int taskSize) {
         this.allieName = allieName;
