@@ -24,7 +24,7 @@ public interface Engine {
      * @param fileName string - name of xml file
      * @return DTOstatus object that describes the status of the operation
      */
-    DTOstatus buildMachineFromXmlFile(String fileName, String userName);
+    DTOspecs buildMachineFromXmlFile(String fileContent, String userName);
 
     /**
      * fetches the current machine specifications.

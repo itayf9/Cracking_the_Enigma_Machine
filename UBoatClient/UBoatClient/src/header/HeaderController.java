@@ -1,7 +1,7 @@
 package header;
 
 import app.MainController;
-import app.statusbar.MessageTone;
+import app.MessageTone;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;
@@ -84,24 +84,24 @@ public class HeaderController {
 
         enableLoadButtonTransition(true);
 
-        // setting the skin selection
-        skinsGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            RadioMenuItem radioMenuItem = (RadioMenuItem) newValue;
-            Skin skin = Skin.DEFAULT;
-
-            switch (radioMenuItem.getId()) {
-                case "skinDefaultButton":
-                    skin = Skin.DEFAULT;
-                    break;
-                case "skinDarkButton":
-                    skin = Skin.DARK;
-                    break;
-                case "skinSpecialButton":
-                    skin = Skin.SPECIAL;
-            }
-
-            mainController.setAppSkin(skin);
-        });
+//        // setting the skin selection
+//        skinsGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+//            RadioMenuItem radioMenuItem = (RadioMenuItem) newValue;
+//            Skin skin = Skin.DEFAULT;
+//
+//            switch (radioMenuItem.getId()) {
+//                case "skinDefaultButton":
+//                    skin = Skin.DEFAULT;
+//                    break;
+//                case "skinDarkButton":
+//                    skin = Skin.DARK;
+//                    break;
+//                case "skinSpecialButton":
+//                    skin = Skin.SPECIAL;
+//            }
+//
+//            mainController.setAppSkin(skin);
+//        });
 
 
     }
@@ -179,9 +179,9 @@ public class HeaderController {
 
     public void setImages(Skin skin) {
 
-        URL settingsImgUrl = getClass().getResource("/header/settings_gear_" + skin.skinName() + ".png");
-
-        settingsButtonImg.setImage(new Image(settingsImgUrl.toString()));
+//        URL settingsImgUrl = getClass().getResource("/header/settings_gear_" + skin.skinName() + ".png");
+//
+//        settingsButtonImg.setImage(new Image(settingsImgUrl.toString()));
     }
 
     public void bindSettings(BooleanProperty isAnimationProperty) {

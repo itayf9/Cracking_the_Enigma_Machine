@@ -57,7 +57,7 @@
                          <children>
                              <fx:include fx:id="statistics" layoutX="385.0" source="screen2/statistics/statistics.fxml" GridPane.columnIndex="2" GridPane.rowSpan="3" />
                              <fx:include fx:id="encryptDecrypt" layoutY="180.0" source="screen2/encrypt/encrypt-decrypt.fxml" GridPane.rowIndex="2" />
-                             <fx:include fx:id="currentConfigScreen2" source="currentconfig/currentConfig.fxml" />
+                             <fx:include fx:id="currentConfigScreen" source="currentconfig/currentConfig.fxml"/>
                          </children>
                      </GridPane>
                  </content>

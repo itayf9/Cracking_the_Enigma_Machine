@@ -5,10 +5,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
-<GridPane fx:id="appGridPane" minWidth="0.0" stylesheets="@app-default.css" xmlns="http://javafx.com/javafx/8.0.171"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.MainController">
+
+<GridPane fx:id="appGridPane" minWidth="0.0" stylesheets="@../../../../DesktopUI/DesktopUI/src/app/app-default.css"
+          xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="app.MainController">
    <columnConstraints>
       <ColumnConstraints hgrow="ALWAYS"/>
    </columnConstraints>
@@ -18,26 +25,23 @@
       <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="NEVER"/>
    </rowConstraints>
    <children>
-      <fx:include fx:id="header" minHeight="100.0" minWidth="0.0" prefHeight="100.0"
-                  source="../../../../UBoatClient/UBoatClient/src/header/header.fxml"/>
       <StackPane GridPane.rowIndex="1">
          <children>
             <Pane cache="true" styleClass="body-background"/>
             <ImageView fx:id="startImage" fitHeight="400.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true"
                        StackPane.alignment="CENTER">
                <image>
-                  <Image url="@starting-screen-enigma.png"/>
+                  <Image url="@../../../../DesktopUI/DesktopUI/src/app/starting-screen-enigma.png"/>
                </image>
                <viewport>
                   <Rectangle2D/>
                </viewport>
             </ImageView>
-            <fx:include fx:id="body" minHeight="0.0" source="../../../../UBoatClient/UBoatClient/src/body/body.fxml"
-                        GridPane.rowIndex="1"/>
          </children>
       </StackPane>
       <HBox fx:id="statusBar" minHeight="25.0" prefHeight="25.0" prefWidth="200.0" styleClass="status-bar"
-            stylesheets="@statusbar/statusbar-default.css" GridPane.rowIndex="2">
+            stylesheets="@../../../../DesktopUI/DesktopUI/src/app/statusbar/statusbar-default.css"
+            GridPane.rowIndex="2">
          <children>
             <StackPane alignment="CENTER_LEFT">
                <children>

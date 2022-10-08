@@ -4,6 +4,7 @@ import battlefield.Battlefield;
 import com.google.gson.Gson;
 import constants.Client;
 import constants.Constants;
+import dto.DTOspecs;
 import dto.DTOstatus;
 import engine.Engine;
 import jakarta.servlet.ServletContext;
@@ -57,7 +58,7 @@ public class LoadXMLServlet extends HttpServlet {
                     //to write the content of the file to a string
                     fileContent = readFromInputStream(file.getInputStream());
                 }
-                DTOstatus loadStatus = engine.buildMachineFromXmlFile(fileContent, usernameFromSession);
+                DTOspecs loadStatus = engine.buildMachineFromXmlFile(fileContent, usernameFromSession);
                 if (!loadStatus.isSucceed()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 } else { // all ok
