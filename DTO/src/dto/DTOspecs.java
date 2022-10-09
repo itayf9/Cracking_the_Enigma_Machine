@@ -25,7 +25,7 @@ public class DTOspecs extends DTOstatus {
                     int availableReflectorsCount, int cipheredTextsCount, List<Integer> inUseRotorsIDs,
                     String originalWindowsCharacters, String currentWindowsCharacters,
                     String inUseReflectorSymbol, String dictionaryExcludeCharacters,
-                    String inUsePlugs) {
+                    String inUsePlugs, String machineAlphabet, Dictionary dictionary) {
         super(isSucceeded, details);
         this.availableRotorsCount = availableRotorsCount;
         this.inUseRotorsCount = inUseRotorsCount;
@@ -39,6 +39,8 @@ public class DTOspecs extends DTOstatus {
         this.inUseReflectorSymbol = inUseReflectorSymbol;
         this.inUsePlugs = inUsePlugs;
         this.dictionaryExcludeCharacters = dictionaryExcludeCharacters;
+        this.machineAlphabet = machineAlphabet;
+        this.dictionary = dictionary;
     }
 
     public int getAvailableRotorsCount() {
@@ -89,6 +91,10 @@ public class DTOspecs extends DTOstatus {
         return dictionaryExcludeCharacters;
     }
 
+    public String getMachineAlphabet() {
+        return machineAlphabet;
+    }
+
     @Override
     public String toString() {
         return "DTOspecs{" +
@@ -103,6 +109,8 @@ public class DTOspecs extends DTOstatus {
                 ", currentWindowsCharacters='" + currentWindowsCharacters + '\'' +
                 ", inUseReflectorSymbol='" + inUseReflectorSymbol + '\'' +
                 ", inUsePlugs='" + inUsePlugs + '\'' +
+                ", dictionaryExcludeCharacters='" + dictionaryExcludeCharacters + '\'' +
+                ", machineAlphabet='" + machineAlphabet + '\'' +
                 '}';
     }
 }

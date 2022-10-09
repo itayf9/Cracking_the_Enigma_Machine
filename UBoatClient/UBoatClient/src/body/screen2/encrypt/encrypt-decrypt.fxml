@@ -32,7 +32,7 @@
    </rowConstraints>
    <children>
       <Label styleClass="component-title" text="Cipher Some Text" GridPane.rowIndex="1" />
-      <TextField fx:id="inputTextField" maxWidth="1.7976931348623157E308" minHeight="40.0" onKeyPressed="#cipherCharacter" onKeyReleased="#deactivateLightBulb" prefHeight="40.0" prefWidth="268.0" promptText="Cipher something..." styleClass="input-text-field" GridPane.rowIndex="3" GridPane.valignment="TOP">
+      <TextField fx:id="inputTextField" maxWidth="1.7976931348623157E308" minHeight="40.0" prefHeight="40.0" prefWidth="268.0" promptText="Cipher something..." styleClass="input-text-field" GridPane.rowIndex="3" GridPane.valignment="TOP">
          <font>
             <Font size="15.0" />
          </font>

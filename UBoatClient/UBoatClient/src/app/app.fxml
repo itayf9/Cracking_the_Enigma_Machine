@@ -23,7 +23,7 @@
       <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
    </rowConstraints>
    <children>
-      <fx:include source="../header/header.fxml" />
+      <fx:include fx:id="header" source="../header/header.fxml" />
       <StackPane GridPane.rowIndex="1">
          <children>
             <Pane cache="true" styleClass="body-background" />
@@ -35,7 +35,7 @@
                   <Rectangle2D />
                </viewport>
             </ImageView>
-            <fx:include source="../body/body.fxml" />
+            <fx:include fx:id="body" source="../body/body.fxml" />
          </children>
       </StackPane>
       <HBox fx:id="statusBar" minHeight="25.0" prefHeight="25.0" prefWidth="200.0" styleClass="status-bar" stylesheets="@../../../../DesktopUI/DesktopUI/src/app/statusbar/statusbar-default.css" GridPane.rowIndex="2">

@@ -87,7 +87,7 @@
       <Label alignment="TOP_CENTER" minHeight="-Infinity" styleClass="property-label" text="Texts Ciphered So Far" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="2" GridPane.valignment="TOP" />
       <Label alignment="TOP_CENTER" styleClass="property-label" text="Available Reflectors" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="4" GridPane.rowIndex="2" GridPane.valignment="TOP" />
       <Label alignment="TOP_CENTER" styleClass="property-label" text="Available Rotors" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-      <fx:include source="../../screen2/currentconfig/currentConfig.fxml" GridPane.columnIndex="8" GridPane.rowSpan="4" />
+      <fx:include fx:id="originalConfig" source="../../screen2/currentconfig/currentConfig.fxml" GridPane.columnIndex="8" GridPane.rowSpan="4" />
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

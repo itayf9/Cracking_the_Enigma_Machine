@@ -6,14 +6,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -59,30 +52,6 @@
             <String fx:value="sub-component-with-background" />
          </styleClass>
       </ScrollPane>
-       <MenuButton fx:id="settingsMenuButton" mnemonicParsing="false" prefHeight="32.0" prefWidth="36.0" styleClass="settings-btn">
-           <items>
-               <Menu mnemonicParsing="false" text="Skins">
-                   <items>
-                       <RadioMenuItem fx:id="skinDefaultButton" mnemonicParsing="false" selected="true" text="Default">
-                           <toggleGroup>
-                               <ToggleGroup fx:id="skinsGroup" />
-                           </toggleGroup>
-                       </RadioMenuItem>
-                       <RadioMenuItem fx:id="skinDarkButton" mnemonicParsing="false" text="Dark" toggleGroup="$skinsGroup" />
-                       <RadioMenuItem fx:id="skinSpecialButton" mnemonicParsing="false" text="Special" toggleGroup="$skinsGroup" />
-                   </items>
-            </Menu>
-            <MenuItem fx:id="animationMenu" mnemonicParsing="false" onAction="#toggleAnimation" text="Animations" />
-            <MenuItem fx:id="aboutMenu" mnemonicParsing="false" onAction="#showAboutScene" text="About" />
-        </items>
-         <graphic>
-             <ImageView fx:id="settingsButtonImg" fitHeight="24.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                 <image>
-                     <Image url="@settings_gear_default.png" />
-                 </image>
-             </ImageView>
-         </graphic>
-       </MenuButton>
       <Label styleClass="enigma-title" text="Cracking The Enigma Machine" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.halignment="CENTER" />
    </children>
     <padding>

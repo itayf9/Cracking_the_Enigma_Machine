@@ -4,9 +4,12 @@ import bindings.CurrWinCharsAndNotchPosBinding;
 import body.BodyController;
 import body.screen2.candidate.tile.CandidateTileController;
 import candidate.Candidate;
-import dto.*;
+import com.google.gson.Gson;
+import dto.DTOsecretConfig;
+import dto.DTOspecs;
+import dto.DTOstatus;
 import header.HeaderController;
-import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -16,14 +19,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
+import javafx.stage.Stage;
+import okhttp.SimpleCookieManager;
+import okhttp3.*;
 import problem.Problem;
-import statistics.StatisticRecord;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
@@ -103,7 +112,6 @@ public class MainController {
 
     @FXML
     public void initialize() {
-
         // controller initialize
         if (headerController != null && bodyController != null) {
             headerController.setMainController(this);
@@ -399,6 +407,10 @@ public class MainController {
          * engine.stopBruteForceProcess();
          * */
 
+    }
+
+    public void setOkHttpClient(OkHttpClient okHttpClient) {
+        this.client = okHttpClient;
     }
 
 //    /**

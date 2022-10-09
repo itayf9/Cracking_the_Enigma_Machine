@@ -23,8 +23,6 @@ public class EncryptDecryptController {
 
     String alphabet;
 
-    @FXML
-    private ScrollPane lightBulbsScrollPane;
 
     @FXML
     private Label outputLabel;
@@ -32,14 +30,6 @@ public class EncryptDecryptController {
     @FXML
     private TextField inputTextField;
 
-    @FXML
-    private Label cipheredOutputHeadline;
-
-    @FXML
-    private Label animationCipherLabel;
-
-    @FXML
-    private Line lineCipher;
 
     @FXML
     private Button processButton;
@@ -50,13 +40,13 @@ public class EncryptDecryptController {
     @FXML
     private Button clearButton;
 
+
     private StringProperty dictionaryExcludeCharactersProperty;
 
     private final PathTransition cipherPathTransition = new PathTransition();
 
     private final FadeTransition cipherFadeTransition = new FadeTransition();
 
-    private final ImageView processButtonIcon = new ImageView("/resource/buttonicons/gears-solid.png");
     private BooleanProperty isAnimationProperty;
 
 
@@ -76,10 +66,6 @@ public class EncryptDecryptController {
         cipherFadeTransition.setDelay(Duration.millis(1500));
         cipherFadeTransition.setNode(outputLabel);
 
-        processButtonIcon.setFitWidth(17);
-        processButtonIcon.setFitHeight(17);
-
-        processButton.setGraphic(processButtonIcon);
 
         processButton.setContentDisplay(ContentDisplay.LEFT);
 
@@ -155,6 +141,11 @@ public class EncryptDecryptController {
     public void clearTextFields() {
         inputTextField.setText("");
         outputLabel.setText("");
+    }
+
+    @FXML
+    void setReady(MouseEvent event) {
+
     }
 
     public void setParentController(BodyController parentController) {

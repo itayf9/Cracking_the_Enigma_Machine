@@ -1,14 +1,3 @@
-import dto.*;
-import engine.EnigmaEngine;
-import engine.Engine;
-import javafx.util.Pair;
-import problem.Problem;
-import statistics.StatisticRecord;
-import utill.Utility;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Scanner;
 /*
 public class Console {
     private static final Engine engine = new EnigmaEngine();

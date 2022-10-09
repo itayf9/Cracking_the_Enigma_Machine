@@ -162,7 +162,7 @@ public class EnigmaEngine implements Engine {
         // here we create an undefined DTO in order to send DTOSpecs with the original build problem.
         return new DTOspecs(false, details, 0, 0, new ArrayList<>(),
                 new ArrayList<>(), 0, 0, new ArrayList<>(),
-                "", "", "", "", "");
+                "", "", "", "", "", "", new Dictionary("", ""));
     }
 
     /**

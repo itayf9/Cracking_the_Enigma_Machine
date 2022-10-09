@@ -4,6 +4,7 @@ import app.MainController;
 import app.MessageTone;
 import body.screen1.codecallibration.CodeCalibrationController;
 import body.screen1.machinedetails.MachineDetailsController;
+import body.screen2.activeteamsarea.ActiveTeamsController;
 import body.screen2.candidate.area.CandidatesAreaController;
 import body.screen2.currentconfig.CurrentConfigController;
 import body.screen2.dictionary.DictionaryController;
