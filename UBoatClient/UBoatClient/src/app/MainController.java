@@ -17,19 +17,16 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import okhttp.SimpleCookieManager;
+import okhttp.cookie.SimpleCookieManager;
+import okhttp.url.URLconst;
 import okhttp3.*;
 import problem.Problem;
 
@@ -37,6 +34,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
+
+import static okhttp.url.URLconst.BASE_URL;
+import static okhttp.url.URLconst.KEY_CONTENT_TYPE;
 
 public class MainController {
 
@@ -74,7 +75,6 @@ public class MainController {
     @FXML
     private Rectangle statusBackShape;
 
-    private DTOsecretConfig configStatus;
 
     /**
      * property stuff
@@ -208,6 +208,7 @@ public class MainController {
                     .url("http://localhost:8080/BattleFieldServer_Web_exploded/load")
                     .post(body)
                     .build();
+            // should insert also the header of Content Type ????
 
             System.out.println(request.headers());
 
@@ -292,22 +293,57 @@ public class MainController {
      */
     public void setRandomMachineConfig() {
 
-        /**
-         *   DTOsecretConfig configStatus = engine.selectConfigurationAuto();
-         * */
+        String body = "";
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/calibrate/auto")
+                .addHeader(KEY_CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
 
-        ObservableList<Integer> rotorsObservableList = FXCollections.observableArrayList(configStatus.getRotors());
-        inUseRotorsIDsProperty.setValue(rotorsObservableList);
+        client.newCall(request).enqueue(new Callback() {
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
 
-        currentWindowsCharactersProperty.setValue(configStatus.getWindows());
-        inUseReflectorSymbolProperty.setValue(configStatus.getReflectorSymbol());
-        inUsePlugsProperty.setValue(configStatus.getPlugs());
-        ObservableList<Integer> notchDistanceObservableList = FXCollections.observableArrayList(configStatus.getNotchDistances());
-        currentNotchDistances.setValue(notchDistanceObservableList);
-        setStatusMessage("Configured Successfully", MessageTone.SUCCESS);
-        isMachineConfiguredProperty.setValue(Boolean.TRUE);
-        bodyController.displayOriginalConfig(inUseRotorsIDsProperty.getValue(), currentWindowsCharactersProperty.getValue(), inUseReflectorSymbolProperty.getValue(), inUsePlugsProperty.getValue(), currentNotchDistances.getValue());
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+                System.out.println("headers: " + response.headers());
+                Gson gson = new Gson();
+
+                if (response.code() != 200) {
+
+                    DTOstatus configStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+
+                    Platform.runLater(() -> {
+                        setStatusMessage("Could not set a code. " + convertProblemToMessage(configStatus.getDetails()), MessageTone.ERROR);
+                    });
+                    return;
+                }
+
+
+                Platform.runLater(() -> {
+
+                    DTOsecretConfig configStatus = gson.fromJson(dtoAsStr, DTOsecretConfig.class);
+                    ObservableList<Integer> rotorsObservableList = FXCollections.observableArrayList(configStatus.getRotors());
+                    inUseRotorsIDsProperty.setValue(rotorsObservableList);
+
+                    currentWindowsCharactersProperty.setValue(configStatus.getWindows());
+                    inUseReflectorSymbolProperty.setValue(configStatus.getReflectorSymbol());
+                    inUsePlugsProperty.setValue(configStatus.getPlugs());
+                    ObservableList<Integer> notchDistanceObservableList = FXCollections.observableArrayList(configStatus.getNotchDistances());
+                    currentNotchDistances.setValue(notchDistanceObservableList);
+                    setStatusMessage("Configured Successfully", MessageTone.SUCCESS);
+                    isMachineConfiguredProperty.setValue(Boolean.TRUE);
+                    bodyController.displayOriginalConfig(inUseRotorsIDsProperty.getValue(), currentWindowsCharactersProperty.getValue(), inUseReflectorSymbolProperty.getValue(), inUsePlugsProperty.getValue(), currentNotchDistances.getValue());
+                });
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
+
     }
+
 
     /**
      * Q5 cipher line
