@@ -1,5 +1,6 @@
 package dto;
 
+import dictionary.Dictionary;
 import problem.Problem;
 
 import java.util.List;
@@ -19,6 +20,8 @@ public class DTOspecs extends DTOstatus {
     private String inUseReflectorSymbol;
     private String inUsePlugs;
     private String dictionaryExcludeCharacters;
+    private String machineAlphabet;
+    private Dictionary dictionary;
 
     public DTOspecs(boolean isSucceeded, Problem details, int availableRotorsCount, int inUseRotorsCount,
                     List<Integer> notchDistancesToWindow, List<Integer> originalNotchPositions,
@@ -86,7 +89,12 @@ public class DTOspecs extends DTOstatus {
     public String getInUsePlugs() {
         return inUsePlugs;
     }
-    
+
+    public Dictionary getDictionary() {
+        return dictionary;
+    }
+
+
     public String getDictionaryExcludeCharacters() {
         return dictionaryExcludeCharacters;
     }

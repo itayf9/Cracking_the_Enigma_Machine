@@ -13,9 +13,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("UBoat");
 
-        Parent load = FXMLLoader.load(getClass().getResource("app/app.fxml"));
-        Scene scene = new Scene(load, 900, 625);
-        primaryStage.setScene(scene);
+
+        Parent load1 = FXMLLoader.load(getClass().getResource("login/login.fxml"));
+        Scene loginScene = new Scene(load1, 300, 300);
+        primaryStage.setScene(loginScene);
         primaryStage.show();
     }
 }

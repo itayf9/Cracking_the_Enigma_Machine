@@ -1,6 +1,5 @@
 package body.screen2.encrypt;
 
-import app.MessageTone;
 import body.BodyController;
 import dto.DTOciphertext;
 import javafx.animation.FadeTransition;
@@ -10,9 +9,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.*;
 import javafx.util.Duration;
 
 public class EncryptDecryptController {
@@ -53,12 +50,8 @@ public class EncryptDecryptController {
     @FXML
     public void initialize() {
         processButton.setText("Process");
-        cipheredOutputHeadline.visibleProperty().bind(Bindings.when(outputLabel.textProperty().isEqualTo("")).then(true).otherwise(false));
-        animationCipherLabel.textProperty().bind(outputLabel.textProperty());
 
         cipherPathTransition.setDuration(Duration.millis(1500));
-        cipherPathTransition.setNode(animationCipherLabel);
-        cipherPathTransition.setPath(lineCipher);
 
         cipherFadeTransition.setFromValue(0);
         cipherFadeTransition.setToValue(1);
@@ -152,38 +145,12 @@ public class EncryptDecryptController {
         this.parentController = parentController;
     }
 
-    public void setAllowEncryptDecrypt(boolean isAllow) {
-        inputTextField.setDisable(!isAllow);
-        processButton.setDisable(!isAllow);
-        resetButton.setDisable(!isAllow);
-        clearButton.setDisable(!isAllow);
-        inputTextField.setText("");
-        outputLabel.setText("");
-    }
-
-    public StringProperty getOutputLabelProperty() {
-        return outputLabel.textProperty();
-    }
-
-    public void showLightBulbs(boolean needToShow) {
-        lightBulbsScrollPane.setVisible(needToShow);
-        lightBulbsScrollPane.setHmax(0);
-    }
-
-    public void bindCipherMode(BooleanProperty isCharByCharModeProperty) {
-        processButton.textProperty().bind(Bindings.when(isCharByCharModeProperty.not()).then("Process").otherwise("Done"));
-    }
-
     public void appendNewWordToInputCipherText(String newWord) {
         if (inputTextField.getText().equals("")) {
             inputTextField.setText(newWord);
         } else {
             inputTextField.setText(inputTextField.getText() + " " + newWord);
         }
-    }
-
-    public void setOnActionProcessToBruteForceMode() {
-        processButton.setOnMouseClicked(this::processHandlerBruteForce);
     }
 
     public void setEncryptExcludeCharsValue(StringProperty dictionaryExcludeCharsProperty) {

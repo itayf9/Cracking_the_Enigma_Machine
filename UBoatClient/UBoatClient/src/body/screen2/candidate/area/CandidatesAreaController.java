@@ -17,29 +17,7 @@ public class CandidatesAreaController {
     private FlowPane candidatesFlowPane;
 
     @FXML
-    private ProgressBar BFprogressBar;
-
-    @FXML
-    private Label progressPercentageLabel;
-
-    @FXML
-    private Label numberOfScannedConfigurationsLabel;
-
-
-    @FXML
     private Label numberOfDistinctCandidatesLabel;
-
-    @FXML
-    private Label BFstatusLabel;
-
-    @FXML
-    private Label averageProcessTimeLabel;
-
-    @FXML
-    private Label totalTimeDecryptLabel;
-
-    @FXML
-    private Label totalTimeDecryptSubTitleLabel;
 
     public void setParentController(BodyController parentController) {
         this.parentController = parentController;
@@ -51,14 +29,6 @@ public class CandidatesAreaController {
                                            DoubleProperty averageTasksProcessTimeProperty, LongProperty totalTimeDecryptProperty) {
 
         numberOfDistinctCandidatesLabel.textProperty().bind(totalDistinctCandidates.asString());
-        numberOfScannedConfigurationsLabel.textProperty().bind(Bindings.concat(totalProcessedConfigurations.asString(), " / ", totalAmountConfigurations.asString()));
-        progressPercentageLabel.textProperty().bind(bruteForceProgressBarPercentageLabel);
-        BFprogressBar.progressProperty().bind(bruteForceProgress);
-        BFstatusLabel.textProperty().bind(bruteForceStatus);
-        averageProcessTimeLabel.textProperty().bind(Bindings.concat(Bindings.format("%.3f", averageTasksProcessTimeProperty), " ms"));
-        totalTimeDecryptLabel.visibleProperty().bind(Bindings.when(isBruteForceTaskActive.not()).then(true).otherwise(false));
-        totalTimeDecryptSubTitleLabel.visibleProperty().bind(Bindings.when(isBruteForceTaskActive.not()).then(true).otherwise(false));
-        totalTimeDecryptLabel.textProperty().bind(Bindings.concat(totalTimeDecryptProperty, " ms"));
     }
 
     public void insertCandidateToFlowPane(Node singleCandidateTile) {

@@ -21,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import problem.Problem;
+import sun.applet.Main;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,38 +33,9 @@ public class HeaderController {
 
     private String selectedMachineFile;
 
-    private FadeTransition loadButtonFadeTransition;
-
-    private BooleanProperty isAnimationProperty;
-
     private BooleanProperty isMachineLoadedProperty;
 
     private MainController mainController;
-
-
-    @FXML
-    private RadioMenuItem skinDefaultButton;
-
-    @FXML
-    private ToggleGroup skinsGroup;
-
-    @FXML
-    private RadioMenuItem skinDarkButton;
-
-    @FXML
-    private RadioMenuItem skinSpecialButton;
-
-    @FXML
-    private MenuButton settingsMenuButton;
-
-    @FXML
-    private MenuItem animationMenu;
-
-    @FXML
-    private MenuItem aboutMenu;
-
-    @FXML
-    private ImageView settingsButtonImg;
 
     @FXML
     private Label filePathLoadMachineLabel;
@@ -71,19 +43,10 @@ public class HeaderController {
     @FXML
     private Button loadFileButton;
 
-
     @FXML
     public void initialize() {
 
         filePathLoadMachineLabel.setText("");
-        loadButtonFadeTransition = new FadeTransition(Duration.millis(1500), loadFileButton);
-        loadButtonFadeTransition.setFromValue(1.0);
-        loadButtonFadeTransition.setToValue(0.3);
-        loadButtonFadeTransition.setCycleCount(Animation.INDEFINITE);
-        loadButtonFadeTransition.setAutoReverse(true);
-
-        enableLoadButtonTransition(true);
-
 //        // setting the skin selection
 //        skinsGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 //            RadioMenuItem radioMenuItem = (RadioMenuItem) newValue;
@@ -103,9 +66,7 @@ public class HeaderController {
 //            mainController.setAppSkin(skin);
 //        });
 
-
     }
-
 
     @FXML
     private void loadMachineFile(MouseEvent event) {
@@ -117,93 +78,16 @@ public class HeaderController {
             this.selectedMachineFile = chosenFile.getAbsolutePath();
             mainController.loadMachineFromFile(selectedMachineFile);
         }
-
     }
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
-
-    public void displayHeaderProblem(Problem details) {
-
-    }
-
     public void displayFilePath() {
         filePathLoadMachineLabel.setText(selectedMachineFile);
     }
 
-    @FXML
-    void toggleAnimation(ActionEvent event) {
-        isAnimationProperty.setValue(!isAnimationProperty.getValue());
-    }
-
-    @FXML
-    void toogleConfigAppearance(ActionEvent event) {
-
-    }
-
-    @FXML
-    void showAboutScene(ActionEvent event) {
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setResizable(false);
-        stage.setHeight(400);
-        stage.setWidth(400);
-
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/header/about/credits.fxml"));
-        try {
-            Node creditsWindow = loader.load();
-
-            //CandidateTileController candidateTileController = loader.getController();
-
-            Scene s = new Scene((Parent) creditsWindow);
-            stage.setScene(s);
-            stage.show();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public void enableLoadButtonTransition(boolean isAllow) {
-        if (isAllow) {
-            loadButtonFadeTransition.play();
-        } else {
-            loadButtonFadeTransition.stop();
-            FadeTransition recover = new FadeTransition(Duration.millis(500), loadFileButton);
-            recover.setToValue(1.0);
-            recover.play();
-        }
-    }
-
-    public void setImages(Skin skin) {
-
-//        URL settingsImgUrl = getClass().getResource("/header/settings_gear_" + skin.skinName() + ".png");
-//
-//        settingsButtonImg.setImage(new Image(settingsImgUrl.toString()));
-    }
-
-    public void bindSettings(BooleanProperty isAnimationProperty) {
-        animationMenu.textProperty().bind(Bindings.when(isAnimationProperty).then("Disable Animations").otherwise("Enable Animations"));
-    }
-
-    public void setProperties(BooleanProperty isAnimationProperty, BooleanProperty isMachineLoadedProperty) {
+    public void setProperties(BooleanProperty isMachineLoadedProperty) {
         this.isMachineLoadedProperty = isMachineLoadedProperty;
-        this.isAnimationProperty = isAnimationProperty;
-        isAnimationProperty.addListener((observable, oldValue, newValue) -> {
-            if (!isMachineLoadedProperty.getValue()) {
-                enableLoadButtonTransition(newValue);
-            }
-
-        });
-
-        isAnimationProperty.addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                mainController.setStatusMessage("Animations: OFF", MessageTone.INFO);
-            } else {
-                mainController.setStatusMessage("Animations: ON", MessageTone.INFO);
-            }
-        });
     }
 }

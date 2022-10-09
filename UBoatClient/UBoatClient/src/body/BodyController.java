@@ -51,7 +51,7 @@ public class BodyController {
     private CurrentConfigController currentConfigController;
 
     @FXML
-    private GridPane encryptDecrypt2;
+    private GridPane encryptDecrypt;
 
     @FXML
     private EncryptDecryptController encryptDecryptController;
@@ -67,6 +67,12 @@ public class BodyController {
 
     @FXML
     private DictionaryController dictionaryController;
+
+    @FXML
+    private GridPane activeTeams;
+
+    @FXML
+    private ActiveTeamsController activeTeamsController;
 
 
     /**
@@ -84,10 +90,7 @@ public class BodyController {
         encryptDecryptController.setParentController(this);
         candidatesAreaController.setParentController(this);
         dictionaryController.setParentController(this);
-
-        // delete
-        encryptDecryptController.showLightBulbs(false);
-        encryptDecryptController.setOnActionProcessToBruteForceMode();
+        activeTeamsController.setParentController(this);
     }
 
     /**
@@ -155,7 +158,6 @@ public class BodyController {
      * @param inUseReflectorSymbolProperty         inUseReflectorSymbolProperty
      * @param inUsePlugs                           inUsePlugs
      * @param currentNotchDistances                currentNotchDistances
-     * @param isCharByCharModeProperty             isCharByCharModeProperty
      * @param cipherCounterProperty                cipherCounterProperty
      * @param totalDistinctCandidates              totalDistinctCandidates
      * @param totalProcessedConfigurations         totalProcessedConfigurations
@@ -168,31 +170,26 @@ public class BodyController {
      */
     public void bindComponents(BooleanProperty isMachineConfiguredProperty, ListProperty<Integer> inUseRotorsIDsProperty,
                                StringProperty currentWindowsCharactersProperty, StringProperty inUseReflectorSymbolProperty,
-                               StringProperty inUsePlugs, ListProperty<Integer> currentNotchDistances, BooleanProperty isCharByCharModeProperty,
-                               IntegerProperty cipherCounterProperty, IntegerProperty totalDistinctCandidates,
-                               IntegerProperty totalProcessedConfigurations, LongProperty totalPossibleConfigurations,
-                               DoubleProperty bruteForceProgressBar, StringProperty bruteForceProgressBarPercentageLabel,
-                               StringProperty bruteForceStatusMessage, BooleanProperty isBruteForceTaskActive, BooleanProperty isBruteForceTaskPaused,
-                               DoubleProperty averageTasksProcessTimeProperty, LongProperty totalTimeDecryptProperty) {
+                               StringProperty inUsePlugs, ListProperty<Integer> currentNotchDistances, IntegerProperty cipherCounterProperty,
+                               IntegerProperty totalDistinctCandidates, IntegerProperty totalProcessedConfigurations,
+                               LongProperty totalPossibleConfigurations, DoubleProperty bruteForceProgressBar,
+                               StringProperty bruteForceProgressBarPercentageLabel, StringProperty bruteForceStatusMessage,
+                               BooleanProperty isBruteForceTaskActive, DoubleProperty averageTasksProcessTimeProperty, LongProperty totalTimeDecryptProperty) {
 
         // binds the components that need the isConfigured Boolean property.
-        encryptDecrypt2.disableProperty().bind(isMachineConfiguredProperty.not().or(isBruteForceTaskActive));
+        encryptDecrypt.disableProperty().bind(isMachineConfiguredProperty.not().or(isBruteForceTaskActive));
         candidatesArea.disableProperty().bind(isMachineConfiguredProperty.not());
         dictionary.disableProperty().bind(isMachineConfiguredProperty.not().or(isBruteForceTaskActive));
 
         // config bindings
         currentConfigController.bindConfigComponents(inUseRotorsIDsProperty, currentWindowsCharactersProperty, inUseReflectorSymbolProperty, inUsePlugs, currentNotchDistances, isMachineConfiguredProperty);
 
-        // cipher mode (Char By Char / Full line) bindings
-        encryptDecryptController.bindCipherMode(isCharByCharModeProperty);
-
         // cipher counter property bind
         machineDetailsController.bindCipherCounterProperty(cipherCounterProperty);
 
         // brute force dashboard labels bind
         candidatesAreaController.bindInitPropertiesToLabels(isBruteForceTaskActive, totalDistinctCandidates, totalProcessedConfigurations, totalPossibleConfigurations,
-                bruteForceProgressBar, bruteForceProgressBarPercentageLabel
-                , bruteForceStatusMessage, averageTasksProcessTimeProperty, totalTimeDecryptProperty);
+                bruteForceProgressBar, bruteForceProgressBarPercentageLabel, bruteForceStatusMessage, averageTasksProcessTimeProperty, totalTimeDecryptProperty);
 
     }
 
@@ -303,10 +300,6 @@ public class BodyController {
 
     public void setEncryptExcludeCharsValue(StringProperty dictionaryExcludeCharsProperty) {
         encryptDecryptController.setEncryptExcludeCharsValue(dictionaryExcludeCharsProperty);
-    }
-
-    public void setIsAnimationPropertyEncryptDecrypt(BooleanProperty isAnimationProperty) {
-        encryptDecryptController.setIsAnimationPropertyEncryptDecrypt(isAnimationProperty);
     }
 
     public void setCodeCalibration(int inUseRotorsCount, int availableRotorsCount, String machineAlphabet, int availableReflectorsCount) {

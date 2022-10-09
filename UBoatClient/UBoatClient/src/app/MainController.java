@@ -17,6 +17,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -35,8 +38,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-
 public class MainController {
+
+    private OkHttpClient client;
+
 
     /**
      * app private members
@@ -69,27 +74,20 @@ public class MainController {
     @FXML
     private Rectangle statusBackShape;
 
-    private FadeTransition messageFadeTransition;
-
-    private DTOsecretConfig configStatus; // do we still need this!!!!!!?????
+    private DTOsecretConfig configStatus;
 
     /**
      * property stuff
      */
     private BooleanProperty isMachineConfiguredProperty;
     private BooleanProperty isMachineLoadedProperty;
-
-    // these properties would store the data of current config component.
     private ListProperty<Integer> inUseRotorsIDsProperty;
     private StringProperty currentWindowsCharactersProperty;
     private StringProperty inUseReflectorSymbolProperty;
     private StringProperty inUsePlugsProperty;
     private ListProperty<Integer> currentNotchDistances;
-
     private CurrWinCharsAndNotchPosBinding currWinCharsAndNotchPosBinding;
     private IntegerProperty cipherCounterProperty;
-    private BooleanProperty isCharByCharModeProperty;
-    private ListProperty<StatisticRecord> statisticsProperty;
 
     /**
      * bruteforce stuff
@@ -102,12 +100,10 @@ public class MainController {
     private StringProperty bruteForceProgressBarPercentageProperty;
     private StringProperty bruteForceStatusMessage;
     private BooleanProperty isBruteForceTaskActive;
-    private BooleanProperty isBruteForceTaskPaused;
     private LongProperty totalPossibleWindowsPositions;
     private DoubleProperty averageTasksProcessTimeProperty;
     private LongProperty totalTimeDecryptProperty;
     private StringProperty dictionaryExcludeCharsProperty;
-    private BooleanProperty isAnimationProperty;
 
 
     @FXML
@@ -117,6 +113,7 @@ public class MainController {
             headerController.setMainController(this);
             bodyController.setMainController(this);
 
+
             // property initialize
             this.isMachineConfiguredProperty = new SimpleBooleanProperty(false);
             this.isMachineLoadedProperty = new SimpleBooleanProperty(false);
@@ -125,18 +122,13 @@ public class MainController {
             this.inUseReflectorSymbolProperty = new SimpleStringProperty("");
             this.inUsePlugsProperty = new SimpleStringProperty("");
             this.currentNotchDistances = new SimpleListProperty<>();
-            this.isCharByCharModeProperty = new SimpleBooleanProperty(false);
             this.cipherCounterProperty = new SimpleIntegerProperty(0);
-            this.statisticsProperty = new SimpleListProperty<>();
             this.totalDistinctCandidates = new SimpleIntegerProperty();
             this.totalProcessedConfigurations = new SimpleIntegerProperty();
             this.totalPossibleConfigurations = new SimpleLongProperty();
-            this.messageFadeTransition = new FadeTransition(Duration.millis(5000), statusBackShape);
             this.isBruteForceTaskActive = new SimpleBooleanProperty(false);
-            this.isBruteForceTaskPaused = new SimpleBooleanProperty(false);
             this.averageTasksProcessTimeProperty = new SimpleDoubleProperty();
             this.dictionaryExcludeCharsProperty = new SimpleStringProperty();
-            this.isAnimationProperty = new SimpleBooleanProperty(true);
             this.bruteForceProgress = new SimpleDoubleProperty();
             this.bruteForceStatusMessage = new SimpleStringProperty("");
             this.bruteForceProgressBarPercentageProperty = new SimpleStringProperty("0%");
@@ -146,10 +138,10 @@ public class MainController {
             // binding initialize
             bodyController.bindComponents(isMachineConfiguredProperty, inUseRotorsIDsProperty,
                     currentWindowsCharactersProperty, inUseReflectorSymbolProperty, inUsePlugsProperty,
-                    currentNotchDistances, isCharByCharModeProperty, cipherCounterProperty, totalDistinctCandidates,
+                    currentNotchDistances, cipherCounterProperty, totalDistinctCandidates,
                     totalProcessedConfigurations, totalPossibleConfigurations, bruteForceProgress,
                     bruteForceProgressBarPercentageProperty, bruteForceStatusMessage, isBruteForceTaskActive,
-                    isBruteForceTaskPaused, averageTasksProcessTimeProperty, totalTimeDecryptProperty);
+                    averageTasksProcessTimeProperty, totalTimeDecryptProperty);
 
             // general setting to initialize sub components
             body.visibleProperty().bind(isMachineLoadedProperty);
@@ -163,13 +155,8 @@ public class MainController {
             statusBackShape.setOpacity(0);
 
             // header bindings & settings
-            headerController.setProperties(isAnimationProperty, isMachineLoadedProperty);
-            headerController.bindSettings(isAnimationProperty);
-
-            bodyController.setIsAnimationPropertyEncryptDecrypt(isAnimationProperty);
-
+            headerController.setProperties(isMachineLoadedProperty);
             isMachineConfiguredProperty.addListener((observable, oldValue, newValue) -> clearOldComponents());
-
             bruteForceStatusMessage.addListener((observable, oldValue, newValue) -> setStatusMessage("Decrypt Manager: " + newValue, MessageTone.INFO));
         }
     }
@@ -192,48 +179,84 @@ public class MainController {
              *     stopBruteForceProcess();
              *     logout servlet request
              * */
-
-
         }
 
         if (isMachineLoadedProperty.get()) {
             setStatusMessage("Can't load more then 1 file.", MessageTone.ERROR);
         } else {
             // then load new machine
-            /**
-             * build machine from XML file
-             *
-             * DTOstatus loadStatus = engine.buildMachineFromXmlFile(selectedMachineFile);
-             *  if (!loadStatus.isSucceed()) {
-             *             setStatusMessage("Could not load that file. " + convertProblemToMessage(loadStatus.getDetails()), MessageTone.ERROR);
-             *         } else {
-             *             headerController.displayFilePath();
-             *             DTOspecs specsStatus = engine.displayMachineSpecifications();
-             *             int rotorsCount = specsStatus.getInUseRotorsCount();
-             *             int alphabetLength = engine.getMachineAlphabet().length();
-             *             // clear old current config
-             *             inUseRotorsIDsProperty.clear();
-             *             currentWindowsCharactersProperty.set("");
-             *             inUseReflectorSymbolProperty.set("");
-             *             currentNotchDistances.clear();
-             *             inUsePlugsProperty.set("");
-             *
-             *             // set new stuff
-             *             bodyController.setDictionaryWords(engine.getDictionaryWords().getDictionary(), engine.getMachineAlphabet());
-             *             bodyController.displayMachineSpecs(specsStatus);
-             *             cipherCounterProperty.set(0);
-             *             bodyController.setLightBulb(engine.getMachineAlphabet());
-             *             bodyController.displayStatistics();
-             *             this.totalPossibleWindowsPositions.setValue(Math.pow(alphabetLength, rotorsCount));
-             *             bodyController.setEncryptExcludeCharsValue(dictionaryExcludeCharsProperty);
-             *             headerController.enableLoadButtonTransition(false);
-             *             isMachineConfiguredProperty.setValue(Boolean.FALSE);
-             *             isMachineLoadedProperty.setValue(Boolean.TRUE);
-             *             dictionaryExcludeCharsProperty.setValue(specsStatus.getDictionaryExcludeCharacters());
-             *             bodyController.setCodeCalibration(specsStatus.getInUseRotorsCount(), specsStatus.getAvailableRotorsCount(), engine.getMachineAlphabet(), specsStatus.getAvailableReflectorsCount());
-             *             setStatusMessage("Machine Loaded Successfully!", MessageTone.SUCCESS);
-             *         }
-             */
+
+            File myFile = new File(selectedMachineFile);
+            byte[] arr = new byte[(int) myFile.length()];
+
+            try {
+                FileInputStream fl = new FileInputStream(myFile);
+                try {
+                    fl.read(arr);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
+            RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("contest", selectedMachineFile,
+                            RequestBody.create(arr))
+                    .build();
+            Request request = new Request.Builder()
+                    .url("http://localhost:8080/BattleFieldServer_Web_exploded/load")
+                    .post(body)
+                    .build();
+
+            System.out.println(request.headers());
+
+            client.newCall(request).enqueue(new Callback() {
+                public void onResponse(Call call, Response response) throws IOException {
+                    System.out.println("Code: " + response.code());
+
+                    String dtoAsStr = response.body().string();
+                    System.out.println("Body: " + dtoAsStr);
+                    Gson gson = new Gson();
+
+                    if (response.code() != 200) {
+                        DTOstatus loadStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                        Platform.runLater(() -> setStatusMessage("Could not load that file. " + convertProblemToMessage(loadStatus.getDetails()), MessageTone.ERROR));
+
+                    } else {
+                        DTOspecs loadStatus = gson.fromJson(dtoAsStr, DTOspecs.class);
+
+                        Platform.runLater(() -> {
+                            headerController.displayFilePath();
+                            int rotorsCount = loadStatus.getInUseRotorsCount();
+                            int alphabetLength = loadStatus.getMachineAlphabet().length();
+                            // clear old current config
+                            inUseRotorsIDsProperty.clear();
+                            currentWindowsCharactersProperty.set("");
+                            inUseReflectorSymbolProperty.set("");
+                            currentNotchDistances.clear();
+                            inUsePlugsProperty.set("");
+
+                            // set new stuff
+                            bodyController.setDictionaryWords(loadStatus.getDictionary().getDictionaryWords(), loadStatus.getMachineAlphabet());
+                            bodyController.displayMachineSpecs(loadStatus);
+                            cipherCounterProperty.set(0);
+                            totalPossibleWindowsPositions.setValue(Math.pow(alphabetLength, rotorsCount));
+                            bodyController.setEncryptExcludeCharsValue(dictionaryExcludeCharsProperty);
+                            isMachineConfiguredProperty.setValue(Boolean.FALSE);
+                            isMachineLoadedProperty.setValue(Boolean.TRUE);
+                            dictionaryExcludeCharsProperty.setValue(loadStatus.getDictionaryExcludeCharacters());
+                            bodyController.setCodeCalibration(loadStatus.getInUseRotorsCount(), loadStatus.getAvailableRotorsCount(), loadStatus.getMachineAlphabet(),
+                                    loadStatus.getAvailableReflectorsCount());
+                            setStatusMessage("Machine Loaded Successfully!", MessageTone.SUCCESS);
+                        });
+                    }
+                }
+
+                public void onFailure(Call call, IOException e) {
+                    System.out.println("Oops... something went wrong..." + e.getMessage());
+                }
+            });
         }
     }
 
@@ -349,7 +372,6 @@ public class MainController {
         averageTasksProcessTimeProperty.set(0);
     }
 
-
     /**
      * creates a Candidate that shows in the flow-pane at the ui
      *
@@ -384,17 +406,7 @@ public class MainController {
         statusBackShape.setOpacity(1);
         statusBackShape.getStyleClass().add(messageTone.colorClassOfMessage());
         messageTone.removeAllStyleClassExcept(statusBackShape.getStyleClass());
-        messageFadeTransition.stop();
-
-        messageFadeTransition = new FadeTransition(Duration.millis(5000), statusBackShape);
         statusLabel.setText(newStatus);
-        messageFadeTransition.setFromValue(1.0);
-        messageFadeTransition.setToValue(0.0);
-        messageFadeTransition.setDelay(Duration.millis(3000));
-
-        if (isAnimationProperty.getValue()) {
-            messageFadeTransition.play();
-        }
     }
 
     /**
