@@ -2,6 +2,7 @@ package app;
 
 import bindings.CurrWinCharsAndNotchPosBinding;
 import body.BodyController;
+import body.screen1.codecallibration.CodeCalibrationController;
 import body.screen2.candidate.tile.CandidateTileController;
 import candidate.Candidate;
 import com.google.gson.Gson;
@@ -205,7 +206,7 @@ public class MainController {
                             RequestBody.create(arr))
                     .build();
             Request request = new Request.Builder()
-                    .url("http://localhost:8080/BattleFieldServer_Web_exploded/load")
+                    .url(BASE_URL + "/load")
                     .post(body)
                     .build();
             // should insert also the header of Content Type ????
@@ -271,21 +272,50 @@ public class MainController {
      */
     public void setManualMachineConfig(String rotors, String windows, int reflector, String plugs) {
 
-        /**
-         *   DTOsecretConfig configStatus = engine.selectConfigurationManual(rotors, windows, reflector, plugs);
-         * */
+        String body = "";
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/calibrate/manual?rotors=" + rotors + "&windows=" + windows + "&reflector=" + reflector + "&plugs=" + plugs)
+                .addHeader(KEY_CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
 
-        ObservableList<Integer> rotorsObservableList = FXCollections.observableArrayList(configStatus.getRotors());
-        inUseRotorsIDsProperty.setValue(rotorsObservableList);
-        currentWindowsCharactersProperty.setValue(configStatus.getWindows());
-        inUseReflectorSymbolProperty.setValue(configStatus.getReflectorSymbol());
-        inUsePlugsProperty.setValue(configStatus.getPlugs());
-        ObservableList<Integer> notchDistanceObservableList = FXCollections.observableArrayList(configStatus.getNotchDistances());
-        currentNotchDistances.setValue(notchDistanceObservableList);
-        // display original config in machine specs
-        bodyController.displayOriginalConfig(configStatus.getRotors(), configStatus.getWindows(), configStatus.getReflectorSymbol(), configStatus.getPlugs(), configStatus.getNotchDistances());
-        setStatusMessage("Configured Successfully", MessageTone.SUCCESS);
-        isMachineConfiguredProperty.setValue(Boolean.TRUE);
+        client.newCall(request).enqueue(new Callback() {
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
+
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+
+                Gson gson = new Gson();
+                if (response.code() != 200) {
+                    DTOstatus configStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(configStatus.getDetails()), MessageTone.ERROR);
+                    });
+                    return;
+                }
+
+                Platform.runLater(() -> {
+                    DTOsecretConfig configStatus = gson.fromJson(dtoAsStr, DTOsecretConfig.class);
+                    ObservableList<Integer> rotorsObservableList = FXCollections.observableArrayList(configStatus.getRotors());
+                    inUseRotorsIDsProperty.setValue(rotorsObservableList);
+                    currentWindowsCharactersProperty.setValue(configStatus.getWindows());
+                    inUseReflectorSymbolProperty.setValue(configStatus.getReflectorSymbol());
+                    inUsePlugsProperty.setValue(configStatus.getPlugs());
+                    ObservableList<Integer> notchDistanceObservableList = FXCollections.observableArrayList(configStatus.getNotchDistances());
+                    currentNotchDistances.setValue(notchDistanceObservableList);
+                    // display original config in machine specs
+                    bodyController.displayOriginalConfig(configStatus.getRotors(), configStatus.getWindows(),
+                            configStatus.getReflectorSymbol(), configStatus.getPlugs(), configStatus.getNotchDistances());
+                    setStatusMessage("Configured Successfully", MessageTone.SUCCESS);
+                    isMachineConfiguredProperty.setValue(Boolean.TRUE);
+                });
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
     }
 
     /**

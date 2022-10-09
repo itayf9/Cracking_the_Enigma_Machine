@@ -129,7 +129,6 @@ public class BodyController {
      */
     public void setManualMachineConfig(String rotors, String windows, int reflector, String plugs) {
         mainController.setManualMachineConfig(rotors, windows, reflector, plugs);
-        //encryptDecryptController.setAllowEncryptDecrypt(true);
     }
 
     /**

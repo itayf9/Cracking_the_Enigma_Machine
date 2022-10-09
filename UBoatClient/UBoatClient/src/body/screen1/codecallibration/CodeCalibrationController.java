@@ -1,10 +1,13 @@
 package body.screen1.codecallibration; //package body.screen1.codecalibration;
 
+import app.MessageTone;
 import body.BodyController;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import problem.Problem;
 
 
 import static utill.Utility.decimalToRoman;
@@ -57,7 +60,59 @@ public class CodeCalibrationController {
 
     @FXML
     void setMachineConfig(MouseEvent ignored) {
+
+        // get rotorsInput
+        StringBuilder rotorsInputBuilder = new StringBuilder();
+        for (int i = 0; i < rotorsHbox.getChildren().size(); i++) {
+            ComboBox<Integer> nextRotorComboBox = (ComboBox<Integer>) rotorsHbox.getChildren().get(i);
+
+            if (nextRotorComboBox.getValue() != null) {
+                rotorsInputBuilder.append(nextRotorComboBox.getValue());
+
+                if (i != rotorsHbox.getChildren().size() - 1) {
+                    rotorsInputBuilder.append(",");
+                }
+            }
+        }
+
+        rotorsInput = rotorsInputBuilder.toString();
+
+        // get windowsInput
+        StringBuilder windowsBuilder = new StringBuilder();
+        for (Node window : windowsCharHbox.getChildren()) {
+            ComboBox<Character> windowCharacter = (ComboBox<Character>) window;
+            if (windowCharacter.getValue() != null) {
+                windowsBuilder.append(windowCharacter.getValue());
+            }
+        }
+
+        windowsInput = windowsBuilder.toString();
+
+        // get reflector
         RadioButton currentReflector = (RadioButton) reflectorToggles.getSelectedToggle();
+
+        // get plugsInput
+        StringBuilder plugsInputBuilder = new StringBuilder();
+        for (Node nextNode : plugsHBox.getChildren()) {
+            HBox nextPlug = (HBox) nextNode;
+            ComboBox<Character> firstInPlug = (ComboBox<Character>) nextPlug.getChildren().get(0);
+            ComboBox<Character> secondInPlug = (ComboBox<Character>) nextPlug.getChildren().get(1);
+
+            if (firstInPlug.getValue() != null) {
+                plugsInputBuilder.append(firstInPlug.getValue());
+            }
+            if (secondInPlug.getValue() != null) {
+                plugsInputBuilder.append(secondInPlug.getValue());
+            }
+
+            if (plugsInputBuilder.length() % 2 == 1) {
+                parentController.setStatusMessage(parentController.convertProblemToMessage(Problem.PLUGS_MISSING_VALUES), MessageTone.ERROR);
+                return;
+            }
+        }
+        plugsInput = plugsInputBuilder.toString();
+
+
         parentController.setManualMachineConfig(rotorsInput, windowsInput, romanToDecimal(currentReflector.getText()), plugsInput);
     }
 

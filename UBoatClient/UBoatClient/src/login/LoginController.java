@@ -50,8 +50,8 @@ public class LoginController {
         String body = "";
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
         Request request = new Request.Builder()
-                .url("http://localhost:8080/BattleFieldServer_Web_exploded/login?username=" + userNameTextField.getText() + "&type=uboat")
-                .addHeader("Content-Type", "text/plain")
+                .url(BASE_URL + "/login?username=" + userNameTextField.getText() + "&type=uboat")
+                .addHeader(KEY_CONTENT_TYPE, "text/plain")
                 .post(RequestBody.create(body.getBytes()))
                 .build();
 
