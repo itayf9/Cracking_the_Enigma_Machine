@@ -12,12 +12,26 @@ public enum Client {
         switch (clientName) {
             case "uboat":
                 return UBOAT;
-            case "info/allie":
+            case "allie":
                 return ALLIE;
-            case "info/agent":
+            case "agent":
                 return AGENT;
             default:
                 return UNAUTHORIZED;
+        }
+    }
+
+    public String getClientTypeAsString() {
+
+        switch (this) {
+            case UBOAT:
+                return "uboat";
+            case ALLIE:
+                return "allie";
+            case AGENT:
+                return "agent";
+            default:
+                return "";
         }
     }
 

@@ -3,6 +3,8 @@ package login;
 import app.MainController;
 import com.google.gson.Gson;
 import dto.DTOstatus;
+import http.url.Client;
+import http.url.Constants;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,12 +52,15 @@ public class LoginController {
 
         String body = "";
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/login").newBuilder();
+        urlBuilder.addQueryParameter(Constants.USERNAME, userNameTextField.getText());
+        urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, UBOAT.getClientTypeAsString());
+        System.out.println(urlBuilder.build().toString());
         Request request = new Request.Builder()
-                .url(BASE_URL + "/login?username=" + userNameTextField.getText() + "&type=uboat")
+                .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
                 .post(RequestBody.create(body.getBytes()))
                 .build();
-
         client.newCall(request).enqueue(new Callback() {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());

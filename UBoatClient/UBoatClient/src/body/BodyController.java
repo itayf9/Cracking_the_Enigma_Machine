@@ -314,7 +314,7 @@ public class BodyController {
         encryptDecryptController.clearTextFields();
     }
 
-    public void setCipherOutput(DTOciphertext cipherStatus) {
-        encryptDecryptController.setCipherOutput(cipherStatus);
+    public void setCipherOutput(Problem problem, String cipherText) {
+        encryptDecryptController.setCipherOutput(problem, cipherText);
     }
 }

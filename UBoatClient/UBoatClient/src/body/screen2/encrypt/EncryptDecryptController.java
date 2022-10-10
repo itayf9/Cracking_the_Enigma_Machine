@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
+import problem.Problem;
 
 public class EncryptDecryptController {
 
@@ -53,9 +54,8 @@ public class EncryptDecryptController {
     @FXML
     public void initialize() {
         processButton.setText("Process");
-
+        cipheredOutputHeadline.visibleProperty().bind(Bindings.when(outputLabel.textProperty().isEqualTo("")).then(true).otherwise(false));
         cipherPathTransition.setDuration(Duration.millis(1500));
-
         cipherFadeTransition.setFromValue(0);
         cipherFadeTransition.setToValue(1);
         cipherFadeTransition.setDuration(Duration.millis(500));
@@ -164,12 +164,11 @@ public class EncryptDecryptController {
         this.isAnimationProperty = isAnimationProperty;
     }
 
-    public void setCipherOutput(DTOciphertext cipherStatus) {
-        if (!cipherStatus.isSucceed()) {
+    public void setCipherOutput(Problem problem, String cipherText) {
+        if (!problem.equals(Problem.NO_PROBLEM)) {
             inputTextField.getStyleClass().add("invalid-input-text-field");
-
         } else {
-            outputLabel.setText(cipherStatus.getCipheredText());
+            outputLabel.setText(cipherText);
         }
     }
 }

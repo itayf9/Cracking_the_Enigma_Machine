@@ -87,5 +87,4 @@ public class ServletUtils {
         Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
         return engine.checkNameValidity(usernameFromSession);
     }
-
 }

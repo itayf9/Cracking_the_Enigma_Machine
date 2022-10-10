@@ -5,9 +5,7 @@ import body.BodyController;
 import body.screen2.candidate.tile.CandidateTileController;
 import candidate.Candidate;
 import com.google.gson.Gson;
-import dto.DTOsecretConfig;
-import dto.DTOspecs;
-import dto.DTOstatus;
+import dto.*;
 import header.HeaderController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -88,7 +86,6 @@ public class MainController {
     /**
      * bruteforce stuff
      */
-
     private IntegerProperty totalDistinctCandidates;
     private IntegerProperty totalProcessedConfigurations;
     private LongProperty totalPossibleConfigurations;
@@ -200,8 +197,9 @@ public class MainController {
                     .addFormDataPart("contest", selectedMachineFile,
                             RequestBody.create(arr))
                     .build();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/load").newBuilder();
             Request request = new Request.Builder()
-                    .url(BASE_URL + "/load")
+                    .url(urlBuilder.build().toString())
                     .post(body)
                     .build();
             // should insert also the header of Content Type ????
@@ -268,12 +266,17 @@ public class MainController {
     public void setManualMachineConfig(String rotors, String windows, int reflector, String plugs) {
 
         String body = "";
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/calibrate/manual").newBuilder();
+        urlBuilder.addQueryParameter(ROTORS_IDS, rotors);
+        urlBuilder.addQueryParameter(WINDOWS_CHARS, windows);
+        urlBuilder.addQueryParameter(REFLECTOR_ID, String.valueOf(reflector));
+        urlBuilder.addQueryParameter(PLUGS, plugs);
         Request request = new Request.Builder()
-                .url(BASE_URL + "/calibrate/manual?rotors=" + rotors + "&windows=" + windows + "&reflector=" + reflector + "&plugs=" + plugs)
+                .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
                 .post(RequestBody.create(body.getBytes()))
                 .build();
-
         client.newCall(request).enqueue(new Callback() {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
@@ -319,8 +322,9 @@ public class MainController {
     public void setRandomMachineConfig() {
 
         String body = "";
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/calibrate/auto").newBuilder();
         Request request = new Request.Builder()
-                .url(BASE_URL + "/calibrate/auto")
+                .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
                 .post(RequestBody.create(body.getBytes()))
                 .build();
@@ -371,7 +375,6 @@ public class MainController {
 
     }
 
-
     /**
      * Q5 cipher line
      *
@@ -380,48 +383,96 @@ public class MainController {
      */
     public void cipher(String line) {
 
-        /**
-         * only one http request
-         *
-         *         DTOciphertext cipherStatus = engine.cipherInputText(line);
-         * if (cipherStatus.isSucceed()) {
-         *      // update configuration
-         *
-         *         currentWindowsCharactersProperty.setValue(cipherStatus.getCurrentWindowsCharacters());
-         *         ObservableList<Integer> notchDistanceObservableList = FXCollections.observableArrayList(cipherStatus.getNotchDistancesToWindow());
-         *         currentNotchDistances.setValue(notchDistanceObservableList);
-         *
-         *         cipherCounterProperty.setValue(cipherStatus.getCipheredTextsCount());
-         *
-         * } else {
-         *     setStatusMessage("Could not cipher that text. " +
-         *      convertProblemToMessage(cipheredLineStatus.getDetails()), MessageTone.ERROR);
-         *
-         * }
-         *
-         *   bodyController.setCipherOutput(cipherStatus);
-         **/
 
+        String body = "";
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/cipher").newBuilder();
+        urlBuilder.addQueryParameter(TEXT_TO_CIPHER, line);
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+
+
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+                Gson gson = new Gson();
+
+
+                if (response.code() != 200) {
+                    DTOstatus cipherStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(cipherStatus.getDetails()), MessageTone.ERROR);
+                        bodyController.setCipherOutput(cipherStatus.getDetails(), "");
+                    });
+
+                } else {
+                    DTOciphertext cipherStatus = gson.fromJson(dtoAsStr, DTOciphertext.class);
+
+                    Platform.runLater(() -> {
+                        currentWindowsCharactersProperty.setValue(cipherStatus.getCurrentWindowsCharacters());
+                        ObservableList<Integer> notchDistanceObservableList = FXCollections.observableArrayList(cipherStatus.getCurrentNotchDistances());
+                        currentNotchDistances.setValue(notchDistanceObservableList);
+                        cipherCounterProperty.setValue(cipherStatus.getCipherCounter());
+                        bodyController.setCipherOutput(cipherStatus.getDetails(), cipherStatus.getCipheredText());
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
     }
 
     /**
      * Q6 reset configuration
      */
     public void resetMachineConfiguration() {
-        /**
-         *  engine.resetConfiguration();
-         *  DTOspecs specsStatus = engine.displayMachineSpecifications();
-         *
-         *  currentWindowsCharactersProperty.setValue(specsStatus.getOriginalWindowsCharacters()); // current should be the same here
-         *
-         *         ObservableList<Integer> notchDistanceObservableList = FXCollections.observableArrayList(specsStatus.getOriginalNotchPositions()); // current should be the same here
-         *         currentNotchDistances.setValue(notchDistanceObservableList);
-         * */
+        String body = "";
 
-        // create servlet for resetting machine - servlet will return DTOspecs
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/reset").newBuilder();
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
 
 
-        setStatusMessage("Reset Successfully", MessageTone.SUCCESS);
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+                Gson gson = new Gson();
+
+
+                if (response.code() != 200) {
+                    DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR);
+                    });
+
+                } else {
+                    DTOresetConfig resetStatus = gson.fromJson(dtoAsStr, DTOresetConfig.class);
+
+                    Platform.runLater(() -> {
+                        currentWindowsCharactersProperty.setValue(resetStatus.getCurrentWindowsCharacters()); // current should be the same here
+                        ObservableList<Integer> notchDistanceObservableList = FXCollections.observableArrayList(resetStatus.getCurrentNotchDistances()); // current should be the same here
+                        currentNotchDistances.setValue(notchDistanceObservableList);
+                        setStatusMessage("Reset Successfully", MessageTone.SUCCESS);
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
     }
 
     /**

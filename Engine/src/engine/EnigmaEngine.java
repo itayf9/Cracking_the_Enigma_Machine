@@ -762,10 +762,10 @@ public class EnigmaEngine implements Engine {
         Problem details = Problem.NO_PROBLEM;
         Machine currentMachine = uboatName2battleField.get(userName).getMachine();
 
-        for (int i = 0; i < uboatName2battleField.get(userName).getMachine().getRotorsCount(); i++) {
+        for (int i = 0; i < currentMachine.getRotorsCount(); i++) {
 
-            int currentOffset = uboatName2battleField.get(userName).getMachine().getInUseWindowsOffsets().get(i);
-            uboatName2battleField.get(userName).getMachine().getInUseRotors().get(i).rotateToOffset(currentOffset);
+            int currentOffset = currentMachine.getInUseWindowsOffsets().get(i);
+            currentMachine.getInUseRotors().get(i).rotateToOffset(currentOffset);
         }
 
         return new DTOresetConfig(isSucceed, details, currentMachine.getOriginalWindowsCharacters(), currentMachine.getOriginalNotchPositions());

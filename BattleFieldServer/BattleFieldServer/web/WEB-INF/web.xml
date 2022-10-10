@@ -176,5 +176,14 @@
         <url-pattern>/fetch/machine-specs</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ResetConfigServlet</servlet-name>
+        <servlet-class>servlets.uboat.ResetConfigServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResetConfigServlet</servlet-name>
+        <url-pattern>/reset</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>
