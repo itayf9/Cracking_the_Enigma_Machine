@@ -25,6 +25,9 @@ public class EncryptDecryptController {
     private Label outputLabel;
 
     @FXML
+    private Label cipheredOutputHeadline;
+
+    @FXML
     private TextField inputTextField;
 
 

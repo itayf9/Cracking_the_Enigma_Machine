@@ -1,15 +1,15 @@
-package constants;
+package http.url;
 
 public enum Client {
     UBOAT, ALLIE, AGENT, UNAUTHORIZED;
 
 
-    public static Client getClient(String client) {
-        if (client == null) {
+    public static Client getClientTypeFromString(String clientName) {
+        if (clientName == null) {
             return UNAUTHORIZED;
         }
 
-        switch (client) {
+        switch (clientName) {
             case "uboat":
                 return UBOAT;
             case "info/allie":

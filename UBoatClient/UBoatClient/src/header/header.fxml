@@ -52,7 +52,7 @@
             <String fx:value="sub-component-with-background" />
          </styleClass>
       </ScrollPane>
-      <Label styleClass="enigma-title" text="Cracking The Enigma Machine" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.halignment="CENTER" />
+      <Label styleClass="enigma-title" text="UBoat" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.halignment="CENTER" />
    </children>
     <padding>
         <Insets bottom="10.0" left="15.0" right="15.0" top="5.0" />

@@ -2,7 +2,7 @@ package servlets.uboat;
 
 import battlefield.Battlefield;
 import com.google.gson.Gson;
-import constants.Client;
+import http.url.Client;
 import http.url.Constants;
 import dto.DTOspecs;
 import dto.DTOstatus;

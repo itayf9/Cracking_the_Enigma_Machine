@@ -1,11 +1,13 @@
 package servlets.uboat;
 
 import com.google.gson.Gson;
-import http.url.Client;
-import http.url.Constants;
 import dto.DTOciphertext;
+import dto.DTOresetConfig;
+import dto.DTOspecs;
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.Client;
+import http.url.Constants;
 import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -18,7 +20,8 @@ import java.io.IOException;
 
 import static utils.ServletUtils.validateAuthorization;
 
-public class CipherTextServlet extends HttpServlet {
+public class ResetConfigServlet extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
@@ -39,30 +42,13 @@ public class CipherTextServlet extends HttpServlet {
                 return;
             }
 
-            // get the text from the cody of post request
-            String textToCipher = req.getParameter(QueryParameter.TEXT_TO_CIPHER);
-            if (textToCipher == null) {
+            DTOresetConfig resetStatus = engine.resetConfiguration(userNameFromSession);
+            if (!resetStatus.isSucceed()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
-                return;
-            }
-
-            textToCipher = textToCipher.toUpperCase();
-
-            // validate the text to cipher
-            if (engine.isAllWordsInDictionary(textToCipher, userNameFromSession)) {
-                DTOciphertext cipherStatus = engine.cipherInputText(textToCipher, userNameFromSession);
-                if (!cipherStatus.isSucceed()) {
-                    // can happen? when putting words manual which has chars not in alphabet
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                }
-                resp.getWriter().println(gson.toJson(cipherStatus));
             } else {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NOT_ALL_WORDS_IN_DICTIONARY)));
+                resp.setStatus(HttpServletResponse.SC_OK);
             }
+            resp.getWriter().println(gson.toJson(resetStatus));
         }
     }
 }

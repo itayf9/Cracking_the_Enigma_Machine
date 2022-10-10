@@ -3,7 +3,7 @@ package servlets.common;
 import info.agent.AgentInfo;
 import battlefield.Battlefield;
 import com.google.gson.Gson;
-import constants.Client;
+import http.url.Client;
 import http.url.Constants;
 import dto.DTOstatus;
 import engine.Engine;
@@ -27,7 +27,7 @@ public class LoginServlet extends HttpServlet {
         Gson gson = new Gson();
         String usernameFromSession = SessionUtils.getUsername(request);
 
-        Client typeOfClient = Client.getClient(request.getParameter(Constants.CLIENT_TYPE));
+        Client typeOfClient = Client.getClientTypeFromString(request.getParameter(Constants.CLIENT_TYPE));
 
         if (typeOfClient.equals(Client.UNAUTHORIZED)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

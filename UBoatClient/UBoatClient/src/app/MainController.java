@@ -31,6 +31,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import static http.url.QueryParameter.*;
 import static http.url.URLconst.BASE_URL;
 import static http.url.URLconst.CONTENT_TYPE;
 
