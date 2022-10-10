@@ -22,12 +22,15 @@
       <Label styleClass="component-title" text="Active Teams" />
       <ScrollPane fitToHeight="true" fitToWidth="true" GridPane.rowIndex="1">
          <content>
-            <TableView fx:id="teamsTable" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="300.0" prefHeight="150.0" prefWidth="200.0">
+            <TableView fx:id="teamsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="300.0" prefHeight="150.0" prefWidth="200.0">
               <columns>
                 <TableColumn prefWidth="75.0" text="Name" />
                 <TableColumn prefWidth="129.66665649414062" text="Number Of Agents" />
                   <TableColumn prefWidth="81.6666259765625" text="Task Size" />
               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
             </TableView>
          </content>
       </ScrollPane>

@@ -3,7 +3,7 @@ package servlets.agent;
 import candidate.AgentConclusion;
 import com.google.gson.Gson;
 import constants.Client;
-import constants.Constants;
+import http.url.Constants;
 import dto.DTOstatus;
 import engine.Engine;
 import jakarta.servlet.ServletException;
@@ -14,9 +14,7 @@ import problem.Problem;
 import utils.SessionUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static utils.ServletUtils.validateAuthorization;
 

@@ -2,10 +2,11 @@ package servlets.uboat;
 
 import com.google.gson.Gson;
 import constants.Client;
-import constants.Constants;
+import http.url.Constants;
 import dto.DTOciphertext;
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public class CipherTextServlet extends HttpServlet {
             }
 
             // get the text from the cody of post request
-            String textToCipher = req.getParameter(Constants.TEXT_TO_CIPHER);
+            String textToCipher = req.getParameter(QueryParameter.TEXT_TO_CIPHER);
             if (textToCipher == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));

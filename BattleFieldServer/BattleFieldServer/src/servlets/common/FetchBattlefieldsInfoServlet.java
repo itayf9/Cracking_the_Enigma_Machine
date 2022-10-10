@@ -1,9 +1,8 @@
 package servlets.common;
 
 import com.google.gson.Gson;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import constants.Client;
-import constants.Constants;
+import http.url.Constants;
 import dto.DTObattlefields;
 import dto.DTOstatus;
 import engine.Engine;

@@ -24,9 +24,11 @@
    <rowConstraints>
       <RowConstraints />
       <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="27.333328247070312" minHeight="5.0" prefHeight="13.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="5.0" minHeight="5.0" prefHeight="5.0" vgrow="NEVER" />
       <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0" prefHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="10.0" minHeight="5.0" prefHeight="10.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="50.0" minHeight="40.0" prefHeight="60.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0" prefHeight="40.0" vgrow="ALWAYS" />
       <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="NEVER" />
       <RowConstraints maxHeight="100.0" minHeight="5.0" prefHeight="5.0" vgrow="NEVER" />
    </rowConstraints>
@@ -37,7 +39,7 @@
             <Font size="15.0" />
          </font>
       </TextField>
-      <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="40.0" prefHeight="40.0" prefWidth="268.0" styleClass="sub-component-with-background" GridPane.rowIndex="5" GridPane.valignment="TOP">
+      <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="40.0" prefHeight="40.0" prefWidth="268.0" styleClass="sub-component-with-background" GridPane.rowIndex="7" GridPane.valignment="TOP">
          <content>
             <StackPane>
                <children>
@@ -73,7 +75,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </Button>
-      <Button fx:id="resetButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onMouseClicked="#ResetConfiguration" styleClass="reset-btn" text="Reset" GridPane.columnIndex="3" GridPane.rowIndex="4">
+      <Button fx:id="resetButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onMouseClicked="#ResetConfiguration" styleClass="reset-btn" text="Reset" GridPane.columnIndex="3" GridPane.rowIndex="5">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -81,7 +83,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </Button>
-      <Button fx:id="clearButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onMouseClicked="#clearCurrentCipher" styleClass="clear-btn" text="Clear" GridPane.columnIndex="2" GridPane.rowIndex="4">
+      <Button fx:id="clearButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onMouseClicked="#clearCurrentCipher" styleClass="clear-btn" text="Clear" GridPane.columnIndex="2" GridPane.rowIndex="5">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -89,7 +91,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </Button>
-      <Button fx:id="readyButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onMouseClicked="#setReady" styleClass="action-btn" text="Ready" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5">
+      <Button fx:id="readyButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onMouseClicked="#setReady" styleClass="action-btn" text="Ready" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

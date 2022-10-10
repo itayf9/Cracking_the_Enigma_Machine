@@ -2,10 +2,10 @@ package servlets.uboat;
 
 import com.google.gson.Gson;
 import constants.Client;
-import constants.Constants;
-import dto.DTOsecretConfig;
+import http.url.Constants;
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ public class CodeCalibrationManualServlet extends HttpServlet {
             }
 
             // extract rotors from body parameter
-            String rotorsIDs = req.getParameter("rotors");
+            String rotorsIDs = req.getParameter(QueryParameter.ROTORS_IDS);
             DTOstatus rotorsStatus = engine.validateRotors(rotorsIDs, usernameFromSession);
             if (!rotorsStatus.isSucceed()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -47,7 +47,7 @@ public class CodeCalibrationManualServlet extends HttpServlet {
             }
 
             // extract windows from body parameter
-            String windowsCharacters = req.getParameter("windows");
+            String windowsCharacters = req.getParameter(QueryParameter.WINDOWS_CHARS);
             DTOstatus windowsStatus = engine.validateWindowCharacters(windowsCharacters, usernameFromSession);
             if (!windowsStatus.isSucceed()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -59,7 +59,7 @@ public class CodeCalibrationManualServlet extends HttpServlet {
             int reflectorID = -1;
             DTOstatus reflectorStatus = new DTOstatus(false, Problem.REFLECTOR_INPUT_NOT_A_NUMBER);
             try {
-                reflectorID = Integer.parseInt(req.getParameter("reflector"));
+                reflectorID = Integer.parseInt(req.getParameter(QueryParameter.REFLECTOR_ID));
                 reflectorStatus = engine.validateReflector(reflectorID, usernameFromSession);
                 if (!reflectorStatus.isSucceed()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -72,7 +72,7 @@ public class CodeCalibrationManualServlet extends HttpServlet {
             }
 
             // extract plugs from body parameter
-            String plugs = req.getParameter("plugs");
+            String plugs = req.getParameter(QueryParameter.PLUGS);
             DTOstatus plugsStatus = engine.validatePlugs(plugs, usernameFromSession);
             if (!plugsStatus.isSucceed()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

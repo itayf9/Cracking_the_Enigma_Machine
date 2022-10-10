@@ -23,7 +23,7 @@
       <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
    </rowConstraints>
    <children>
-      <fx:include fx:id="header" source="../header/header.fxml" />
+      <fx:include fx:id="header" minWidth="0.0" source="../header/header.fxml" />
       <StackPane GridPane.rowIndex="1">
          <children>
             <Pane cache="true" styleClass="body-background" />

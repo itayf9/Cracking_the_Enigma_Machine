@@ -2,7 +2,7 @@ package servlets.agent;
 
 import com.google.gson.Gson;
 import constants.Client;
-import constants.Constants;
+import http.url.Constants;
 import dto.DTOactive;
 import dto.DTOstatus;
 import engine.Engine;

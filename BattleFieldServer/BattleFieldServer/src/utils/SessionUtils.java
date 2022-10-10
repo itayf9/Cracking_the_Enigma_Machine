@@ -1,7 +1,7 @@
 package utils;
 
 import constants.Client;
-import constants.Constants;
+import http.url.Constants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 

@@ -2,12 +2,10 @@ package servlets.agent;
 
 import com.google.gson.Gson;
 import constants.Client;
-import constants.Constants;
+import http.url.Constants;
 import dm.agent.DTOtasks;
-import dto.DTOactive;
 import dto.DTOstatus;
 import engine.Engine;
-import jakarta.servlet.GenericServlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

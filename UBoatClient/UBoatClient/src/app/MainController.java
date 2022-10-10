@@ -2,7 +2,6 @@ package app;
 
 import bindings.CurrWinCharsAndNotchPosBinding;
 import body.BodyController;
-import body.screen1.codecallibration.CodeCalibrationController;
 import body.screen2.candidate.tile.CandidateTileController;
 import candidate.Candidate;
 import com.google.gson.Gson;
@@ -18,16 +17,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import okhttp.cookie.SimpleCookieManager;
-import okhttp.url.URLconst;
 import okhttp3.*;
 import problem.Problem;
 
@@ -35,10 +30,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 
-import static okhttp.url.URLconst.BASE_URL;
-import static okhttp.url.URLconst.KEY_CONTENT_TYPE;
+import static http.url.URLconst.BASE_URL;
+import static http.url.URLconst.CONTENT_TYPE;
 
 public class MainController {
 
@@ -275,7 +269,7 @@ public class MainController {
         String body = "";
         Request request = new Request.Builder()
                 .url(BASE_URL + "/calibrate/manual?rotors=" + rotors + "&windows=" + windows + "&reflector=" + reflector + "&plugs=" + plugs)
-                .addHeader(KEY_CONTENT_TYPE, "text/plain")
+                .addHeader(CONTENT_TYPE, "text/plain")
                 .post(RequestBody.create(body.getBytes()))
                 .build();
 
@@ -326,7 +320,7 @@ public class MainController {
         String body = "";
         Request request = new Request.Builder()
                 .url(BASE_URL + "/calibrate/auto")
-                .addHeader(KEY_CONTENT_TYPE, "text/plain")
+                .addHeader(CONTENT_TYPE, "text/plain")
                 .post(RequestBody.create(body.getBytes()))
                 .build();
 
@@ -349,10 +343,12 @@ public class MainController {
                     return;
                 }
 
-
+                // response code is 200, therefore the request was successful
                 Platform.runLater(() -> {
 
                     DTOsecretConfig configStatus = gson.fromJson(dtoAsStr, DTOsecretConfig.class);
+
+                    // sets the properties that hold the configuration
                     ObservableList<Integer> rotorsObservableList = FXCollections.observableArrayList(configStatus.getRotors());
                     inUseRotorsIDsProperty.setValue(rotorsObservableList);
 

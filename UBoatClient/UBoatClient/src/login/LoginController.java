@@ -14,14 +14,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import okhttp.cookie.SimpleCookieManager;
+import http.cookie.SimpleCookieManager;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.net.URL;
 
-import static okhttp.url.URLconst.BASE_URL;
-import static okhttp.url.URLconst.KEY_CONTENT_TYPE;
+import static http.url.URLconst.BASE_URL;
+import static http.url.URLconst.CONTENT_TYPE;
 
 public class LoginController {
 
@@ -51,7 +51,7 @@ public class LoginController {
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
         Request request = new Request.Builder()
                 .url(BASE_URL + "/login?username=" + userNameTextField.getText() + "&type=uboat")
-                .addHeader(KEY_CONTENT_TYPE, "text/plain")
+                .addHeader(CONTENT_TYPE, "text/plain")
                 .post(RequestBody.create(body.getBytes()))
                 .build();
 

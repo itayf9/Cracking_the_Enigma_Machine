@@ -2,7 +2,7 @@ package servlets.common;
 
 import com.google.gson.Gson;
 import constants.Client;
-import constants.Constants;
+import http.url.Constants;
 import dto.DTOstatus;
 import engine.Engine;
 import jakarta.servlet.ServletException;
@@ -13,8 +13,6 @@ import problem.Problem;
 import utils.SessionUtils;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static utils.ServletUtils.validateAuthorization;
 

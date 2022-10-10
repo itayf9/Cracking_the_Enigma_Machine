@@ -2,7 +2,7 @@ package servlets.common;
 
 import com.google.gson.Gson;
 import constants.Client;
-import constants.Constants;
+import http.url.Constants;
 
 import dto.DTOstatus;
 import engine.Engine;
@@ -15,7 +15,6 @@ import utils.SessionUtils;
 
 import java.io.IOException;
 
-import static constants.Client.*;
 import static utils.ServletUtils.validateAuthorization;
 
 public class ClientIsReadyServlet extends HttpServlet {

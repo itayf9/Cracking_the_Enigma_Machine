@@ -2,8 +2,7 @@ package servlets.allies;
 
 import com.google.gson.Gson;
 import constants.Client;
-import constants.Constants;
-import dto.DTOactive;
+import http.url.Constants;
 import dto.DTOstatus;
 import engine.Engine;
 import jakarta.servlet.ServletException;

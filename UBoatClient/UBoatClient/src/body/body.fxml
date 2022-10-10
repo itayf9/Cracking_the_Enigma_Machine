@@ -41,26 +41,26 @@
          <content>
              <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="tab-scrollpane">
                  <content>
-                     <GridPane minHeight="451.0" minWidth="750.0" prefHeight="451.0" prefWidth="900.0" styleClass="tab-gridpane">
+                     <GridPane minHeight="345.0" minWidth="890.0" prefHeight="451.0" prefWidth="900.0" styleClass="tab-gridpane">
                          <columnConstraints>
                              <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="280.0" prefWidth="280.0" />
-                        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="0.0" prefWidth="27.6666259765625" />
-                        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="122.66665649414062" prefWidth="294.3333435058594" />
-                             <ColumnConstraints hgrow="NEVER" maxWidth="291.3333435058594" minWidth="0.0" prefWidth="96.66665649414062" />
-                        <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="7.3333740234375" prefWidth="7.3333740234375" />
+                        <ColumnConstraints hgrow="NEVER" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="40.0" prefWidth="219.33331298828125" />
+                             <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
+                        <ColumnConstraints hgrow="NEVER" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
                         <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="187.6666259765625" prefWidth="231.66668701171875" />
                          </columnConstraints>
                          <rowConstraints>
-                             <RowConstraints maxHeight="190.66668701171875" minHeight="90.0" prefHeight="190.0" vgrow="NEVER" />
-                             <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" prefHeight="14.0" vgrow="SOMETIMES" />
+                             <RowConstraints maxHeight="190.66668701171875" minHeight="190.0" prefHeight="190.0" vgrow="NEVER" />
+                             <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0" prefHeight="14.0" vgrow="NEVER" />
                              <RowConstraints maxHeight="1.7976931348623157E308" minHeight="150.0" prefHeight="257.6666717529297" vgrow="ALWAYS" />
                          </rowConstraints>
                      <children>
                         <fx:include fx:id="encryptDecrypt" source="screen2/encrypt/encrypt-decrypt.fxml" GridPane.columnIndex="2" GridPane.columnSpan="2" />
                         <fx:include fx:id="dictionary" source="screen2/dictionary/dictionary.fxml" GridPane.columnIndex="5" />
-                        <fx:include fx:id="candidatesArea" source="screen2/candidate/area/candidatesArea.fxml" GridPane.rowIndex="2" />
+                        <fx:include fx:id="candidatesArea" source="screen2/candidate/area/candidatesArea.fxml" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                         <fx:include fx:id="currentConfig" source="screen2/currentconfig/currentConfig.fxml" />
-                        <fx:include fx:id="activeTeams" source="screen2/activeteamsarea/activeteamsarea.fxml" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                        <fx:include fx:id="activeTeams" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="screen2/activeteamsarea/activeteamsarea.fxml" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                      </children>
                      </GridPane>
                  </content>

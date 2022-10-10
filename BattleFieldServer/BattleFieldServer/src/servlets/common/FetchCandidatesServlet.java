@@ -2,9 +2,8 @@ package servlets.common;
 
 import com.google.gson.Gson;
 import constants.Client;
-import constants.Constants;
+import http.url.Constants;
 import dto.DTOagentConclusions;
-import dto.DTOallies;
 import dto.DTOstatus;
 import engine.Engine;
 import jakarta.servlet.ServletException;
@@ -16,8 +15,6 @@ import utils.SessionUtils;
 
 import java.io.IOException;
 
-import static constants.Client.UBOAT;
-import static constants.Client.getClient;
 import static utils.ServletUtils.validateAuthorization;
 
 public class FetchCandidatesServlet extends HttpServlet {
