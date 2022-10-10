@@ -90,6 +90,10 @@ public class CodeCalibrationController {
 
         // get reflector
         RadioButton currentReflector = (RadioButton) reflectorToggles.getSelectedToggle();
+        if (currentReflector == null) {
+            parentController.setStatusMessage(parentController.convertProblemToMessage(Problem.NO_REFLECTOR_BEEN_CHOSEN), MessageTone.ERROR);
+            return;
+        }
 
         // get plugsInput
         StringBuilder plugsInputBuilder = new StringBuilder();

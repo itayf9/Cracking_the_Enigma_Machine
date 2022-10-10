@@ -598,7 +598,7 @@ public class MainController {
             case PLUGS_MISSING_VALUES:
                 return "Please complete the plug selection.";
             default:
-                return "";
+                return problem.name();
         }
     }
 
