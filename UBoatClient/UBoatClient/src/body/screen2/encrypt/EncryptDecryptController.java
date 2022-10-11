@@ -61,10 +61,7 @@ public class EncryptDecryptController {
         cipherFadeTransition.setDuration(Duration.millis(500));
         cipherFadeTransition.setDelay(Duration.millis(1500));
         cipherFadeTransition.setNode(outputLabel);
-
-
         processButton.setContentDisplay(ContentDisplay.LEFT);
-
     }
 
     /* /**

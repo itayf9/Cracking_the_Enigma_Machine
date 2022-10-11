@@ -173,7 +173,8 @@ public class BodyController {
                                IntegerProperty totalDistinctCandidates, IntegerProperty totalProcessedConfigurations,
                                LongProperty totalPossibleConfigurations, DoubleProperty bruteForceProgressBar,
                                StringProperty bruteForceProgressBarPercentageLabel, StringProperty bruteForceStatusMessage,
-                               BooleanProperty isBruteForceTaskActive, DoubleProperty averageTasksProcessTimeProperty, LongProperty totalTimeDecryptProperty) {
+                               BooleanProperty isBruteForceTaskActive, DoubleProperty averageTasksProcessTimeProperty, LongProperty totalTimeDecryptProperty, BooleanProperty isClientReady) {
+
 
         // binds the components that need the isConfigured Boolean property.
         codeCalibration.disableProperty().bind(isClientReady);

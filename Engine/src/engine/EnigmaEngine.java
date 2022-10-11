@@ -711,18 +711,17 @@ public class EnigmaEngine implements Engine {
 
                 machineRecords.get(machineRecords.size() - 1).getCipherHistory().add(inputTextToOutputTextToTimeElapsed);
 
-                // sets the text to decipher in the battlefield
-                battlefield.setTextToDecipher(outputText);
             } else {
                 // cipher in char-by-char mode
                 long startMeasureTime = System.nanoTime();
                 outputText = cipherText(inputText, userName);
+                // sets the text to decipher in the battlefield
+                battlefield.setTextToDecipher(outputText);
                 long timeElapsed = System.nanoTime() - startMeasureTime;
                 currentCipherProcessTimeElapsed += timeElapsed; // value that engine holds for current  cipher time
                 currentCipherProcessInputText += inputText;
                 currentCipherProcessOutputText += outputText;
             }
-
         }
 
         String currentWindowCharacters = uboatName2battleField.get(userName).getMachine().getCurrentWindowsCharacters();
