@@ -141,7 +141,7 @@ public class EncryptDecryptController {
 
     @FXML
     void setReady(MouseEvent event) {
-
+        parentController.setReady();
     }
 
     public void setParentController(BodyController parentController) {

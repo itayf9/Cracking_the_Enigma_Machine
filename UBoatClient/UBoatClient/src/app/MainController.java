@@ -476,6 +476,54 @@ public class MainController {
     }
 
     /**
+     * send http request to the server to report that uboat is ready to start the contest.
+     */
+    public void setReady() {
+        if (textHasBeenCiphered.get() == Boolean.FALSE) {
+            setStatusMessage("please cipher some text", MessageTone.ERROR);
+            return;
+        }
+        isClientReady.set(Boolean.TRUE);
+
+        String body = "";
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/ready").newBuilder();
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+
+
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+                Gson gson = new Gson();
+
+
+                if (response.code() != 200) {
+                    DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR);
+                    });
+
+                } else {
+                    Platform.runLater(() -> {
+                        setStatusMessage("uboat is ready", MessageTone.SUCCESS);
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
+
+    }
+
+    /**
      * clear all findings of last process and labels progress
      */
     private void cleanOldResults() {
@@ -653,5 +701,4 @@ public class MainController {
                 return problem.name();
         }
     }
-
 }

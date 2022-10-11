@@ -176,9 +176,10 @@ public class BodyController {
                                BooleanProperty isBruteForceTaskActive, DoubleProperty averageTasksProcessTimeProperty, LongProperty totalTimeDecryptProperty) {
 
         // binds the components that need the isConfigured Boolean property.
-        encryptDecrypt.disableProperty().bind(isMachineConfiguredProperty.not().or(isBruteForceTaskActive));
+        codeCalibration.disableProperty().bind(isClientReady);
+        encryptDecrypt.disableProperty().bind(isMachineConfiguredProperty.not().or(isBruteForceTaskActive).or(isClientReady));
         candidatesArea.disableProperty().bind(isMachineConfiguredProperty.not());
-        dictionary.disableProperty().bind(isMachineConfiguredProperty.not().or(isBruteForceTaskActive));
+        dictionary.disableProperty().bind(isMachineConfiguredProperty.not().or(isBruteForceTaskActive).or(isClientReady));
 
         // config bindings
         currentConfigController.bindConfigComponents(inUseRotorsIDsProperty, currentWindowsCharactersProperty, inUseReflectorSymbolProperty, inUsePlugs, currentNotchDistances, isMachineConfiguredProperty);
@@ -316,5 +317,9 @@ public class BodyController {
 
     public void setCipherOutput(Problem problem, String cipherText) {
         encryptDecryptController.setCipherOutput(problem, cipherText);
+    }
+
+    public void setReady() {
+        mainController.setReady();
     }
 }
