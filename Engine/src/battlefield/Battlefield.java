@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Battlefield {
@@ -32,6 +33,7 @@ public class Battlefield {
     private boolean isBattlefieldConfigured;
 
     public Battlefield() {
+        this.uboatCandidatesQueue = new LinkedBlockingQueue<>();
         this.allies = new HashSet<>();
         this.battlefieldName = "";
         this.isUboatReady = false;
@@ -87,10 +89,6 @@ public class Battlefield {
 
     public BlockingQueue<AgentConclusion> getUboatCandidatesQueue() {
         return uboatCandidatesQueue;
-    }
-
-    public void setUboatCandidatesQueue(BlockingQueue<AgentConclusion> uboatCandidatesQueue) {
-        this.uboatCandidatesQueue = uboatCandidatesQueue;
     }
 
     public void setBattlefieldName(String battlefieldName) {

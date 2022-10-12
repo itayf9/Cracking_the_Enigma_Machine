@@ -33,6 +33,12 @@ public class FetchCandidatesServlet extends HttpServlet {
         if (isValidSession) {
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
 
+            if (!typeOfClient.equals(Client.ALLIE) && !typeOfClient.equals(Client.UBOAT)) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
+                return;
+            }
+
             switch (typeOfClient) {
                 case UBOAT:
                     DTOagentConclusions agentConclusionsStatus = engine.fetchNextCandidates(usernameFromSession);
@@ -40,7 +46,7 @@ public class FetchCandidatesServlet extends HttpServlet {
                     resp.getWriter().println(gson.toJson(agentConclusionsStatus));
                     break;
                 case ALLIE:
-                    String uboatName = req.getParameter("uboat-name");
+                    String uboatName = req.getParameter(Constants.UBOAT_NAME);
                     if (uboatName == null) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));

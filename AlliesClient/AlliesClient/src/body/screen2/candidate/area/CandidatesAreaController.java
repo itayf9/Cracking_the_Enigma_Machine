@@ -21,11 +21,7 @@ public class CandidatesAreaController {
         this.parentController = parentController;
     }
 
-    public void bindInitPropertiesToLabels(BooleanProperty isBruteForceTaskActive, IntegerProperty totalDistinctCandidates, IntegerProperty totalProcessedConfigurations,
-                                           LongProperty totalAmountConfigurations, DoubleProperty bruteForceProgress,
-                                           StringProperty bruteForceProgressBarPercentageLabel, StringProperty bruteForceStatus,
-                                           DoubleProperty averageTasksProcessTimeProperty, LongProperty totalTimeDecryptProperty) {
-
+    public void bindInitPropertiesToLabels(IntegerProperty totalDistinctCandidates) {
         numberOfDistinctCandidatesLabel.textProperty().bind(totalDistinctCandidates.asString());
     }
 

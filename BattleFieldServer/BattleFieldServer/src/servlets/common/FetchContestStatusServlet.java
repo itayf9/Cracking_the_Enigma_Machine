@@ -48,7 +48,7 @@ public class FetchContestStatusServlet extends HttpServlet {
 
             Map<String, Battlefield> battlefields = ServletUtils.getUboatName2battleField(getServletContext());
             resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().println(gson.toJson(new DTOactive(true, Problem.NO_PROBLEM, battlefields.get(usernameFromSession).isActive().get())));
+            resp.getWriter().println(gson.toJson(new DTOactive(true, Problem.NO_PROBLEM, battlefields.get(uboatName).isActive().get())));
         }
     }
 }

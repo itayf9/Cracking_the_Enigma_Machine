@@ -68,8 +68,7 @@ public class ClientIsReadyServlet extends HttpServlet {
             if (engine.allClientsReady(uboatName) && engine.getIsUboatReady(uboatName)) {
                 engine.startBruteForceProcess(uboatName);
             }
-
-
+            
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().println(gson.toJson(new DTOstatus(true, Problem.NO_PROBLEM)));
         }

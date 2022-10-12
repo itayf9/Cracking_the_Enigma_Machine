@@ -135,7 +135,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>WinnerFoundServlet</servlet-name>
-        <url-pattern>/fetch/contest/status</url-pattern>
+        <url-pattern>/contest/winner-found</url-pattern>
     </servlet-mapping>
 
 
@@ -183,6 +183,24 @@
     <servlet-mapping>
         <servlet-name>ResetConfigServlet</servlet-name>
         <url-pattern>/reset</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>FetchContestStatusServlet</servlet-name>
+        <servlet-class>servlets.common.FetchContestStatusServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchContestStatusServlet</servlet-name>
+        <url-pattern>/fetch/contest/status</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>servlets.common.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
 
