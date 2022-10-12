@@ -218,7 +218,7 @@ public class BodyController {
     }
 
     public void clearOldResultsOfBruteForce() {
-        candidatesAreaController.clearOldResultsOfBruteForce();
+        candidatesAreaController.clearOldResults();
     }
 
     public void appendNewWordToInputCipherText(String newWord) {

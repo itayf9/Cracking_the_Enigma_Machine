@@ -67,8 +67,6 @@ public class LoginController {
 
                 String dtoAsStr = response.body().string();
                 System.out.println("Body: " + dtoAsStr);
-                System.out.println("headers: " + response.headers());
-
 
                 if (response.code() != 200) {
                     Gson gson = new Gson();

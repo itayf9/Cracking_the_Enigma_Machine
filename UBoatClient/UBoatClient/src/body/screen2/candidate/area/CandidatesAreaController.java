@@ -1,12 +1,10 @@
 package body.screen2.candidate.area;
 
 import body.BodyController;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.FlowPane;
 
 public class CandidatesAreaController {
@@ -35,7 +33,7 @@ public class CandidatesAreaController {
         candidatesFlowPane.getChildren().add(singleCandidateTile);
     }
 
-    public void clearOldResultsOfBruteForce() {
+    public void clearOldResults() {
         candidatesFlowPane.getChildren().clear();
     }
 }
