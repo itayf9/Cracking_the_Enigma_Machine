@@ -16,7 +16,23 @@ public class ActiveTeamsController {
     @FXML
     private TableView<AllieInfo> teamsTable;
 
-    public void addTeam(AllieInfo allieInfo) {
+    @FXML
+    private TableColumn<AllieInfo, String> nameColumn;
+
+    @FXML
+    private TableColumn<AllieInfo, String> numberOfAgentsColumn;
+
+    @FXML
+    private TableColumn<AllieInfo, String> taskSizeColumn;
+
+    @FXML
+    public void initialize() {
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("allieName"));
+        nameColumn.setSortable(false);
+        numberOfAgentsColumn.setCellValueFactory(new PropertyValueFactory<>("numOfAgents"));
+        numberOfAgentsColumn.setSortable(false);
+        taskSizeColumn.setCellValueFactory(new PropertyValueFactory<>("taskSize"));
+        taskSizeColumn.setSortable(false);
 
     }
 
