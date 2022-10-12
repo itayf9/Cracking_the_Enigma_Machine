@@ -75,6 +75,8 @@ public class MainController {
      */
     private IntegerProperty totalDistinctCandidates;
 
+    private BooleanProperty isSubscribedToContest;
+
     /**
      * contest stuff
      */
@@ -103,6 +105,7 @@ public class MainController {
 
         // property initialize
         this.totalDistinctCandidates = new SimpleIntegerProperty();
+        this.isSubscribedToContest = new SimpleBooleanProperty();
         this.isContestActive = new SimpleBooleanProperty(false);
 
         // Timers
@@ -232,6 +235,7 @@ public class MainController {
                         uboatName = uboatNameToRegister;
                         fetchDynamicContestInfoTimer.setUboatName(uboatName);
                         fetchAlliesInfoTimer.setUboatName(uboatName);
+                        isSubscribedToContest.set(true);
 
                         setStatusMessage("Subscribed Successfully", MessageTone.SUCCESS);
                     });
@@ -558,6 +562,7 @@ public class MainController {
             contestTileController.setIsActiveStatus(isActiveStatusStr);
             contestTileController.setDifficultyLevel(battlefieldInfo.getDifficultyLevel().name());
             contestTileController.setAlliesSubscribedRequired(String.valueOf(battlefieldInfo.getNumOfLoggedAllies()), String.valueOf(battlefieldInfo.getNumOfRequiredAllies()));
+            contestTileController.bindSubscriptionButton(isSubscribedToContest);
             contestTileController.setParentController(bodyController);
             bodyController.insertContestToFlowPane(singleContestTile);
         } catch (IOException e) {

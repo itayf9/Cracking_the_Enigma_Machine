@@ -1,6 +1,7 @@
 package body.screen1.contest.tile;
 
 import body.BodyController;
+import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -50,6 +51,10 @@ public class ContestTileController {
 
     public void setAlliesSubscribedRequired(String alliesSubscribed, String alliesRequired) {
         this.alliesSubscribedRequiredLabel.setText(alliesSubscribed + " / " + alliesRequired);
+    }
+
+    public void bindSubscriptionButton(BooleanProperty isSubscribedToContest) {
+        subscribeButton.disableProperty().bind(isSubscribedToContest);
     }
 
     public void setParentController(BodyController bodyController) {
