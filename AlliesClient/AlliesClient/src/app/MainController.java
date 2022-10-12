@@ -1,6 +1,7 @@
 package app;
 
 import body.BodyController;
+import body.screen1.contest.tile.ContestTileController;
 import body.screen2.candidate.tile.CandidateTileController;
 import candidate.AgentConclusion;
 import candidate.Candidate;
@@ -18,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import okhttp3.*;
 import problem.Problem;
+import tasks.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -76,7 +78,21 @@ public class MainController {
         this.totalDistinctCandidates = new SimpleIntegerProperty();
         this.isContestActive = new SimpleBooleanProperty(false);
 
-         /*isContestActive.addListener((o, oldVal, newVal) -> {
+        // Timers
+        this.contestStatusTimer = new Timer();
+        this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive);
+        this.alliesInfoTimer = new Timer();
+        this.fetchAlliesInfoTimer = new FetchAlliesInfoTimer(this);
+        this.allCandidatesTimer = new Timer();
+        this.fetchAllCandidatesTimer = new FetchCandidatesTimer(this);
+        this.loggedAgentsTimer = new Timer();
+        this.fetchLoggedAgentsInfoTimer = new FetchLoggedAgentsInfoTimer(this);
+        this.dynamicContestInfoTimer = new Timer();
+        this.fetchDynamicContestInfoTimer = new FetchDynamicContestInfoTimer(this);
+        this.contestsInfoTimer = new Timer();
+        this.fetchContestsInfoTimer = new FetchContestsInfoTimer(this);
+
+        isContestActive.addListener((o, oldVal, newVal) -> {
             if (newVal) {
                 // contest == active
                 // stop allies & status timers
@@ -105,6 +121,9 @@ public class MainController {
         statusBackShape.widthProperty().bind(statusLabel.widthProperty());
         statusBackShape.setStrokeWidth(0);
         statusBackShape.setOpacity(0);
+
+        loggedAgentsTimer.schedule(fetchLoggedAgentsInfoTimer, REFRESH_RATE, REFRESH_RATE);
+        contestsInfoTimer.schedule(fetchContestsInfoTimer, REFRESH_RATE, REFRESH_RATE);
     }
 
     /**
@@ -225,6 +244,12 @@ public class MainController {
 
     public void setOkHttpClient(OkHttpClient okHttpClient) {
         this.client = okHttpClient;
+        this.fetchLoggedAgentsInfoTimer.setClient(client);
+        this.fetchContestStatusTimer.setClient(client);
+        this.fetchAllCandidatesTimer.setClient(client);
+        this.fetchAlliesInfoTimer.setClient(client);
+        this.fetchDynamicContestInfoTimer.setClient(client);
+        this.fetchContestsInfoTimer.setClient(client);
     }
 
     public String convertProblemToMessage(Problem problem) {
@@ -293,4 +318,48 @@ public class MainController {
                 return "";
         }
     }
+
+    public void updateLoggedAgentsInfo(Set<AgentInfo> loggedAgents) {
+        bodyController.updateLoggedAgentsInfo(loggedAgents);
+    }
+
+    public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus, List<AgentConclusion> allCandidates) {
+        bodyController.displayDynamicContestInfo(agentsInfo, jobStatus, allCandidates);
+    }
+
+    public void displayContestsInfo(List<BattlefieldInfo> allBattlefields) {
+
+        bodyController.clearContests();
+        System.out.println("######################");
+        System.out.println(allBattlefields.size());
+        System.out.println("######################");
+
+        for (BattlefieldInfo battlefieldInfo : allBattlefields) {
+            createContestTile(battlefieldInfo);
+        }
+    }
+
+    private void createContestTile(BattlefieldInfo battlefieldInfo) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/body/screen1/contest/tile/contestTile.fxml"));
+            Node singleContestTile = loader.load();
+            ContestTileController contestTileController = loader.getController();
+
+            contestTileController.setBattlefieldName(battlefieldInfo.getBattleName());
+            contestTileController.setUboatName(battlefieldInfo.getUboatName());
+            String isActiveStatusStr = "Idle";
+            if (battlefieldInfo.isActive()) {
+                isActiveStatusStr = "Active";
+            }
+            contestTileController.setIsActiveStatus(isActiveStatusStr);
+            contestTileController.setDifficultyLevel(battlefieldInfo.getDifficultyLevel().name());
+            contestTileController.setAlliesSubscribedRequired(String.valueOf(battlefieldInfo.getNumOfLoggedAllies()), String.valueOf(battlefieldInfo.getNumOfRequiredAllies()));
+            contestTileController.setParentController(bodyController);
+            bodyController.insertContestToFlowPane(singleContestTile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -27,8 +27,8 @@
                                 <RowConstraints maxHeight="294.0" prefHeight="250.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                      <children>
-                        <fx:include source="screen1/agentsinfo/agentsinfo.fxml" />
-                        <fx:include source="screen1/contest/area/contestsArea.fxml" GridPane.columnIndex="2" />
+                        <fx:include fx:id="agentsInfo" source="screen1/agentsinfo/agentsinfo.fxml" />
+                        <fx:include fx:id="contestsArea" source="screen1/contest/area/contestsArea.fxml" GridPane.columnIndex="2" />
                      </children>
                         </GridPane>
                     </content>
@@ -57,10 +57,10 @@
                                 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="150.0" prefHeight="257.6666717529297" vgrow="ALWAYS" />
                             </rowConstraints>
                             <children>
-                        <fx:include source="screen2/activeteamsarea/activeteamsarea.fxml" GridPane.columnIndex="3" />
+                        <fx:include fx:id="activeTeams" source="screen2/activeteamsarea/activeteamsarea.fxml" GridPane.columnIndex="3" />
                                 <fx:include fx:id="candidatesArea" source="screen2/candidate/area/candidatesArea.fxml" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="2" />
-                        <fx:include source="screen2/agentsprogress/agentsProgress.fxml" GridPane.rowIndex="2" />
-                        <fx:include source="screen1/contest/tile/contestTile.fxml" />
+                        <fx:include fx:id="agentProgress" source="screen2/agentsprogress/agentsProgress.fxml" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                        <fx:include fx:id="contestTile" source="screen1/contest/tile/contestTile.fxml" />
                             </children>
                         </GridPane>
                     </content>

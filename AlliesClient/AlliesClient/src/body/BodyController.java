@@ -3,11 +3,13 @@ package body;
 import app.MainController;
 import app.MessageTone;
 import body.screen1.agentsinfo.AgentsInfoController;
-import body.screen1.contest.area.contestsAreaController;
+import body.screen1.contest.area.ContestsAreaController;
 import body.screen2.activeteamsarea.ActiveTeamsController;
 import body.screen2.agentsprogress.AgentsProgressController;
 import body.screen2.candidate.area.CandidatesAreaController;
-import body.screen1.contest.tile.contestTileController;
+import body.screen1.contest.tile.ContestTileController;
+import candidate.AgentConclusion;
+import info.agent.AgentInfo;
 import info.allie.AllieInfo;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
@@ -16,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import problem.Problem;
 
 import java.util.List;
+import java.util.Set;
 
 public class BodyController {
 
@@ -30,9 +33,9 @@ public class BodyController {
     private AgentsInfoController agentsInfoController;
 
     @FXML
-    private GridPane allContestsInfo;
+    private GridPane contestsArea;
     @FXML
-    private contestsAreaController allContestsInfoController;
+    private ContestsAreaController contestsAreaController;
 
     /**
      * screen 2
@@ -53,9 +56,9 @@ public class BodyController {
     private AgentsProgressController agentProgressController;
 
     @FXML
-    private GridPane myContestInfo;
+    private GridPane contestTile;
     @FXML
-    private contestTileController myContestInfoController;
+    private ContestTileController contestTileController;
 
 
     /**
