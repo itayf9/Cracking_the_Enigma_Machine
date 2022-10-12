@@ -1,0 +1,16 @@
+
+.task-size-spinner *.increment-arrow-button {
+    -fx-background-color: #0095ff;
+}
+
+.task-size-spinner *.decrement-arrow-button {
+    -fx-background-color: #0095ff;
+}
+
+.task-size-spinner *.increment-arrow-button *.increment-arrow {
+    -fx-background-color: white;
+}
+
+.task-size-spinner *.decrement-arrow-button *.decrement-arrow {
+    -fx-background-color: white;
+}
