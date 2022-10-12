@@ -8,6 +8,9 @@ import candidate.Candidate;
 import com.google.gson.Gson;
 import dto.*;
 import header.HeaderController;
+import http.cookie.SimpleCookieManager;
+import http.url.Constants;
+import info.allie.AllieInfo;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -594,16 +597,22 @@ public class MainController {
     private void createCandidateTile(Candidate candidate, String AllieName, String AgentName) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/body/screen3/candidate/tile/candidateTile.fxml"));
+            loader.setLocation(getClass().getResource("/body/screen2/candidate/tile/candidateTile.fxml"));
             Node singleCandidateTile = loader.load();
             CandidateTileController candidateTileController = loader.getController();
 
+            // builds the new candidate tile
             candidateTileController.setDecipheredText(candidate.getDecipheredText());
             candidateTileController.setRotorsIDs(candidate.getRotorsIDs());
             candidateTileController.setWindowsCharsAndNotches(candidate.getWindowChars(), candidate.getNotchPositions());
             candidateTileController.setReflectorSymbol(candidate.getReflectorSymbol());
             candidateTileController.setProcessedByAllieName(AllieName);
             candidateTileController.setProcessedByAgentName(AgentName);
+
+            // updates the total distinct candidates counter
+            totalDistinctCandidates.setValue(totalDistinctCandidates.getValue() + 1);
+
+            // inserts the new candidate to the area
             bodyController.insertCandidateToFlowPane(singleCandidateTile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -790,5 +799,41 @@ public class MainController {
             default:
                 return problem.name();
         }
+    }
+
+    public void updateAlliesInfo(List<AllieInfo> alliesInfoList) {
+        bodyController.updateAlliesInfo(alliesInfoList);
+    }
+
+    public void scanCandidates(List<AgentConclusion> conclusions) {
+
+        // goes through all the conclusions
+        for (AgentConclusion conclusion : conclusions) {
+            String currentAllieName = conclusion.getAllieName();
+            String currentAgentName = conclusion.getAgentName();
+
+            // goes through all the candidates of each conclusion
+            for (Candidate candidate : conclusion.getCandidates()) {
+
+                // adds a new tile to the candidates area
+                createCandidateTile(candidate, currentAllieName, currentAgentName);
+
+                // checks for a winner
+                if (candidate.getRotorsIDs().equals(inUseRotorsIDsProperty.getValue())
+                        && candidate.getWindowChars().equals(currentWindowsCharactersProperty.get())
+                        && candidate.getReflectorSymbol().equals(inUseReflectorSymbolProperty.get())
+                        && candidate.getDecipheredText().equals(originalText.get())) {
+
+                    // winner has been found...
+                    announceTheWinnerOfTheContest(conclusion.getAllieName());
+                    return;
+                }
+            }
+
+        }
+    }
+
+    public OkHttpClient getHTTPClient() {
+        return client;
     }
 }
