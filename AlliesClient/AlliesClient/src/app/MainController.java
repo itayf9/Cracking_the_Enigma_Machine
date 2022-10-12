@@ -5,8 +5,16 @@ import body.screen1.contest.tile.ContestTileController;
 import body.screen2.candidate.tile.CandidateTileController;
 import candidate.AgentConclusion;
 import candidate.Candidate;
+import com.google.gson.Gson;
+import dto.DTOresetConfig;
+import dto.DTOstaticContestInfo;
+import dto.DTOstatus;
 import header.HeaderController;
+import http.url.Constants;
+import info.agent.AgentInfo;
 import info.allie.AllieInfo;
+import info.battlefield.BattlefieldInfo;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
@@ -17,12 +25,18 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
+import jobprogress.JobProgressInfo;
 import okhttp3.*;
 import problem.Problem;
 import tasks.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
+import java.util.Timer;
+
+import static http.url.URLconst.BASE_URL;
+import static http.url.URLconst.CONTENT_TYPE;
 
 public class MainController {
 
@@ -64,8 +78,21 @@ public class MainController {
     /**
      * contest stuff
      */
+    public final static int REFRESH_RATE = 2000;
     private BooleanProperty isContestActive;
-
+    private String uboatName;
+    private Timer contestStatusTimer;
+    private FetchContestStatusTimer fetchContestStatusTimer;
+    private Timer alliesInfoTimer;
+    private FetchAlliesInfoTimer fetchAlliesInfoTimer;
+    private Timer allCandidatesTimer;
+    private FetchCandidatesTimer fetchAllCandidatesTimer;
+    private Timer loggedAgentsTimer;
+    private FetchLoggedAgentsInfoTimer fetchLoggedAgentsInfoTimer;
+    private Timer dynamicContestInfoTimer;
+    private FetchDynamicContestInfoTimer fetchDynamicContestInfoTimer;
+    private Timer contestsInfoTimer;
+    private FetchContestsInfoTimer fetchContestsInfoTimer;
 
     @FXML
     public void initialize() {
@@ -99,17 +126,19 @@ public class MainController {
                 setStatusMessage("Contest has started", MessageTone.INFO);
                 fetchContestStatusTimer.cancel();
                 contestStatusTimer.cancel();
-                fetchActiveTeamsInfoTimer.cancel();
-                ActiveTeamsInfoTimer.cancel();
 
-                // schedule fetch candidates timer
-                candidatesTimer.schedule(fetchCandidatesTimer, REFRESH_RATE, REFRESH_RATE);
+                // schedule fetch candidates timer & fetch active teams
+                alliesInfoTimer.schedule(fetchAlliesInfoTimer, REFRESH_RATE, REFRESH_RATE);
+                allCandidatesTimer.schedule(fetchAllCandidatesTimer, REFRESH_RATE, REFRESH_RATE);
+                dynamicContestInfoTimer.schedule(fetchDynamicContestInfoTimer, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // contest == not active => winner found
                 fetchAllCandidatesTimer.cancel();
                 allCandidatesTimer.cancel();
+                fetchAlliesInfoTimer.cancel();
+                alliesInfoTimer.cancel();
             }
-        });*/
+        });
 
         // binding initialize
         bodyController.bindComponents(totalDistinctCandidates);
@@ -130,35 +159,175 @@ public class MainController {
      * #1 fetch logged agents info from server via http request
      */
     public void fetchLoggedAgentsInfoFromServer() {
+        String body = "";
 
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/agents").newBuilder();
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .get()
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+
+
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+                Gson gson = new Gson();
+
+
+                if (response.code() != 200) {
+                    DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR);
+                    });
+
+                } else {
+                    DTOresetConfig resetStatus = gson.fromJson(dtoAsStr, DTOresetConfig.class);
+
+                    Platform.runLater(() -> {
+
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
     }
 
     /**
      * #2 register the app to a battlefield with http request to the server
      */
-    public void subscribeToBattlefield() {
+    public void subscribeToBattlefield(String uboatNameToRegister) {
+        String body = "";
 
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/subscribe").newBuilder();
+        urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatNameToRegister);
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+
+
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+                Gson gson = new Gson();
+
+                DTOstatus subscribeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+
+                if (response.code() != 200) {
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(subscribeStatus.getDetails()), MessageTone.ERROR);
+                    });
+
+                } else {
+                    Platform.runLater(() -> {
+                        uboatName = uboatNameToRegister;
+                        fetchDynamicContestInfoTimer.setUboatName(uboatName);
+                        fetchAlliesInfoTimer.setUboatName(uboatName);
+
+                        setStatusMessage("Subscribed Successfully", MessageTone.SUCCESS);
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
     }
 
     /**
      * #3 let the server know we are ready for contest to start
      */
     public void setReady() {
+        String body = "";
 
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/static").newBuilder();
+        urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatName);
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+                Gson gson = new Gson();
+
+
+                if (response.code() != 200) {
+                    DTOstatus readyStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(readyStatus.getDetails()), MessageTone.ERROR);
+                    });
+
+                } else {
+                    Platform.runLater(() -> {
+                        cleanOldResults();
+                        contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
+                        setStatusMessage("Allie is Ready", MessageTone.INFO);
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
     }
 
     /**
      * #4 fetch static info about the contest from the server via http request
      */
     public void fetchStaticInfoContest() {
+        String body = "";
 
-    }
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/ready").newBuilder();
+        urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatName);
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
 
-    /**
-     * #5 fetch dynamic info about the contest from the server via http request timer...
-     */
-    public void fetchDynamicInfoContest() {
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+                Gson gson = new Gson();
 
+
+                if (response.code() != 200) {
+                    DTOstatus staticInfoStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(staticInfoStatus.getDetails()), MessageTone.ERROR);
+                    });
+
+                } else {
+                    DTOstaticContestInfo staticInfoStatus = gson.fromJson(dtoAsStr, DTOstaticContestInfo.class);
+                    Platform.runLater(() -> {
+                        bodyController.displayStaticContestInfo(staticInfoStatus.getAlliesInfo(), staticInfoStatus.getBattlefieldInfo());
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
     }
 
     /**
@@ -195,6 +364,40 @@ public class MainController {
      * confirm the contest is over and alert the server
      */
     public void approveContestIsOver() {
+        String body = "";
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/static").newBuilder();
+        urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatName);
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+                Gson gson = new Gson();
+
+                if (response.code() != 200) {
+                    DTOstatus approveStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(approveStatus.getDetails()), MessageTone.ERROR);
+                    });
+
+                } else {
+                    Platform.runLater(() -> {
+                        setStatusMessage("Contest is Approved", MessageTone.INFO);
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
     }
 
     /**

@@ -1323,8 +1323,12 @@ public class EnigmaEngine implements Engine {
             return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
         }
 
-        battlefield.addDecryptManager(alliesName, agentName2agentInfo); // cant fail..
-        return new DTOstatus(true, Problem.NO_PROBLEM);
+        if (battlefield.getAllies().size() < battlefield.getNumOfRequiredAllies()) {
+            battlefield.addDecryptManager(alliesName, agentName2agentInfo); // cant fail..
+            return new DTOstatus(true, Problem.NO_PROBLEM);
+        } else {
+            return new DTOstatus(false, Problem.CONTEST_IS_FULL);
+        }
     }
 
     @Override

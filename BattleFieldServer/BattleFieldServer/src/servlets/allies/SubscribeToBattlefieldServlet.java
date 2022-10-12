@@ -33,7 +33,6 @@ public class SubscribeToBattlefieldServlet extends HttpServlet {
                 return;
             }
 
-
             String uboatNameToRegister = req.getParameter(Constants.UBOAT_NAME);
             if (uboatNameToRegister == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

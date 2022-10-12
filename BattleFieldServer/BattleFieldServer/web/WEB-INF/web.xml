@@ -203,5 +203,14 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ApproveAllieFinishGameServlet</servlet-name>
+        <servlet-class>servlets.allies.ApproveAllieFinishGameServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ApproveAllieFinishGameServlet</servlet-name>
+        <url-pattern>/approve/contest</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>

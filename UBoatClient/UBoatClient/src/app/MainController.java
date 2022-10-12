@@ -686,54 +686,6 @@ public class MainController {
         fetchAlliesInfoTimer.setClient(client);
     }
 
-//    /**
-//     * changes the skin theme across the entire app.
-//     *
-//     * @param skin the skin to change to: Dark, Normal, Spacial
-//     */
-//    public void setAppSkin(Skin skin) {
-//
-//        System.out.println("before remove");
-//        System.out.println(header.getStylesheets());
-//
-//
-//        // removes all stylesheets
-//        header.getStylesheets().removeAll(header.getStylesheets());
-//        System.out.println(header.getStylesheets());
-//        appGridPane.getStylesheets().removeAll(appGridPane.getStylesheets());
-//        body.getStylesheets().removeAll(body.getStylesheets());
-//        statusBar.getStylesheets().removeAll(statusBar.getStylesheets());
-//
-//        System.out.println("after remove");
-//        System.out.println(header.getStylesheets());
-//
-//        // adds "app", "header", "body", "statusbar" stylesheets
-//        URL appUrl = getClass().getResource("/app/app-" + skin.skinName() + ".css");
-//        header.getStylesheets().add(appUrl.toString());
-//        appGridPane.getStylesheets().add(appUrl.toString());
-//        body.getStylesheets().add(appUrl.toString());
-//        statusBar.getStylesheets().add(appUrl.toString());
-//
-//        URL headerUrl = getClass().getResource("/header/header-" + skin.skinName() + ".css");
-//        header.getStylesheets().add(headerUrl.toString());
-//
-//        URL bodyUrl = getClass().getResource("/body/body-" + skin.skinName() + ".css");
-//        body.getStylesheets().add(bodyUrl.toString());
-//
-//        URL statusbarUrl = getClass().getResource("/app/statusbar/statusbar-" + skin.skinName() + ".css");
-//        statusBar.getStylesheets().add(statusbarUrl.toString());
-//
-//        System.out.println("after add");
-//        System.out.println(header.getStylesheets());
-//
-//        // adds stylesheets to the body components
-//        bodyController.setComponentsSkin(appUrl.toString(), skin);
-//
-//        // sets images
-//        headerController.setImages(skin);
-//
-//    }
-
     public String convertProblemToMessage(Problem problem) {
         switch (problem) {
             case CIPHER_INPUT_EMPTY_STRING:

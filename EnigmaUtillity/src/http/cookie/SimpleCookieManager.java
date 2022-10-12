@@ -26,8 +26,6 @@ public class SimpleCookieManager implements CookieJar {
 
     @Override
     public void saveFromResponse(HttpUrl httpUrl, List<Cookie> responseCookies) {
-        System.out.println("in save function !");
-
         String host = httpUrl.host();
         synchronized (this) {
             Map<String, Cookie> cookiesMap = cookies.computeIfAbsent(host, key -> new HashMap<>());

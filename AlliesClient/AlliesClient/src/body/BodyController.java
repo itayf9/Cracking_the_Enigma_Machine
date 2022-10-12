@@ -11,10 +11,12 @@ import body.screen1.contest.tile.ContestTileController;
 import candidate.AgentConclusion;
 import info.agent.AgentInfo;
 import info.allie.AllieInfo;
+import info.battlefield.BattlefieldInfo;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
+import jobprogress.JobProgressInfo;
 import problem.Problem;
 
 import java.util.List;
@@ -69,14 +71,13 @@ public class BodyController {
 
         //screen 1
         agentsInfoController.setParentController(this);
-        allContestsInfoController.setParentController(this);
+        contestsAreaController.setParentController(this);
 
         //screen 2
         candidatesAreaController.setParentController(this);
         activeTeamsController.setParentController(this);
         agentProgressController.setParentController(this);
-        myContestInfoController.setParentController(this);
-
+        contestTileController.setParentController(this);
     }
 
     /**
@@ -117,5 +118,28 @@ public class BodyController {
 
     public void updateActiveTeamsInfo(List<AllieInfo> alliesInfoList) {
         activeTeamsController.setTeams(alliesInfoList);
+    }
+
+    public void subscribeToBattlefieldAction(String uboatName) {
+        mainController.subscribeToBattlefield(uboatName);
+    }
+
+    public void updateLoggedAgentsInfo(Set<AgentInfo> loggedAgents) {
+        agentsInfoController.setAgents(loggedAgents);
+    }
+
+    public void displayStaticContestInfo(List<AllieInfo> alliesInfo, BattlefieldInfo battlefieldInfo) {
+        contestsAreaController.displayStaticContestInfo(alliesInfo, battlefieldInfo);
+    }
+
+    public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus, List<AgentConclusion> allCandidates) {
+    }
+
+    public void insertContestToFlowPane(Node singleContestTile) {
+        contestsAreaController.insertContestToFlowPane(singleContestTile);
+    }
+
+    public void clearContests() {
+        contestsAreaController.clearContests();
     }
 }

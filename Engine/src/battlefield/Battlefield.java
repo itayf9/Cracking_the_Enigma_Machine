@@ -104,7 +104,9 @@ public class Battlefield {
     }
 
     public void addDecryptManager(String allieName, Map<String, AgentInfo> agentName2agentInfo) {
+        System.out.println(allies);
         allies.add(new DecryptManager(allieName, this, agentName2agentInfo));
+        System.out.println(allies);
     }
 
     public AtomicBoolean isActive() {
