@@ -9,8 +9,10 @@ import body.screen2.candidate.area.CandidatesAreaController;
 import body.screen2.currentconfig.CurrentConfigController;
 import body.screen2.dictionary.DictionaryController;
 import body.screen2.encrypt.EncryptDecryptController;
+import dto.DTOallies;
 import dto.DTOciphertext;
 import dto.DTOspecs;
+import info.allie.AllieInfo;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -322,5 +324,9 @@ public class BodyController {
 
     public void setReady() {
         mainController.setReady();
+    }
+
+    public void updateAlliesInfo(List<AllieInfo> alliesInfoList) {
+        activeTeamsController.setTeams(alliesInfoList);
     }
 }
