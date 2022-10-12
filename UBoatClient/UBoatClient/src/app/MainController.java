@@ -3,6 +3,7 @@ package app;
 import bindings.CurrWinCharsAndNotchPosBinding;
 import body.BodyController;
 import body.screen2.candidate.tile.CandidateTileController;
+import candidate.AgentConclusion;
 import candidate.Candidate;
 import com.google.gson.Gson;
 import dto.*;
@@ -23,11 +24,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import okhttp3.*;
 import problem.Problem;
+import tasks.FetchAlliesInfoTimer;
+import tasks.FetchCandidatesTimer;
+import tasks.FetchContestStatusTimer;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Timer;
 
 import static http.url.QueryParameter.*;
 import static http.url.URLconst.BASE_URL;
@@ -100,6 +106,19 @@ public class MainController {
     private LongProperty totalTimeDecryptProperty;
     private StringProperty dictionaryExcludeCharsProperty;
 
+    /**
+     * contest stuff
+     */
+    public final static int REFRESH_RATE = 2000;
+    private BooleanProperty isContestActive;
+    private Timer contestStatusTimer;
+    private FetchContestStatusTimer fetchContestStatusTimer;
+    private Timer alliesInfoTimer;
+    private FetchAlliesInfoTimer fetchAlliesInfoTimer;
+    private Timer candidatesTimer;
+    private FetchCandidatesTimer fetchCandidatesTimer;
+    private StringProperty originalText;
+
 
     @FXML
     public void initialize() {
@@ -130,6 +149,34 @@ public class MainController {
         this.totalTimeDecryptProperty = new SimpleLongProperty();
         this.isClientReady = new SimpleBooleanProperty(false);
         this.textHasBeenCiphered = new SimpleBooleanProperty(false);
+        this.isContestActive = new SimpleBooleanProperty(false);
+        this.contestStatusTimer = new Timer();
+        this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive);
+        this.alliesInfoTimer = new Timer();
+        this.fetchAlliesInfoTimer = new FetchAlliesInfoTimer(this);
+        this.candidatesTimer = new Timer();
+        this.fetchCandidatesTimer = new FetchCandidatesTimer(this);
+        this.originalText = new SimpleStringProperty();
+
+        // add event change listener
+        isContestActive.addListener((o, oldVal, newVal) -> {
+            if (newVal) {
+                // contest == active
+                // stop allies & status timers
+                setStatusMessage("Contest has started", MessageTone.INFO);
+                fetchContestStatusTimer.cancel();
+                contestStatusTimer.cancel();
+                fetchAlliesInfoTimer.cancel();
+                alliesInfoTimer.cancel();
+
+                // schedule fetch candidates timer
+                candidatesTimer.schedule(fetchCandidatesTimer, REFRESH_RATE, REFRESH_RATE);
+            } else {
+                // contest == not active => winner found
+                fetchCandidatesTimer.cancel();
+                candidatesTimer.cancel();
+            }
+        });
 
 
         // binding initialize
@@ -246,6 +293,7 @@ public class MainController {
                             dictionaryExcludeCharsProperty.setValue(loadStatus.getDictionaryExcludeCharacters());
                             bodyController.setCodeCalibration(loadStatus.getInUseRotorsCount(), loadStatus.getAvailableRotorsCount(), loadStatus.getMachineAlphabet(),
                                     loadStatus.getAvailableReflectorsCount());
+                            alliesInfoTimer.schedule(fetchAlliesInfoTimer, REFRESH_RATE, REFRESH_RATE);
                             setStatusMessage("Machine Loaded Successfully!", MessageTone.SUCCESS);
                         });
                     }
@@ -386,6 +434,7 @@ public class MainController {
      */
     public void cipher(String line) {
 
+        originalText.set(line);
 
         String body = "";
 
@@ -515,6 +564,8 @@ public class MainController {
 
                 } else {
                     Platform.runLater(() -> {
+                        contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
+                        cleanOldResults();
                         setStatusMessage("uboat is ready", MessageTone.SUCCESS);
                     });
                 }
@@ -532,10 +583,7 @@ public class MainController {
      */
     private void cleanOldResults() {
         bodyController.clearOldResultsOfBruteForce();
-        bruteForceProgress.set(0);
-        totalDistinctCandidates.set(0);
-        totalProcessedConfigurations.set(0);
-        averageTasksProcessTimeProperty.set(0);
+        totalDistinctCandidates.setValue(0);
     }
 
     /**
@@ -578,17 +626,55 @@ public class MainController {
     /**
      * stops & cancel the engine Brute-Force process
      */
-    public void announceTheWinnerOfTheContest() {
-        isBruteForceTaskActive.set(false);
-        /**
-         * http request to found winner servlet
-         * engine.stopBruteForceProcess();
-         * */
+    public void announceTheWinnerOfTheContest(String allieWinnerName) {
+
+        String body = "";
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/contest/winner-found").newBuilder();
+        urlBuilder.addQueryParameter(Constants.ALLIE_NAME, allieWinnerName);
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+
+
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+                Gson gson = new Gson();
+
+
+                if (response.code() != 200) {
+                    DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR);
+                    });
+
+                } else {
+                    DTOresetConfig resetStatus = gson.fromJson(dtoAsStr, DTOresetConfig.class);
+
+                    Platform.runLater(() -> {
+                        isContestActive.set(false);
+                        isClientReady.set(false);
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
 
     }
 
     public void setOkHttpClient(OkHttpClient okHttpClient) {
         this.client = okHttpClient;
+        fetchContestStatusTimer.setClient(client);
+        fetchCandidatesTimer.setClient(client);
+        fetchAlliesInfoTimer.setClient(client);
     }
 
 //    /**
