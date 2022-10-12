@@ -1131,12 +1131,16 @@ public class EnigmaEngine implements Engine {
     @Override
     public boolean allClientsReady(String uboatName) {
         final boolean[] isAllReady = {true};
+        Battlefield battlefield = uboatName2battleField.get(uboatName);
+        Set<DecryptManager> allies = battlefield.getAllies();
 
-        Set<DecryptManager> allies = uboatName2battleField.get(uboatName).getAllies();
-        Optional<DecryptManager> unreadyDM = allies.stream().filter(allie -> !allie.getDMReady()).findFirst();
+        if (allies.size() == battlefield.getNumOfRequiredAllies()) {
+            Optional<DecryptManager> unreadyDM = allies.stream().filter(allie -> !allie.getDMReady()).findFirst();
 
-        unreadyDM.ifPresent(decryptManager -> isAllReady[0] = false);
-        return isAllReady[0];
+            unreadyDM.ifPresent(decryptManager -> isAllReady[0] = false);
+            return isAllReady[0];
+        }
+        return false;
     }
 
     /**
