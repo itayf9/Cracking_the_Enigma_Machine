@@ -51,11 +51,11 @@ public class BodyController {
     private CurrentConfigController currentConfigController;
 
     @FXML
-    private GridPane encryptDecrypt;
+    private contestsAreaController allContestsInfoController;
 
-    @FXML
-    private EncryptDecryptController encryptDecryptController;
-
+    /**
+     * screen 2
+     */
     @FXML
     private GridPane candidatesArea;
 
@@ -72,7 +72,12 @@ public class BodyController {
     private GridPane activeTeams;
 
     @FXML
-    private ActiveTeamsController activeTeamsController;
+    private AgentsProgressController agentProgressController;
+
+    @FXML
+    private GridPane myContestInfo;
+    @FXML
+    private contestTileController myContestInfoController;
 
 
     /**

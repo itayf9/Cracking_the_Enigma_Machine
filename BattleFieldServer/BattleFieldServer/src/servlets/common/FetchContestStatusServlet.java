@@ -29,13 +29,17 @@ public class FetchContestStatusServlet extends HttpServlet {
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
         Client typeOfClient = SessionUtils.getTypeOfClient(req);
         if (isValidSession) {
-            if (!typeOfClient.equals(Client.AGENT) && !typeOfClient.equals(Client.ALLIE)) {
+            if (!typeOfClient.equals(Client.AGENT) && !typeOfClient.equals(Client.ALLIE) && !typeOfClient.equals(Client.UBOAT)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
                 return;
             }
-
-            String uboatName = req.getParameter(Constants.UBOAT_NAME);
+            String uboatName;
+            if (typeOfClient.equals(Client.UBOAT)) {
+                uboatName = usernameFromSession;
+            } else {
+                uboatName = req.getParameter(Constants.UBOAT_NAME);
+            }
             if (uboatName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
