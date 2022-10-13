@@ -133,10 +133,11 @@ public class BodyController {
     public void displayStaticContestInfo(List<AllieInfo> alliesInfo, BattlefieldInfo battlefieldInfo) {
         activeTeamsController.setTeams(alliesInfo);
         contestTileController.setContestInfo(battlefieldInfo);
+        agentProgressController.setTextToDecipher(battlefieldInfo.getTextToDecipher());
     }
 
     public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus, List<AgentConclusion> allCandidates) {
-
+        agentProgressController.setProgressInfo(agentsInfo, jobStatus);
     }
 
     public void insertContestToFlowPane(Node singleContestTile) {

@@ -46,7 +46,7 @@
       <Label fx:id="totalTasksLabel" text="100002" GridPane.columnIndex="4" GridPane.rowIndex="4" />
       <Label styleClass="sub-title" text="Tasks Produced So Far:" GridPane.columnIndex="3" GridPane.rowIndex="5" />
       <Label styleClass="sub-title" text="Tasks Finished By Agents So Far:" GridPane.columnIndex="3" GridPane.rowIndex="6" />
-      <Label fx:id="FinishedTasksLabel" text="100" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+      <Label fx:id="finishedTasksLabel" text="100" GridPane.columnIndex="4" GridPane.rowIndex="6" />
       <Label fx:id="producedTasksLabel" text="11100" GridPane.columnIndex="4" GridPane.rowIndex="5" />
       <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="4" />
       <Separator prefWidth="200.0" GridPane.columnSpan="5" GridPane.rowIndex="2" />
