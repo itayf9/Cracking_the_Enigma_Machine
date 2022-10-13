@@ -56,6 +56,7 @@
                              <RowConstraints maxHeight="1.7976931348623157E308" minHeight="150.0" prefHeight="257.6666717529297" vgrow="ALWAYS" />
                          </rowConstraints>
                      <children>
+                        <fx:include fx:id="loseWinArea" source="../winner/loseWinArea.fxml" />
                         <fx:include fx:id="encryptDecrypt" source="screen2/encrypt/encrypt-decrypt.fxml" GridPane.columnIndex="2" GridPane.columnSpan="2" />
                         <fx:include fx:id="dictionary" source="screen2/dictionary/dictionary.fxml" GridPane.columnIndex="5" />
                         <fx:include fx:id="candidatesArea" source="screen2/candidate/area/candidatesArea.fxml" GridPane.columnSpan="3" GridPane.rowIndex="2" />

@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import problem.Problem;
+import winner.LoseWinAreaController;
 
 import java.util.List;
 import java.util.Set;
@@ -45,6 +46,12 @@ public class BodyController {
     /**
      * screen 2 controllers and components
      */
+
+    @FXML
+    private GridPane loseWinArea;
+
+    @FXML
+    private LoseWinAreaController loseWinAreaController;
 
     @FXML
     private GridPane currentConfig;
@@ -88,6 +95,7 @@ public class BodyController {
         machineDetailsController.setParentController(this);
 
         //screen 2
+        loseWinAreaController.setParentController(this);
         currentConfigController.setParentController(this);
         encryptDecryptController.setParentController(this);
         candidatesAreaController.setParentController(this);
