@@ -136,7 +136,7 @@ public class BodyController {
         agentProgressController.setTextToDecipher(battlefieldInfo.getTextToDecipher());
     }
 
-    public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus, List<AgentConclusion> allCandidates) {
+    public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus) {
         agentProgressController.setProgressInfo(agentsInfo, jobStatus);
     }
 

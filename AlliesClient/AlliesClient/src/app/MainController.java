@@ -419,7 +419,7 @@ public class MainController {
      *
      * @param candidate the candidate to create a tile from
      */
-    private void createCandidateTile(Candidate candidate, String AllieName, String AgentName) {
+    private void createCandidateTile(Candidate candidate, String allieName, String agentName) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/body/screen3/candidate/tile/candidateTile.fxml"));
@@ -430,8 +430,8 @@ public class MainController {
             candidateTileController.setRotorsIDs(candidate.getRotorsIDs());
             candidateTileController.setWindowsCharsAndNotches(candidate.getWindowChars(), candidate.getNotchPositions());
             candidateTileController.setReflectorSymbol(candidate.getReflectorSymbol());
-            candidateTileController.setProcessedByAllieName(AllieName);
-            candidateTileController.setProcessedByAgentName(AgentName);
+            candidateTileController.setProcessedByAllieName(allieName);
+            candidateTileController.setProcessedByAgentName(agentName);
             bodyController.insertCandidateToFlowPane(singleCandidateTile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -533,7 +533,14 @@ public class MainController {
     }
 
     public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus, List<AgentConclusion> allCandidates) {
-        bodyController.displayDynamicContestInfo(agentsInfo, jobStatus, allCandidates);
+        bodyController.displayDynamicContestInfo(agentsInfo, jobStatus);
+        for (AgentConclusion agentConclusion : allCandidates) {
+            String allieName = agentConclusion.getAllieName();
+            String agentName = agentConclusion.getAgentName();
+            for (Candidate candidate : agentConclusion.getCandidates()) {
+                createCandidateTile(candidate, allieName, agentName);
+            }
+        }
     }
 
     public void displayContestsInfo(List<BattlefieldInfo> allBattlefields) {
