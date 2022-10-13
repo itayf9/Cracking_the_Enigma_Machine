@@ -1,5 +1,7 @@
 package body.screen1.alliesetting;
 
+import body.BodyController;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
@@ -7,6 +9,9 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.MouseEvent;
 
 public class AllieSettingController {
+
+    private BodyController parentController;
+
 
     @FXML
     private Spinner<Integer> taskSizeSpinner;
@@ -38,7 +43,11 @@ public class AllieSettingController {
 
     @FXML
     void setReady(MouseEvent event) {
+        parentController.setReady(taskSizeSpinner.getValue());
+    }
 
+    public void setParentController(BodyController bodyController) {
+        this.parentController = bodyController;
     }
 
 }

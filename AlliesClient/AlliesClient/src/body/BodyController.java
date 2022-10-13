@@ -94,10 +94,12 @@ public class BodyController {
      *
      * @param totalDistinctCandidates totalDistinctCandidates
      */
-    public void bindComponents(IntegerProperty totalDistinctCandidates) {
+    public void bindComponents(IntegerProperty totalDistinctCandidates, BooleanProperty isSubscribedToContest) {
 
         // brute force dashboard labels bind
         candidatesAreaController.bindInitPropertiesToLabels(totalDistinctCandidates);
+
+
     }
 
     public void insertCandidateToFlowPane(Node singleCandidateTile) {
@@ -129,10 +131,12 @@ public class BodyController {
     }
 
     public void displayStaticContestInfo(List<AllieInfo> alliesInfo, BattlefieldInfo battlefieldInfo) {
-        contestsAreaController.displayStaticContestInfo(alliesInfo, battlefieldInfo);
+        activeTeamsController.setTeams(alliesInfo);
+        contestTileController.setContestInfo(battlefieldInfo);
     }
 
     public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus, List<AgentConclusion> allCandidates) {
+
     }
 
     public void insertContestToFlowPane(Node singleContestTile) {
@@ -141,5 +145,9 @@ public class BodyController {
 
     public void clearContests() {
         contestsAreaController.clearContests();
+    }
+
+    public void setReady(int taskSize) {
+        mainController.setReady(taskSize);
     }
 }

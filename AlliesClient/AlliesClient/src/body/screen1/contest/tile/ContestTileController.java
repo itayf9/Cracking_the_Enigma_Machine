@@ -1,6 +1,7 @@
 package body.screen1.contest.tile;
 
 import body.BodyController;
+import info.battlefield.BattlefieldInfo;
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -59,5 +60,17 @@ public class ContestTileController {
 
     public void setParentController(BodyController bodyController) {
         this.parentController = bodyController;
+    }
+
+    public void setContestInfo(BattlefieldInfo battlefieldInfo) {
+        this.battlefieldNameLabel.setText(battlefieldInfo.getBattleName());
+        this.uboatNameLabel.setText(battlefieldInfo.getUboatName());
+        String isActiveStr = "Idle";
+        if (battlefieldInfo.isActive()) {
+            isActiveStr = "Active";
+        }
+        this.isActiveStatusLabel.setText(isActiveStr);
+        this.difficultyLevelLabel.setText(battlefieldInfo.getDifficultyLevel().name());
+        this.alliesSubscribedRequiredLabel.setText(battlefieldInfo.getNumOfLoggedAllies() + " / " + battlefieldInfo.getNumOfRequiredAllies());
     }
 }

@@ -22,9 +22,6 @@ public class ContestsAreaController {
         this.parentController = bodyController;
     }
 
-    public void displayStaticContestInfo(List<AllieInfo> alliesInfo, BattlefieldInfo battlefieldInfo) {
-    }
-
     public void insertContestToFlowPane(Node singleContestTile) {
         contestsFlowpane.getChildren().add(singleContestTile);
     }

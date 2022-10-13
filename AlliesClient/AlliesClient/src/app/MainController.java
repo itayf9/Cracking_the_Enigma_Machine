@@ -127,6 +127,7 @@ public class MainController {
                 // contest == active
                 // stop allies & status timers
                 setStatusMessage("Contest has started", MessageTone.INFO);
+                fetchStaticInfoContest();
                 fetchContestStatusTimer.cancel();
                 contestStatusTimer.cancel();
 
@@ -144,7 +145,7 @@ public class MainController {
         });
 
         // binding initialize
-        bodyController.bindComponents(totalDistinctCandidates);
+        bodyController.bindComponents(totalDistinctCandidates, isSubscribedToContest);
 
         // general setting to initialize sub components
         messageLabel.textProperty().bind(statusLabel.textProperty());
@@ -251,11 +252,12 @@ public class MainController {
     /**
      * #3 let the server know we are ready for contest to start
      */
-    public void setReady() {
+    public void setReady(int taskSize) {
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/static").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/ready").newBuilder();
         urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(Constants.TASK_SIZE, String.valueOf(taskSize));
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -297,7 +299,7 @@ public class MainController {
     public void fetchStaticInfoContest() {
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/ready").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/static").newBuilder();
         urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
