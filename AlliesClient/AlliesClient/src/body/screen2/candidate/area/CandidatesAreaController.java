@@ -29,7 +29,7 @@ public class CandidatesAreaController {
         candidatesFlowPane.getChildren().add(singleCandidateTile);
     }
 
-    public void clearOldResultsOfBruteForce() {
+    public void clearOldResult() {
         candidatesFlowPane.getChildren().clear();
     }
 }

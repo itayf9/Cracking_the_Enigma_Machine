@@ -103,9 +103,9 @@ public class Battlefield {
         this.difficultyLevel = difficultyLevel;
     }
 
-    public void addDecryptManager(String allieName, Map<String, AgentInfo> agentName2agentInfo) {
+    public void addDecryptManager(DecryptManager allie) {
         System.out.println(allies);
-        allies.add(new DecryptManager(allieName, this, agentName2agentInfo));
+        allies.add(allie);
         System.out.println(allies);
     }
 

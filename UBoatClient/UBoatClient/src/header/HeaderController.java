@@ -47,25 +47,6 @@ public class HeaderController {
     public void initialize() {
 
         filePathLoadMachineLabel.setText("");
-//        // setting the skin selection
-//        skinsGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-//            RadioMenuItem radioMenuItem = (RadioMenuItem) newValue;
-//            Skin skin = Skin.DEFAULT;
-//
-//            switch (radioMenuItem.getId()) {
-//                case "skinDefaultButton":
-//                    skin = Skin.DEFAULT;
-//                    break;
-//                case "skinDarkButton":
-//                    skin = Skin.DARK;
-//                    break;
-//                case "skinSpecialButton":
-//                    skin = Skin.SPECIAL;
-//            }
-//
-//            mainController.setAppSkin(skin);
-//        });
-
     }
 
     @FXML

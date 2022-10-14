@@ -6,9 +6,7 @@ import body.screen2.candidate.tile.CandidateTileController;
 import candidate.AgentConclusion;
 import candidate.Candidate;
 import com.google.gson.Gson;
-import dto.DTOresetConfig;
-import dto.DTOstaticContestInfo;
-import dto.DTOstatus;
+import dto.*;
 import header.HeaderController;
 import http.url.Constants;
 import info.agent.AgentInfo;
@@ -87,8 +85,6 @@ public class MainController {
     private FetchContestStatusTimer fetchContestStatusTimer;
     private Timer alliesInfoTimer;
     private FetchAlliesInfoTimer fetchAlliesInfoTimer;
-    private Timer allCandidatesTimer;
-    private FetchCandidatesTimer fetchAllCandidatesTimer;
     private Timer loggedAgentsTimer;
     private FetchLoggedAgentsInfoTimer fetchLoggedAgentsInfoTimer;
     private Timer dynamicContestInfoTimer;
@@ -113,8 +109,6 @@ public class MainController {
         this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive);
         this.alliesInfoTimer = new Timer();
         this.fetchAlliesInfoTimer = new FetchAlliesInfoTimer(this);
-        this.allCandidatesTimer = new Timer();
-        this.fetchAllCandidatesTimer = new FetchCandidatesTimer(this);
         this.loggedAgentsTimer = new Timer();
         this.fetchLoggedAgentsInfoTimer = new FetchLoggedAgentsInfoTimer(this);
         this.dynamicContestInfoTimer = new Timer();
@@ -128,17 +122,16 @@ public class MainController {
                 // stop allies & status timers
                 setStatusMessage("Contest has started", MessageTone.INFO);
                 fetchStaticInfoContest();
-                fetchContestStatusTimer.cancel();
-                contestStatusTimer.cancel();
 
                 // schedule fetch candidates timer & fetch active teams
                 alliesInfoTimer.schedule(fetchAlliesInfoTimer, REFRESH_RATE, REFRESH_RATE);
-                allCandidatesTimer.schedule(fetchAllCandidatesTimer, REFRESH_RATE, REFRESH_RATE);
                 dynamicContestInfoTimer.schedule(fetchDynamicContestInfoTimer, REFRESH_RATE, REFRESH_RATE);
             } else {
+
                 // contest == not active => winner found
                 fetchAlliesInfoTimer.cancel();
                 alliesInfoTimer.cancel();
+                fetchWinnerMessage();
             }
         });
 
@@ -155,6 +148,50 @@ public class MainController {
 
         loggedAgentsTimer.schedule(fetchLoggedAgentsInfoTimer, REFRESH_RATE, REFRESH_RATE);
         contestsInfoTimer.schedule(fetchContestsInfoTimer, REFRESH_RATE, REFRESH_RATE);
+    }
+
+    /**
+     * fetch the winner allie name from server and display it to everyone
+     */
+    private void fetchWinnerMessage() {
+        String body = "";
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/winner").newBuilder();
+        urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatName);
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .get()
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+
+
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                System.out.println("Body: " + dtoAsStr);
+                Gson gson = new Gson();
+
+
+                if (response.code() != 200) {
+                    DTOstatus winnerStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(winnerStatus.getDetails()), MessageTone.ERROR);
+                    });
+
+                } else {
+                    DTOwinner winnerStatus = gson.fromJson(dtoAsStr, DTOwinner.class);
+                    Platform.runLater(() -> {
+                        headerController.displayWinnerMessage(winnerStatus.getAllieWinner());
+                        setStatusMessage("Found a Winner !", MessageTone.SUCCESS);
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
     }
 
     /**
@@ -222,20 +259,20 @@ public class MainController {
                 System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
-                DTOstatus subscribeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
 
                 if (response.code() != 200) {
-                    Platform.runLater(() -> {
-                        setStatusMessage(convertProblemToMessage(subscribeStatus.getDetails()), MessageTone.ERROR);
-                    });
+                    DTOstatus subscribeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    Platform.runLater(() -> setStatusMessage(convertProblemToMessage(subscribeStatus.getDetails()), MessageTone.ERROR));
 
                 } else {
+                    DTOsubscribe subscribeStatus = gson.fromJson(dtoAsStr, DTOsubscribe.class);
+
                     Platform.runLater(() -> {
                         uboatName = uboatNameToRegister;
                         fetchDynamicContestInfoTimer.setUboatName(uboatName);
                         fetchAlliesInfoTimer.setUboatName(uboatName);
                         isSubscribedToContest.set(true);
-
+                        bodyController.setTaskSizeSpinner(subscribeStatus.getTotalPossibleWindowsPositions());
                         setStatusMessage("Subscribed Successfully", MessageTone.SUCCESS);
                     });
                 }
@@ -393,6 +430,8 @@ public class MainController {
                 } else {
                     Platform.runLater(() -> {
                         setStatusMessage("Contest is Approved", MessageTone.INFO);
+                        cleanOldResults();
+                        isSubscribedToContest.set(false);
                     });
                 }
             }
@@ -407,7 +446,7 @@ public class MainController {
      * clear all findings of last process and labels progress
      */
     private void cleanOldResults() {
-        bodyController.clearOldResultsOfBruteForce();
+        bodyController.clearOldResults();
         totalDistinctCandidates.set(0);
     }
 
@@ -448,16 +487,24 @@ public class MainController {
         statusLabel.setText(newStatus);
     }
 
+    /**
+     * set the ok http client in the timers
+     */
     public void setOkHttpClient(OkHttpClient okHttpClient) {
         this.client = okHttpClient;
         this.fetchLoggedAgentsInfoTimer.setClient(client);
         this.fetchContestStatusTimer.setClient(client);
-        this.fetchAllCandidatesTimer.setClient(client);
         this.fetchAlliesInfoTimer.setClient(client);
         this.fetchDynamicContestInfoTimer.setClient(client);
         this.fetchContestsInfoTimer.setClient(client);
     }
 
+    /**
+     * display the relevant message to the user
+     *
+     * @param problem the kind of message
+     * @return string of message
+     */
     public String convertProblemToMessage(Problem problem) {
         switch (problem) {
             case CIPHER_INPUT_EMPTY_STRING:
@@ -525,10 +572,22 @@ public class MainController {
         }
     }
 
+    /**
+     * display all logged agents infos
+     *
+     * @param loggedAgents
+     */
     public void updateLoggedAgentsInfo(Set<AgentInfo> loggedAgents) {
         bodyController.updateLoggedAgentsInfo(loggedAgents);
     }
 
+    /**
+     * disaply all dynamic info like agents & progress of the contest
+     *
+     * @param agentsInfo    agent info
+     * @param jobStatus     progress
+     * @param allCandidates cnadidates found
+     */
     public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus, List<AgentConclusion> allCandidates) {
         bodyController.displayDynamicContestInfo(agentsInfo, jobStatus);
         for (AgentConclusion agentConclusion : allCandidates) {
@@ -540,18 +599,24 @@ public class MainController {
         }
     }
 
+    /**
+     * disaply a list of all contests
+     *
+     * @param allBattlefields all contests
+     */
     public void displayContestsInfo(List<BattlefieldInfo> allBattlefields) {
-
         bodyController.clearContests();
-        System.out.println("######################");
-        System.out.println(allBattlefields.size());
-        System.out.println("######################");
 
         for (BattlefieldInfo battlefieldInfo : allBattlefields) {
             createContestTile(battlefieldInfo);
         }
     }
 
+    /**
+     * create a contest tile object
+     *
+     * @param battlefieldInfo and load it to display
+     */
     private void createContestTile(BattlefieldInfo battlefieldInfo) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -575,5 +640,4 @@ public class MainController {
             e.printStackTrace();
         }
     }
-
 }

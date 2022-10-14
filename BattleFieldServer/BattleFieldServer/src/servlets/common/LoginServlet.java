@@ -1,5 +1,6 @@
 package servlets.common;
 
+import dm.decryptmanager.DecryptManager;
 import info.agent.AgentInfo;
 import battlefield.Battlefield;
 import com.google.gson.Gson;
@@ -96,9 +97,6 @@ public class LoginServlet extends HttpServlet {
                         }
 
                         if (agentName != null && allieNameToJoin != null && numOfThreads > 0 && numOfThreads < 5 && numOfMissionsToPull > 0) {
-
-                            Map<String, AgentInfo> agentInfoMap = ServletUtils.getLoggedAgentNames(getServletContext());
-
                             synchronized (this) {
                                 if (!ServletUtils.checkNameValidity(getServletContext(), usernameFromParameter)) {
                                     // the username already exists

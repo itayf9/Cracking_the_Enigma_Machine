@@ -21,7 +21,7 @@ public class FetchAllLoggedAlliesServlet extends HttpServlet {
         Gson gson = new Gson();
         String clientTypeStr = req.getParameter(Constants.CLIENT_TYPE);
 
-        if (clientTypeStr != null && clientTypeStr.equals("info/agent")) {
+        if (clientTypeStr != null && clientTypeStr.equals("agent")) {
 
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
             if (engine != null) { // if engine exist we send all logged allies info

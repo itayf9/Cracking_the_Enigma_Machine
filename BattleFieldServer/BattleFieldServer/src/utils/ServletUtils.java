@@ -1,5 +1,6 @@
 package utils;
 
+import dm.decryptmanager.DecryptManager;
 import info.agent.AgentInfo;
 import battlefield.Battlefield;
 import com.google.gson.Gson;
@@ -86,5 +87,10 @@ public class ServletUtils {
         }
         Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
         return engine.checkNameValidity(usernameFromSession);
+    }
+
+    public static Map<String, DecryptManager> getAlliesMap(ServletContext servletContext) {
+        Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
+        return engine.getAllieMap();
     }
 }

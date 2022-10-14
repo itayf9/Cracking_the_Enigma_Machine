@@ -2,6 +2,7 @@ package servlets.common;
 
 import battlefield.Battlefield;
 import com.google.gson.Gson;
+import engine.Engine;
 import http.url.Client;
 import http.url.Constants;
 import dto.DTOactive;
@@ -34,11 +35,24 @@ public class FetchContestStatusServlet extends HttpServlet {
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
                 return;
             }
+            Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
             String uboatName;
+            String allieName;
             if (typeOfClient.equals(Client.UBOAT)) {
                 uboatName = usernameFromSession;
-            } else {
+            } else if (typeOfClient.equals(Client.ALLIE)) {
                 uboatName = req.getParameter(Constants.UBOAT_NAME);
+            } else { // case of agent is different
+                allieName = req.getParameter(Constants.ALLIE_NAME);
+                if (allieName == null) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_ALLIE_NAME)));
+                } else {
+                    DTOactive activeStatus = engine.checkIfAllieIsSubscribedToContest(allieName);
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    resp.getWriter().println(gson.toJson(activeStatus));
+                }
+                return;
             }
             if (uboatName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

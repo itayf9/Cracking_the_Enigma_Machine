@@ -30,7 +30,7 @@ public class ContestTileController {
     private Button subscribeButton;
 
     @FXML
-    void subscribeToBattlefieldAction(MouseEvent event) {
+    void subscribeToBattlefieldAction(MouseEvent ignored) {
         parentController.subscribeToBattlefieldAction(uboatNameLabel.getText());
     }
 

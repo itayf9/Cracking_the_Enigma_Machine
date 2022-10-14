@@ -51,6 +51,7 @@ public class FetchContestStatusTimer extends TimerTask {
                 if (response.code() != 200) {
                     DTOstatus activeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
+
                     });
 
                 } else {
@@ -59,6 +60,8 @@ public class FetchContestStatusTimer extends TimerTask {
                     Platform.runLater(() -> {
                         if (activeStatus.isActive()) {
                             isContestActive.set(Boolean.TRUE);
+                        } else {
+                            isContestActive.set(Boolean.FALSE);
                         }
                     });
                 }

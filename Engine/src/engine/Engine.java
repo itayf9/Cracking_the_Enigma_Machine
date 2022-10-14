@@ -2,6 +2,7 @@ package engine;
 
 import candidate.AgentConclusion;
 import dm.agent.DTOtasks;
+import dm.decryptmanager.DecryptManager;
 import info.agent.AgentInfo;
 import battlefield.Battlefield;
 import dto.*;
@@ -208,4 +209,8 @@ public interface Engine {
     DTOtasks getNextTasks(String agentName, String allieName, String uboatName);
 
     boolean checkNameValidity(String usernameFromSession);
+
+    DTOactive checkIfAllieIsSubscribedToContest(String allieName);
+
+    Map<String, DecryptManager> getAllieMap();
 }

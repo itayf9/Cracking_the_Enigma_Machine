@@ -1,14 +1,13 @@
 package body;
 
 import app.MainController;
-import app.MessageTone;
 import body.screen1.agentsinfo.AgentsInfoController;
+import body.screen1.alliesetting.AllieSettingController;
 import body.screen1.contest.area.ContestsAreaController;
 import body.screen2.activeteamsarea.ActiveTeamsController;
 import body.screen2.agentsprogress.AgentsProgressController;
 import body.screen2.candidate.area.CandidatesAreaController;
 import body.screen1.contest.tile.ContestTileController;
-import candidate.AgentConclusion;
 import info.agent.AgentInfo;
 import info.allie.AllieInfo;
 import info.battlefield.BattlefieldInfo;
@@ -17,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import jobprogress.JobProgressInfo;
-import problem.Problem;
 
 import java.util.List;
 import java.util.Set;
@@ -38,6 +36,11 @@ public class BodyController {
     private GridPane contestsArea;
     @FXML
     private ContestsAreaController contestsAreaController;
+
+    @FXML
+    private GridPane allieSettings;
+    @FXML
+    private AllieSettingController allieSettingsController;
 
     /**
      * screen 2
@@ -99,6 +102,8 @@ public class BodyController {
         // brute force dashboard labels bind
         candidatesAreaController.bindInitPropertiesToLabels(totalDistinctCandidates);
 
+        allieSettingsController.bindComponents(isSubscribedToContest);
+
 
     }
 
@@ -106,16 +111,11 @@ public class BodyController {
         candidatesAreaController.insertCandidateToFlowPane(singleCandidateTile);
     }
 
-    public void clearOldResultsOfBruteForce() {
-        candidatesAreaController.clearOldResultsOfBruteForce();
-    }
-
-    public void setStatusMessage(String statusMessage, MessageTone messageTone) {
-        mainController.setStatusMessage(statusMessage, messageTone);
-    }
-
-    public String convertProblemToMessage(Problem problem) {
-        return mainController.convertProblemToMessage(problem);
+    public void clearOldResults() {
+        candidatesAreaController.clearOldResult();
+        activeTeamsController.clearOldResult();
+        agentProgressController.clearOldResult();
+        contestTileController.clearOldResult();
     }
 
     public void updateActiveTeamsInfo(List<AllieInfo> alliesInfoList) {
@@ -150,5 +150,9 @@ public class BodyController {
 
     public void setReady(int taskSize) {
         mainController.setReady(taskSize);
+    }
+
+    public void setTaskSizeSpinner(long totalPossibleWindowsPositions) {
+        allieSettingsController.setTaskSizeSpinner(totalPossibleWindowsPositions);
     }
 }

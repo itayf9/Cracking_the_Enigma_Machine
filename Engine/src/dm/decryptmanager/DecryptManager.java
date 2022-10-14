@@ -7,10 +7,6 @@ import dm.candidatecollector.CandidatesCollector;
 import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
 import dm.taskproducer.TaskProducer;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleLongProperty;
 import jobprogress.JobProgressInfo;
 import machine.Machine;
 
@@ -35,7 +31,6 @@ public class DecryptManager {
     private final DifficultyLevel difficultyLevel;
     private long totalPossibleConfigurations;
     private final long totalPossibleWindowsPositions;
-    private LongProperty totalTimeDecryptProperty;
     private final BlockingQueue<Runnable> waitingTasksBlockingQueue;
     private int taskSize;
     private final String allieName;
@@ -44,9 +39,9 @@ public class DecryptManager {
     private final JobProgressInfo jobProgressInfo;
     private final BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final AtomicBoolean isBruteForceActionCancelled;
-    private final BooleanProperty isBruteForceActionPaused;
     private final Map<String, AgentInfo> agentName2agentInfo;
     private String textToDecipher;
+    private AtomicBoolean isBattlefieldActive;
 
     private boolean isDMapprovedFinishGame;
 
@@ -68,10 +63,7 @@ public class DecryptManager {
         this.textToDecipher = battlefield.getTextToDecipher();
         this.isBruteForceActionCancelled = battlefield.isActive();
         this.isDMapprovedFinishGame = false;
-
-        // maybe delete those later
-        this.totalTimeDecryptProperty = new SimpleLongProperty();
-        this.isBruteForceActionPaused = new SimpleBooleanProperty(false);
+        this.isBattlefieldActive = battlefield.isActive();
     }
 
 
@@ -83,11 +75,8 @@ public class DecryptManager {
      * cancel the bruteForce execution
      */
     public void stopDecrypt() {
-        // isBruteForceActionPaused.setValue(false);
 
-        // stopping the thread pool
-        // isBruteForceActionCancelled.set(true);
-        // threadExecutor.shutdownNow();
+        isBruteForceActionCancelled.set(true);
 
         //  stopping the collector Task / Thread
         collector.interrupt();
@@ -103,8 +92,6 @@ public class DecryptManager {
 
         this.agentReportsOfCandidatesQueue = new LinkedBlockingQueue<>();
         isBruteForceActionCancelled.set(false);
-
-        totalTimeDecryptProperty.setValue(System.nanoTime());
 
         // updates the total configs property
         setTotalConfigs(difficultyLevel);
@@ -196,14 +183,6 @@ public class DecryptManager {
         return isBruteForceActionCancelled;
     }
 
-    public BooleanProperty getIsBruteForceActionPaused() {
-        return isBruteForceActionPaused;
-    }
-
-    public BooleanProperty isBruteForceActionPausedProperty() {
-        return isBruteForceActionPaused;
-    }
-
     public String getAllieName() {
         return allieName;
     }
@@ -257,24 +236,12 @@ public class DecryptManager {
         return totalPossibleConfigurations;
     }
 
-    public LongProperty getTotalTimeDecryptProperty() {
-        return totalTimeDecryptProperty;
-    }
-
-    public LongProperty totalTimeDecryptPropertyProperty() {
-        return totalTimeDecryptProperty;
-    }
-
     public BlockingQueue<AgentConclusion> getUboatCandidateQueue() {
         return uboatCandidateQueue;
     }
 
     public AtomicBoolean getIsBruteForceActionCancelled() {
         return isBruteForceActionCancelled;
-    }
-
-    public boolean isIsBruteForceActionPaused() {
-        return isBruteForceActionPaused.get();
     }
 
     public boolean isDMapprovedFinishGame() {

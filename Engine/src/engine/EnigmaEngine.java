@@ -46,6 +46,7 @@ public class EnigmaEngine implements Engine {
     private final Map<String, Battlefield> uboatName2battleField;
     private final Map<String, Set<AgentInfo>> loggedAllieName2loggedAgents;
     private final Map<String, AgentInfo> agentName2agentInfo;
+    private final Map<String, DecryptManager> allieName2decryptManager;
 
     private final Object waitingTasksQueueLock;
     private final Object conclusionQueueLock;
@@ -59,6 +60,7 @@ public class EnigmaEngine implements Engine {
         this.uboatName2battleField = new HashMap<>();
         this.loggedAllieName2loggedAgents = new HashMap<>();
         this.agentName2agentInfo = new HashMap<>();
+        this.allieName2decryptManager = new HashMap<>();
         this.waitingTasksQueueLock = new Object();
         this.conclusionQueueLock = new Object();
     }
@@ -1009,16 +1011,14 @@ public class EnigmaEngine implements Engine {
 
     @Override
     public void pauseBruteForceProcess(String userName) {
-        Set<DecryptManager> allies = uboatName2battleField.get(userName).getAllies();
-
+        // Set<DecryptManager> allies = uboatName2battleField.get(userName).getAllies();
         // allies.for each DM need to stop all tasks
         // decryptManager.pauseDecrypt();
     }
 
     @Override
     public void resumeBruteForceProcess(String userName) {
-        Set<DecryptManager> allies = uboatName2battleField.get(userName).getAllies();
-
+        // Set<DecryptManager> allies = uboatName2battleField.get(userName).getAllies();
         // allies.for each DM need to stop all tasks
         // decryptManager.resumeDecrypt();
     }
@@ -1255,7 +1255,6 @@ public class EnigmaEngine implements Engine {
 
         agentsOfAllie.add(agentInfoToInsert);
         agentName2agentInfo.put(agentName, agentInfoToInsert);
-
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
@@ -1324,7 +1323,9 @@ public class EnigmaEngine implements Engine {
         }
 
         if (battlefield.getAllies().size() < battlefield.getNumOfRequiredAllies()) {
-            battlefield.addDecryptManager(alliesName, agentName2agentInfo); // cant fail..
+            DecryptManager allie = new DecryptManager(alliesName, battlefield, agentName2agentInfo);
+            allieName2decryptManager.put(alliesName, allie);
+            battlefield.addDecryptManager(allie); // cant fail..
             return new DTOstatus(true, Problem.NO_PROBLEM);
         } else {
             return new DTOstatus(false, Problem.CONTEST_IS_FULL);
@@ -1394,8 +1395,17 @@ public class EnigmaEngine implements Engine {
         if (!allieMaybe.isPresent()) {
             return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
         }
+        System.out.println("######################");
+        System.out.println(battlefield.getAllies().size());
+        System.out.println("######################");
 
         allieMaybe.get().setDMapprovedFinishGame(isApprove);
+        battlefield.getAllies().remove(allieMaybe.get());
+
+        System.out.println("######################");
+        System.out.println(battlefield.getAllies().size());
+        System.out.println("######################");
+
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
@@ -1475,6 +1485,20 @@ public class EnigmaEngine implements Engine {
     @Override
     public boolean checkNameValidity(String username) {
         return !uboatName2battleField.containsKey(username) && !loggedAllieName2loggedAgents.containsKey(username) && !agentName2agentInfo.containsKey(username);
+    }
+
+    @Override
+    public DTOactive checkIfAllieIsSubscribedToContest(String allieName) {
+        DecryptManager allie = allieName2decryptManager.get(allieName);
+        if (allie == null) {
+            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
+        }
+        return new DTOactive(true, Problem.NO_PROBLEM, allie.getIsBattlefieldActive().get());
+    }
+
+    @Override
+    public Map<String, DecryptManager> getAllieMap() {
+        return allieName2decryptManager;
     }
 
     @Override
