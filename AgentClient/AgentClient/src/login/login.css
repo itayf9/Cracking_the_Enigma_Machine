@@ -1,0 +1,28 @@
+
+.spinner *.increment-arrow-button {
+    -fx-background-color: #0095ff;
+}
+
+.spinner *.decrement-arrow-button {
+    -fx-background-color: #0095ff;
+}
+
+.spinner *.increment-arrow-button *.increment-arrow {
+    -fx-background-color: white;
+}
+
+.spinner *.decrement-arrow-button *.decrement-arrow {
+    -fx-background-color: white;
+}
+
+.slider *.thumb {
+    -fx-background-color: #0095ff;
+}
+
+.combo-box *.arrow-button {
+    -fx-background-color: #0095ff;
+}
+
+.combo-box *.arrow {
+    -fx-background-color: white;
+}

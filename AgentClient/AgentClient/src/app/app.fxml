@@ -3,10 +3,17 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
+
 <GridPane fx:id="appGridPane" minWidth="0.0" stylesheets="@../../../../DesktopUI/DesktopUI/src/app/app-default.css"
           xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="app.MainController">
@@ -19,7 +26,7 @@
       <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="NEVER"/>
    </rowConstraints>
    <children>
-      <fx:include fx:id="header" minWidth="0.0" source="../header/header.fxml"/>
+      <fx:include source="../header/header.fxml"/>
       <StackPane GridPane.rowIndex="1">
          <children>
             <Pane cache="true" styleClass="body-background"/>
@@ -32,7 +39,30 @@
                   <Rectangle2D/>
                </viewport>
             </ImageView>
-            <fx:include fx:id="body" source="../body/body.fxml"/>
+            <ScrollPane fitToHeight="true" fitToWidth="true">
+               <content>
+                  <GridPane minHeight="370.0" minWidth="400.0" prefHeight="489.0" prefWidth="868.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="701.3333740234375" minWidth="10.0"
+                                           prefWidth="435.9999694824219"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="670.0" minWidth="10.0"
+                                           prefWidth="464.0000305175781"/>
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="378.0" minHeight="10.0" prefHeight="200.66668701171875"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="409.99998474121094" minHeight="10.0" prefHeight="299.33331298828125"
+                                        vgrow="SOMETIMES"/>
+                     </rowConstraints>
+                     <children>
+                        <fx:include source="../body/screen1/contest/contestAndTeamArea.fxml" GridPane.columnSpan="2"/>
+                        <fx:include source="../body/screen1/agentprogress/agentProgress.fxml" GridPane.rowIndex="1"/>
+                        <fx:include source="../body/screen1/candidate/area/candidatesArea.fxml" GridPane.columnIndex="1"
+                                    GridPane.rowIndex="1"/>
+                     </children>
+                  </GridPane>
+               </content>
+            </ScrollPane>
          </children>
       </StackPane>
       <HBox fx:id="statusBar" minHeight="25.0" prefHeight="25.0" prefWidth="200.0" styleClass="status-bar"
