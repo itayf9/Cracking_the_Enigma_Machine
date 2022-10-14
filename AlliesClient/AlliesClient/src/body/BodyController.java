@@ -97,12 +97,12 @@ public class BodyController {
      *
      * @param totalDistinctCandidates totalDistinctCandidates
      */
-    public void bindComponents(IntegerProperty totalDistinctCandidates, BooleanProperty isSubscribedToContest) {
+    public void bindComponents(IntegerProperty totalDistinctCandidates, BooleanProperty isSubscribedToContest, BooleanProperty isReady) {
 
         // brute force dashboard labels bind
         candidatesAreaController.bindInitPropertiesToLabels(totalDistinctCandidates);
 
-        allieSettingsController.bindComponents(isSubscribedToContest);
+        allieSettingsController.bindComponents(isSubscribedToContest, isReady);
 
 
     }

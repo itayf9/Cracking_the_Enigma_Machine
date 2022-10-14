@@ -48,8 +48,9 @@ public class AllieSettingController {
         });
     }
 
-    public void bindComponents(BooleanProperty isSubscribedToContest) {
-        isReadyButton.disableProperty().bind(isSubscribedToContest.not());
-        taskSizeSpinner.disableProperty().bind(isSubscribedToContest.not());
+    public void bindComponents(BooleanProperty isSubscribedToContest, BooleanProperty isReady) {
+        isReadyButton.disableProperty().bind(isSubscribedToContest.not().or(isReady));
+        taskSizeSpinner.disableProperty().bind(isSubscribedToContest.not().or(isReady));
+
     }
 }

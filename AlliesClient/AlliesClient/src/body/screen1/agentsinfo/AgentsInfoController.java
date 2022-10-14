@@ -40,6 +40,7 @@ public class AgentsInfoController {
     }
 
     public void setAgents(Set<AgentInfo> loggedAgents) {
+        agentsTable.getItems().clear();
         for (AgentInfo agentInfo : loggedAgents) {
             agentsTable.getItems().add(agentInfo);
         }

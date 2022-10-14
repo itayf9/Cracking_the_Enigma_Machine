@@ -136,7 +136,7 @@ public class MainController {
         });
 
         // binding initialize
-        bodyController.bindComponents(totalDistinctCandidates, isSubscribedToContest);
+        bodyController.bindComponents(totalDistinctCandidates, isSubscribedToContest, isReady);
 
         // general setting to initialize sub components
         messageLabel.textProperty().bind(statusLabel.textProperty());
@@ -317,6 +317,7 @@ public class MainController {
                     Platform.runLater(() -> {
                         contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
                         setStatusMessage("Allie is Ready", MessageTone.INFO);
+                        isReady.set(true);
                     });
                 }
             }

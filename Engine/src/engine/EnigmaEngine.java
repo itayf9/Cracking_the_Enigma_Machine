@@ -1348,7 +1348,7 @@ public class EnigmaEngine implements Engine {
 
         DecryptManager allie = allieMaybe.get();
 
-        int numOfAgents = allie.getNumOfAgents();
+        int numOfAgents = loggedAllieName2loggedAgents.get(allieName).size();
         int taskSize = allie.getTaskSize();
         AllieInfo winnerAllieInfo = new AllieInfo(allieName, numOfAgents, taskSize);
 

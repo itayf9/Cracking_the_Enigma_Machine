@@ -159,7 +159,6 @@ public class MainController {
         this.fetchSubscribeTimer = new FetchSubscriptionStatusTimer(isSubscribed);
         this.waitForAllieApprovalTimer = new WaitForAllieApproveFinishGameTimer(this);
 
-
         isSubscribed.addListener((o, oldVal, newVal) -> {
             if (newVal) {
                 subscribeTimer.cancel();
@@ -201,8 +200,6 @@ public class MainController {
         statusBackShape.widthProperty().bind(statusLabel.widthProperty());
         statusBackShape.setStrokeWidth(0);
         statusBackShape.setOpacity(0);
-
-        subscribeTimer.schedule(fetchSubscribeTimer, REFRESH_RATE, REFRESH_RATE);
     }
 
     /**
@@ -505,13 +502,15 @@ public class MainController {
     }
 
     public void setInitialSettings(String allieName, int numOfThreads, int numOfTasksPerPull, String agentName) {
-        this.allieName = allieName;
+        this.allieName.set(allieName);
         this.numOfThreads = numOfThreads;
         this.numOfTasksToPull = numOfTasksPerPull;
         this.agentName = agentName;
 
         // initializes the thread pool
         this.threadPool = Executors.newFixedThreadPool(numOfThreads);
+
+        subscribeTimer.schedule(fetchSubscribeTimer, REFRESH_RATE, REFRESH_RATE);
     }
 
     public void executeTasks(List<AgentTask> taskList) {

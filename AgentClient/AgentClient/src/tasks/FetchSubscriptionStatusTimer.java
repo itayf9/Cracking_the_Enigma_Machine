@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.TimerTask;
 
 import static http.url.Constants.CONTENT_TYPE;
+import static http.url.QueryParameter.ALLIE_NAME;
 import static http.url.URLconst.*;
 import static http.url.URLconst.BASE_URL;
 

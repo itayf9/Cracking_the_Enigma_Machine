@@ -23,7 +23,7 @@
         <Label styleClass="component-title" text="Message"/>
         <Label styleClass="sub-title" text="Winner Team:" GridPane.columnIndex="1"/>
         <Label fx:id="winnerTeamLabel" text="winner" GridPane.columnIndex="2"/>
-        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#approveAllieFinishGameAction"
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false"
                 styleClass="action-btn" text="Done" GridPane.columnIndex="3" GridPane.halignment="CENTER"/>
     </children>
     <stylesheets>
