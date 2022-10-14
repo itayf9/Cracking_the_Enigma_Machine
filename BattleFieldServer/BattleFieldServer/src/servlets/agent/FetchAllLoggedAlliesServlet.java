@@ -21,6 +21,8 @@ public class FetchAllLoggedAlliesServlet extends HttpServlet {
         Gson gson = new Gson();
         String clientTypeStr = req.getParameter(Constants.CLIENT_TYPE);
 
+        System.out.println(req);
+        System.out.println("client is : " + clientTypeStr);
         if (clientTypeStr != null && clientTypeStr.equals("agent")) {
 
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);

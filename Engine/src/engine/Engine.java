@@ -1,7 +1,7 @@
 package engine;
 
 import candidate.AgentConclusion;
-import dm.agent.DTOtasks;
+import dto.DTOtasks;
 import dm.decryptmanager.DecryptManager;
 import info.agent.AgentInfo;
 import battlefield.Battlefield;

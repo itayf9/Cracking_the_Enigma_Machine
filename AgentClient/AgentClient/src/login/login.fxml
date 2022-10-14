@@ -37,7 +37,7 @@
       <ComboBox fx:id="teamComboBox" prefHeight="30.0" prefWidth="128.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Slider fx:id="threadsSlider" majorTickUnit="1.0" max="4.0" min="1.0" minorTickCount="0" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <Label styleClass="sub-title" text="Tasks Per Pull:" GridPane.rowIndex="4" />
-      <Spinner fx:id="tasksPerPullSpinner" prefHeight="27.0" prefWidth="99.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Spinner fx:id="tasksPerPullSpinner" editable="true" prefHeight="27.0" prefWidth="99.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
     </children>
     <stylesheets>
         <URL value="@../app/app-default.css" />

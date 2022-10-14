@@ -1,8 +1,7 @@
-package dm.agent;
+package agent;
 
 import candidate.AgentConclusion;
 import candidate.Candidate;
-import dm.decryptmanager.DecryptManager;
 import dictionary.Dictionary;
 import javafx.beans.property.BooleanProperty;
 import machine.Machine;
@@ -24,20 +23,20 @@ public class AgentTask implements Runnable {
     private final int inUseReflectorID;
     private BlockingQueue<AgentConclusion> candidatesQueue;
 
-    private BooleanProperty isIsBruteForceActionCancelledProperty;
+    private BooleanProperty isContestActiveProperty;
     private String agentName;
 
     private String allieName;
 
-    public AgentTask(List<Integer> rotorsIDs, List<Integer> windowOffsets, int inUseReflectorID, Machine copyOfMachine, DecryptManager dm) {
+    public AgentTask(List<Integer> rotorsIDs, List<Integer> windowOffsets, int inUseReflectorID, Machine copyOfMachine, int taskSize, String textToDecipher, String allieName) {
         this.machine = copyOfMachine;
-        this.taskSize = dm.getTaskSize();
-        this.textToDecipher = dm.getTextToDecipher();
+        this.taskSize = taskSize;
+        this.textToDecipher = textToDecipher;
         this.windowOffsets = windowOffsets;
         this.rotorsIDs = rotorsIDs;
         this.inUseReflectorID = inUseReflectorID;
         this.agentName = "";
-        this.allieName = dm.getAllieName();
+        this.allieName = allieName;
 
     }
 
@@ -80,8 +79,8 @@ public class AgentTask implements Runnable {
         this.dictionary = dictionary;
     }
 
-    public void setIsIsBruteForceActionCancelledProperty(boolean isIsBruteForceActionCancelledProperty) {
-        this.isIsBruteForceActionCancelledProperty.set(isIsBruteForceActionCancelledProperty);
+    public void setIsContestActiveProperty(BooleanProperty isContestActiveProperty) {
+        this.isContestActiveProperty = isContestActiveProperty;
     }
 
     public void setCandidatesQueue(BlockingQueue<AgentConclusion> candidatesQueue) {
@@ -105,7 +104,7 @@ public class AgentTask implements Runnable {
         List<Candidate> candidates = new ArrayList<>();
         int numOfConfigScanned = 0;
 
-        for (int i = 0; i < taskSize && !isIsBruteForceActionCancelledProperty.get(); i++) {
+        for (int i = 0; i < taskSize && isContestActiveProperty.get(); i++) {
             numOfConfigScanned++;
 
             // sets machine to the next configuration

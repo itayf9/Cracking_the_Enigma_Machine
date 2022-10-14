@@ -1,5 +1,6 @@
-package dm.agent;
+package dto;
 
+import agent.AgentTask;
 import dto.DTOstatus;
 import problem.Problem;
 

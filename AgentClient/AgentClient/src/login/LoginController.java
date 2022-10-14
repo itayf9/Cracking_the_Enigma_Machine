@@ -160,6 +160,7 @@ public class LoginController {
                         app = loader.load();
                         appController = loader.getController();
                         appController.setOkHttpClient(client);
+                        appController.setInitialSettings(teamComboBox.getEditor().getText(), (int) threadsSlider.getValue(), tasksPerPullSpinner.getValue(), userNameTextField.getText());
 
                     } catch (IOException e) {
                         throw new RuntimeException(e);

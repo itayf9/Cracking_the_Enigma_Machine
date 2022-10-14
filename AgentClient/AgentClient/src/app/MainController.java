@@ -7,6 +7,7 @@ import body.screen1.contest.ContestAndTeamAreaController;
 import candidate.AgentConclusion;
 import candidate.Candidate;
 import com.google.gson.Gson;
+import dictionary.Dictionary;
 import dto.*;
 import header.HeaderController;
 import http.url.Constants;
@@ -29,7 +30,6 @@ import tasks.FetchContestStatusTimer;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.*;
@@ -433,6 +433,34 @@ public class MainController {
             }
         }
         return conclusions;
+    }
+
+    public void setInitialSettings(String allieName, int numOfThreads, int numOfTasksPerPull, String agentName) {
+        this.allieName = allieName;
+        this.numOfThreads = numOfThreads;
+        this.numOfTasksToPull = numOfTasksPerPull;
+        this.agentName = agentName;
+
+        // initializes the thread pool
+        this.threadPool = Executors.newFixedThreadPool(numOfThreads);
+    }
+
+    public void executeTasks(List<AgentTask> taskList) {
+        numOfTotalPulledTasks.setValue(numOfTotalPulledTasks.get() + taskList.size());
+        numOfTasksInQueue.setValue(numOfTasksInQueue.get() + taskList.size());
+
+        for (AgentTask task : taskList) {
+            task.setAgentName(agentName);
+            task.setDictionary(dictionary);
+            task.setIsContestActiveProperty(isContestActive);
+            task.setCandidatesQueue(conclusionsQueue);
+
+            // add a lock to the candidateQueue, so all agent threads will be synchronized when inserting
+            // a new conclusion to the queue, and when the submitting thread is taking conclusions from
+            // the queue
+
+            threadPool.execute(task);
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 package engine;
 
-import dm.agent.AgentTask;
-import dm.agent.DTOtasks;
+import agent.AgentTask;
+import dto.DTOtasks;
 import info.agent.AgentInfo;
 import info.allie.AllieInfo;
 import battlefield.Battlefield;
@@ -18,7 +18,6 @@ import machine.EnigmaMachine;
 import machine.Machine;
 import machine.component.Reflector;
 import machine.component.Rotor;
-import machine.jaxb.generated.*;
 import problem.Problem;
 import statistics.StatisticRecord;
 

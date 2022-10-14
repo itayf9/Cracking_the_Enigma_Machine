@@ -1,12 +1,10 @@
 package tasks;
 
-import app.MainController;
-import app.MessageTone;
 import com.google.gson.Gson;
-import dto.DTOagentConclusions;
+import dto.DTOactive;
 import dto.DTOstatus;
-import dto.DTOtasks;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -15,13 +13,13 @@ import java.util.TimerTask;
 import static http.url.URLconst.BASE_URL;
 import static http.url.URLconst.CONTENT_TYPE;
 
-public class FetchTasksTimer extends TimerTask {
+public class FetchSubscriptionStatusTimer extends TimerTask {
 
     private OkHttpClient client;
-    private MainController mainController;
+    private final BooleanProperty isSubscribed;
 
-    public FetchTasksTimer(MainController mainController) {
-        this.mainController = mainController;
+    public FetchSubscriptionStatusTimer(BooleanProperty isSubscribed) {
+        this.isSubscribed = isSubscribed;
     }
 
     public void setClient(OkHttpClient client) {
@@ -30,7 +28,8 @@ public class FetchTasksTimer extends TimerTask {
 
     @Override
     public void run() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/next-tasks").newBuilder();
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/subscribe/status").newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -40,7 +39,8 @@ public class FetchTasksTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch candidates task response");
+                System.out.println("fetch subscription task response");
+
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 System.out.println("Body: " + dtoAsStr);
@@ -48,15 +48,20 @@ public class FetchTasksTimer extends TimerTask {
 
 
                 if (response.code() != 200) {
-                    DTOstatus tasksStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    DTOstatus subscribeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
-                        mainController.setStatusMessage(mainController.convertProblemToMessage(tasksStatus.getDetails()), MessageTone.ERROR);
+
                     });
 
                 } else {
-                    DTOtasks tasksStatus = gson.fromJson(dtoAsStr, DTOtasks.class);
+                    DTOactive activeStatus = gson.fromJson(dtoAsStr, DTOactive.class);
+
                     Platform.runLater(() -> {
-                        mainController.executeTasks(tasksStatus.getTaskList());
+                        if (activeStatus.isActive()) {
+                            isSubscribed.set(Boolean.TRUE);
+                        } else {
+                            isSubscribed.set(Boolean.FALSE);
+                        }
                     });
                 }
             }

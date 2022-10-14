@@ -1,6 +1,5 @@
 package battlefield;
 
-import info.agent.AgentInfo;
 import info.allie.AllieInfo;
 import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
@@ -9,7 +8,6 @@ import difficultylevel.DifficultyLevel;
 import machine.Machine;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

@@ -1,7 +1,7 @@
 package dm.taskproducer;
 
 import candidate.AgentConclusion;
-import dm.agent.AgentTask;
+import agent.AgentTask;
 import dm.decryptmanager.DecryptManager;
 import difficultylevel.DifficultyLevel;
 import machine.EnigmaMachine;
@@ -92,7 +92,7 @@ public class TaskProducer implements Runnable {
         try {
             taskCounter++;
             dm.getJobProgressInfo().setNumberOfTasksProduced(taskCounter);
-            agentTaskQueue.put(new AgentTask(rotorsIDs, new ArrayList<>(currentWindowsOffsets), reflectorID, copyOfMachine, dm));
+            agentTaskQueue.put(new AgentTask(rotorsIDs, new ArrayList<>(currentWindowsOffsets), reflectorID, copyOfMachine, taskSize, textToDecipher, dm.getAllieName()));
         } catch (InterruptedException ignored) {
             //throw new RuntimeException(e);
         }
@@ -116,7 +116,7 @@ public class TaskProducer implements Runnable {
             try {
                 taskCounter++;
                 dm.getJobProgressInfo().setNumberOfTasksProduced(taskCounter);
-                agentTaskQueue.put(new AgentTask(rotorsIDs, nextWindowsOffsets, reflectorID, copyOfMachine, dm));
+                agentTaskQueue.put(new AgentTask(rotorsIDs, nextWindowsOffsets, reflectorID, copyOfMachine, taskSize, textToDecipher, dm.getAllieName()));
             } catch (InterruptedException e) {
                 // producer Stopped so need to die
                 return;

@@ -4,6 +4,7 @@ import app.MainController;
 import body.screen1.contest.tile.ContestTileController;
 import info.battlefield.BattlefieldInfo;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 import java.awt.*;
