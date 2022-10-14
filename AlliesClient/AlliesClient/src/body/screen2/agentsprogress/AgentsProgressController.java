@@ -65,4 +65,12 @@ public class AgentsProgressController {
         this.producedTasksLabel.setText(String.valueOf(jobProgressInfo.getNumberOfTasksProduced()));
         this.finishedTasksLabel.setText(String.valueOf(jobProgressInfo.getNumberOfTasksDone()));
     }
+
+    public void clearOldResult() {
+        agentsTable.getItems().clear();
+        textToDecipherLabel.setText("-");
+        totalTasksLabel.setText("-");
+        finishedTasksLabel.setText("-");
+        producedTasksLabel.setText("-");
+    }
 }
