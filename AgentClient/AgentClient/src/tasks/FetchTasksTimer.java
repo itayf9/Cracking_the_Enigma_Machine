@@ -10,7 +10,7 @@ import okhttp3.*;
 
 import java.io.IOException;
 import java.util.TimerTask;
-
+import static http.url.URLconst.*;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
 
@@ -29,7 +29,7 @@ public class FetchTasksTimer extends TimerTask {
 
     @Override
     public void run() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/next-tasks").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_NEXT_TASKS_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

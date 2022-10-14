@@ -221,5 +221,14 @@
         <url-pattern>/fetch/subscribe/status</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>FetchWinnerServlet</servlet-name>
+        <servlet-class>servlets.common.FetchWinnerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchWinnerServlet</servlet-name>
+        <url-pattern>/fetch/contest/winner</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>

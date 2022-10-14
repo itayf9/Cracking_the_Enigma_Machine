@@ -23,6 +23,7 @@ import java.net.URL;
 
 import static http.url.Client.AGENT;
 import static http.url.Client.UBOAT;
+import static http.url.URLconst.*;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
 import static http.url.URLconst.LOGIN_SRC;
@@ -57,7 +58,7 @@ public class LoginController {
 
         // get all allies
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/allies-names").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_LOGGED_ALLIES_SRC).newBuilder();
         urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, AGENT.getClientTypeAsString());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())

@@ -27,10 +27,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import okhttp3.*;
 import problem.Problem;
-import tasks.FetchContestStatusTimer;
-import tasks.FetchSubscriptionStatusTimer;
-import tasks.FetchTasksTimer;
-import tasks.SubmitConclusionsTimer;
+import tasks.*;
+import winner.LoseWinAreaController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,6 +77,12 @@ public class MainController {
     private CandidatesAreaController candidatesAreaController;
 
     @FXML
+    private GridPane loseWinArea;
+
+    @FXML
+    private LoseWinAreaController loseWinAreaController;
+
+    @FXML
     private HBox statusBar;
 
     @FXML
@@ -119,7 +123,10 @@ public class MainController {
     private FetchTasksTimer fetchTasksTimer;
     private Timer subscribeTimer;
     private FetchSubscriptionStatusTimer fetchSubscribeTimer;
+    private Timer waitForAllieApproveTimer;
+    private WaitForAllieApproveFinishGameTimer waitForAllieApprovalTimer;
     private BooleanProperty isSubscribed;
+
 
     @FXML
     public void initialize() {
@@ -145,18 +152,24 @@ public class MainController {
         this.submitConclusionsTimer = new Timer();
         this.tasksTimer = new Timer();
         this.subscribeTimer = new Timer();
+        this.waitForAllieApproveTimer = new Timer();
         this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive);
         this.submitAllConclusionsTimer = new SubmitConclusionsTimer(this);
         this.fetchTasksTimer = new FetchTasksTimer(this);
         this.fetchSubscribeTimer = new FetchSubscriptionStatusTimer(isSubscribed);
+        this.waitForAllieApprovalTimer = new WaitForAllieApproveFinishGameTimer(this);
 
 
         isSubscribed.addListener((o, oldVal, newVal) -> {
             if (newVal) {
+                subscribeTimer.cancel();
+                fetchSubscribeTimer.cancel();
                 // allie just subscribed
                 setStatusMessage("Allie has subscribed to a Contest", MessageTone.INFO);
                 fetchStaticInfoContest();
                 contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
+            } else {
+                subscribeTimer.schedule(fetchSubscribeTimer, REFRESH_RATE, REFRESH_RATE);
             }
         });
 
@@ -188,6 +201,8 @@ public class MainController {
         statusBackShape.widthProperty().bind(statusLabel.widthProperty());
         statusBackShape.setStrokeWidth(0);
         statusBackShape.setOpacity(0);
+
+        subscribeTimer.schedule(fetchSubscribeTimer, REFRESH_RATE, REFRESH_RATE);
     }
 
     /**
@@ -213,14 +228,13 @@ public class MainController {
 
                 if (response.code() != 200) {
                     DTOstatus winnerStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-                    Platform.runLater(() -> {
-                        setStatusMessage(convertProblemToMessage(winnerStatus.getDetails()), MessageTone.ERROR);
-                    });
+                    Platform.runLater(() -> setStatusMessage(convertProblemToMessage(winnerStatus.getDetails()), MessageTone.ERROR));
 
                 } else {
                     DTOwinner winnerStatus = gson.fromJson(dtoAsStr, DTOwinner.class);
                     Platform.runLater(() -> {
                         setStatusMessage("Found a Winner !", MessageTone.SUCCESS);
+                        loseWinAreaController.setWinnerTeamLabelName(winnerStatus.getAllieWinner().getAllieName());
                     });
                 }
             }
@@ -237,7 +251,7 @@ public class MainController {
     public void setReady(int taskSize) {
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/ready").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + CLIENT_IS_READY_SRC).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         urlBuilder.addQueryParameter(QueryParameter.TASK_SIZE, String.valueOf(taskSize));
         Request request = new Request.Builder()
@@ -256,9 +270,7 @@ public class MainController {
 
                 if (response.code() != 200) {
                     DTOstatus readyStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-                    Platform.runLater(() -> {
-                        setStatusMessage(convertProblemToMessage(readyStatus.getDetails()), MessageTone.ERROR);
-                    });
+                    Platform.runLater(() -> setStatusMessage(convertProblemToMessage(readyStatus.getDetails()), MessageTone.ERROR));
 
                 } else {
                     Platform.runLater(() -> {
@@ -299,13 +311,15 @@ public class MainController {
                 if (response.code() != 200) {
                     DTOstatus staticInfoStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
 
-                    Platform.runLater(() -> {
-                        setStatusMessage(convertProblemToMessage(staticInfoStatus.getDetails()), MessageTone.ERROR);
-                    });
+                    Platform.runLater(() -> setStatusMessage(convertProblemToMessage(staticInfoStatus.getDetails()), MessageTone.ERROR));
 
                 } else {
                     DTOstaticContestInfo staticInfoStatus = gson.fromJson(dtoAsStr, DTOstaticContestInfo.class);
-                    Platform.runLater(() -> contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo(), allieName));
+                    Platform.runLater(() -> {
+                        contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo(), allieName);
+                        dictionary = staticInfoStatus.getBattlefieldInfo().getDictionary();
+                    });
+
                 }
             }
 
@@ -318,7 +332,7 @@ public class MainController {
     /**
      * display all candidates from server
      *
-     * @param conclusions
+     * @param conclusions agents conclusions objects
      */
     public void displayAllCandidates(List<AgentConclusion> conclusions) {
 
@@ -393,6 +407,10 @@ public class MainController {
     public void setOkHttpClient(OkHttpClient okHttpClient) {
         this.client = okHttpClient;
         this.fetchContestStatusTimer.setClient(client);
+        this.fetchSubscribeTimer.setClient(client);
+        this.fetchTasksTimer.setClient(client);
+        this.submitAllConclusionsTimer.setClient(client);
+        this.waitForAllieApprovalTimer.setClient(client);
     }
 
     /**
@@ -473,6 +491,7 @@ public class MainController {
         while (!conclusionsQueue.isEmpty()) {
             AgentConclusion conclusion = conclusionsQueue.poll();
             if (conclusion != null) {
+                numOfTasksInQueue.set(numOfTasksInQueue.get() - 1);
                 conclusions.add(conclusion);
             } else {
                 break;

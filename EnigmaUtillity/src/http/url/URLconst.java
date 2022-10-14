@@ -50,4 +50,8 @@ public class URLconst {
 
     public static final String FETCH_SUBSCRIPTION_STATUS_SRC = "/fetch/subscribe/status";
 
+    public static final String FETCH_CONTEST_WINNER = "/fetch/contest/winner";
+
+
+    public static final String LOAD_XML_SRC = "/load";
 }

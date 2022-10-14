@@ -8,7 +8,7 @@ import okhttp3.*;
 
 import java.io.IOException;
 import java.util.TimerTask;
-
+import static http.url.URLconst.*;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
 
@@ -31,7 +31,7 @@ public class SubmitConclusionsTimer extends TimerTask {
 
         String conclusions = gson.toJson(mainController.getConclusions());
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/submit/conclusions").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + SUBMIT_NEXT_CANDIDATES_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

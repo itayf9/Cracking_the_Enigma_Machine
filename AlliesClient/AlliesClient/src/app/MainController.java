@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.Timer;
-
+import static http.url.URLconst.*;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
 
@@ -156,7 +156,7 @@ public class MainController {
     private void fetchWinnerMessage() {
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/winner").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CONTEST_WINNER).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
@@ -200,7 +200,7 @@ public class MainController {
     public void fetchLoggedAgentsInfoFromServer() {
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/agents").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_LOGGED_AGENTS_INFO_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -243,7 +243,7 @@ public class MainController {
     public void subscribeToBattlefield(String uboatNameToRegister) {
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/subscribe").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + SUBSCRIBE_TO_BATTLEFIELD_SRC).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatNameToRegister);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
@@ -290,7 +290,7 @@ public class MainController {
     public void setReady(int taskSize) {
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/ready").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + CLIENT_IS_READY_SRC).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         urlBuilder.addQueryParameter(QueryParameter.TASK_SIZE, String.valueOf(taskSize));
         Request request = new Request.Builder()
@@ -333,7 +333,7 @@ public class MainController {
     public void fetchStaticInfoContest() {
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/static").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_STATIC_CONTEST_INFO_SRC).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
@@ -406,7 +406,7 @@ public class MainController {
     public void approveContestIsOver() {
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/static").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + APPROVE_ALLIE_FINISH_GAME_SRC).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())

@@ -13,7 +13,7 @@ import java.util.TimerTask;
 
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
-
+import static http.url.URLconst.*;
 public class FetchContestStatusTimer extends TimerTask {
 
     private OkHttpClient client;
@@ -30,7 +30,7 @@ public class FetchContestStatusTimer extends TimerTask {
     @Override
     public void run() {
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/status").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CONTEST_STATUS_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

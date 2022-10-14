@@ -86,13 +86,14 @@ public class TaskProducer implements Runnable {
         // easy mode so rotors & reflector doesn't change.
 
         List<Integer> nextWindowsOffsets;
+        // clone is redundant...
         Machine copyOfMachine = new EnigmaMachine((EnigmaMachine) machine); // Clone!
 
         // set up first agentTask
         try {
             taskCounter++;
             dm.getJobProgressInfo().setNumberOfTasksProduced(taskCounter);
-            agentTaskQueue.put(new AgentTask(rotorsIDs, new ArrayList<>(currentWindowsOffsets), reflectorID, copyOfMachine, taskSize, textToDecipher, dm.getAllieName()));
+            agentTaskQueue.put(new AgentTask(rotorsIDs, new ArrayList<>(currentWindowsOffsets), reflectorID, machine, taskSize, textToDecipher, dm.getAllieName()));
         } catch (InterruptedException ignored) {
             //throw new RuntimeException(e);
         }
@@ -100,7 +101,7 @@ public class TaskProducer implements Runnable {
         while (!finishedAllTasks && !dm.isIsBruteForceActionCancelled()) {
 
             // first clone a machine to send to the agent
-            copyOfMachine = new EnigmaMachine((EnigmaMachine) machine);
+            // copyOfMachine = new EnigmaMachine((EnigmaMachine) machine);
 
             // the next window characters to set for the agent, based on last window characters
             nextWindowsOffsets = getNextWindowsOffsets(taskSize, currentWindowsOffsets);
@@ -116,7 +117,7 @@ public class TaskProducer implements Runnable {
             try {
                 taskCounter++;
                 dm.getJobProgressInfo().setNumberOfTasksProduced(taskCounter);
-                agentTaskQueue.put(new AgentTask(rotorsIDs, nextWindowsOffsets, reflectorID, copyOfMachine, taskSize, textToDecipher, dm.getAllieName()));
+                agentTaskQueue.put(new AgentTask(rotorsIDs, nextWindowsOffsets, reflectorID, machine, taskSize, textToDecipher, dm.getAllieName()));
             } catch (InterruptedException e) {
                 // producer Stopped so need to die
                 return;
