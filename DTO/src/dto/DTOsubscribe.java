@@ -14,4 +14,6 @@ public class DTOsubscribe extends DTOstatus {
     public long getTotalPossibleWindowsPositions() {
         return totalPossibleWindowsPositions;
     }
+
+
 }

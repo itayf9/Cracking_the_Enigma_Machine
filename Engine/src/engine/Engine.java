@@ -22,7 +22,6 @@ public interface Engine {
      * gets fileName from user and loads XML file to build a new machine.
      * then, builds the machine.
      *
-     * @param fileName string - name of xml file
      * @return DTOstatus object that describes the status of the operation
      */
     DTOspecs buildMachineFromXmlFile(String fileContent, String userName);
@@ -213,4 +212,6 @@ public interface Engine {
     DTOactive checkIfAllieIsSubscribedToContest(String allieName);
 
     Map<String, DecryptManager> getAllieMap();
+
+    DTOactive checkIfAllieIsSubscribedToContestHasStarted(String allieName);
 }

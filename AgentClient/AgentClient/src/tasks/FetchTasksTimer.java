@@ -3,7 +3,6 @@ package tasks;
 import app.MainController;
 import app.MessageTone;
 import com.google.gson.Gson;
-import dto.DTOagentConclusions;
 import dto.DTOstatus;
 import dto.DTOtasks;
 import javafx.application.Platform;

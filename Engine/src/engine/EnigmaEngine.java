@@ -1492,6 +1492,15 @@ public class EnigmaEngine implements Engine {
         if (allie == null) {
             return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
         }
+        return new DTOactive(true, Problem.NO_PROBLEM, allie.isSubscribed());
+    }
+
+    @Override
+    public DTOactive checkIfAllieIsSubscribedToContestHasStarted(String allieName) {
+        DecryptManager allie = allieName2decryptManager.get(allieName);
+        if (allie == null) {
+            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
+        }
         return new DTOactive(true, Problem.NO_PROBLEM, allie.getIsBattlefieldActive().get());
     }
 

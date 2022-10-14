@@ -212,5 +212,14 @@
         <url-pattern>/approve/contest</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>FetchSubscriptionStatusServlet</servlet-name>
+        <servlet-class>servlets.agent.FetchSubscriptionStatusServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FetchSubscriptionStatusServlet</servlet-name>
+        <url-pattern>/fetch/subscribe/status</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>

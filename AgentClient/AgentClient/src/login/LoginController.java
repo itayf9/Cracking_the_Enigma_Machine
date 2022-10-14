@@ -2,11 +2,10 @@ package login;
 
 import app.MainController;
 import com.google.gson.Gson;
-import dto.DTOallies;
+import dto.DTOloggedAllies;
 import dto.DTOstatus;
 import http.cookie.SimpleCookieManager;
 import http.url.Constants;
-import info.allie.AllieInfo;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,7 +55,7 @@ public class LoginController {
 
         // get all allies
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/allies-info").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/allies-names").newBuilder();
         urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, AGENT.getClientTypeAsString());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
@@ -81,11 +80,11 @@ public class LoginController {
                     return;
                 }
 
-                DTOallies alliesStatus = gson.fromJson(dtoAsStr, DTOallies.class);
+                DTOloggedAllies alliesStatus = gson.fromJson(dtoAsStr, DTOloggedAllies.class);
 
                 Platform.runLater(() -> {
-                    for (AllieInfo allie : alliesStatus.getAllies()) {
-                        teamComboBox.getItems().add(allie.getAllieName());
+                    for (String allieName : alliesStatus.getLoggedAllies()) {
+                        teamComboBox.getItems().add(allieName);
                     }
                 });
             }

@@ -1,5 +1,6 @@
 package app;
 
+import agent.AgentTask;
 import body.screen1.agentprogress.AgentProgressController;
 import body.screen1.candidate.area.CandidatesAreaController;
 import body.screen1.candidate.tile.CandidateTileController;
@@ -27,6 +28,9 @@ import javafx.scene.shape.Rectangle;
 import okhttp3.*;
 import problem.Problem;
 import tasks.FetchContestStatusTimer;
+import tasks.FetchSubscriptionStatusTimer;
+import tasks.FetchTasksTimer;
+import tasks.SubmitConclusionsTimer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -91,20 +95,31 @@ public class MainController {
      */
     private IntegerProperty totalDistinctCandidates;
     private Dictionary dictionary;
-    private ExecutorService threadPoolExecutor;
+    private ExecutorService threadPool;
     private BlockingQueue<AgentConclusion> conclusionsQueue;
+    private IntegerProperty numOfTotalPulledTasks;
+    private IntegerProperty numOfTasksInQueue;
+    private IntegerProperty numOfTotalCompletedTasks;
 
     /**
      * contest stuff
      */
     public final static int REFRESH_RATE = 2000;
     private BooleanProperty isContestActive;
+    private String agentName;
     private String allieName;
     private String uboatName;
     private int numOfThreads;
     private int numOfTasksToPull;
     private Timer contestStatusTimer;
     private FetchContestStatusTimer fetchContestStatusTimer;
+    private Timer submitConclusionsTimer;
+    private SubmitConclusionsTimer submitAllConclusionsTimer;
+    private Timer tasksTimer;
+    private FetchTasksTimer fetchTasksTimer;
+    private Timer subscribeTimer;
+    private FetchSubscriptionStatusTimer fetchSubscribeTimer;
+    private BooleanProperty isSubscribed;
 
     @FXML
     public void initialize() {
@@ -116,27 +131,50 @@ public class MainController {
         agentProgressController.setParentController(this);
 
         this.conclusionsQueue = new LinkedBlockingQueue<>();
-        this.threadPoolExecutor = Executors.newFixedThreadPool(numOfThreads);
 
         // property initialize
         this.totalDistinctCandidates = new SimpleIntegerProperty();
         this.isContestActive = new SimpleBooleanProperty(false);
+        this.isSubscribed = new SimpleBooleanProperty();
+        this.numOfTasksInQueue = new SimpleIntegerProperty();
+        this.numOfTotalPulledTasks = new SimpleIntegerProperty();
+        this.numOfTotalCompletedTasks = new SimpleIntegerProperty();
 
         // Timers
         this.contestStatusTimer = new Timer();
+        this.submitConclusionsTimer = new Timer();
+        this.tasksTimer = new Timer();
+        this.subscribeTimer = new Timer();
         this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive);
+        this.submitAllConclusionsTimer = new SubmitConclusionsTimer(this);
+        this.fetchTasksTimer = new FetchTasksTimer(this);
+        this.fetchSubscribeTimer = new FetchSubscriptionStatusTimer(isSubscribed);
+
+
+        isSubscribed.addListener((o, oldVal, newVal) -> {
+            if (newVal) {
+                // allie just subscribed
+                setStatusMessage("Allie has subscribed to a Contest", MessageTone.INFO);
+                fetchStaticInfoContest();
+                contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
+            }
+        });
+
 
         isContestActive.addListener((o, oldVal, newVal) -> {
             if (newVal) {
                 // contest == active
                 // stop allies & status timers
                 setStatusMessage("Contest has started", MessageTone.INFO);
-                fetchStaticInfoContest();
 
                 // schedule fetch candidates timer & fetch active teams
+                tasksTimer.schedule(fetchTasksTimer, REFRESH_RATE, REFRESH_RATE);
+                submitConclusionsTimer.schedule(submitAllConclusionsTimer, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // contest == not active => winner found
                 fetchWinnerMessage();
+                threadPool.shutdownNow();
+
             }
         });
 
@@ -266,7 +304,7 @@ public class MainController {
 
                 } else {
                     DTOstaticContestInfo staticInfoStatus = gson.fromJson(dtoAsStr, DTOstaticContestInfo.class);
-                    Platform.runLater(() -> contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo()));
+                    Platform.runLater(() -> contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo(), allieName));
                 }
             }
 

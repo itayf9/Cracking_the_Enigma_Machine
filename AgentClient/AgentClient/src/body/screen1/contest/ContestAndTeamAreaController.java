@@ -7,8 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
-import java.awt.*;
-
 public class ContestAndTeamAreaController {
 
     MainController parentController;
@@ -26,7 +24,8 @@ public class ContestAndTeamAreaController {
         this.parentController = mainController;
     }
 
-    public void displayStaticContestInfo(BattlefieldInfo battlefieldInfo) {
+    public void displayStaticContestInfo(BattlefieldInfo battlefieldInfo, String allieName) {
         contestInfoController.setContestInfo(battlefieldInfo);
+
     }
 }

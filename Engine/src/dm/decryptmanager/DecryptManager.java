@@ -42,7 +42,7 @@ public class DecryptManager {
     private final Map<String, AgentInfo> agentName2agentInfo;
     private String textToDecipher;
     private AtomicBoolean isBattlefieldActive;
-
+    private AtomicBoolean isSubscribed;
     private boolean isDMapprovedFinishGame;
 
     public DecryptManager(String allieName, Battlefield battlefield, Map<String, AgentInfo> agentName2agentInfo) {
@@ -64,6 +64,7 @@ public class DecryptManager {
         this.isBruteForceActionCancelled = battlefield.isActive();
         this.isDMapprovedFinishGame = false;
         this.isBattlefieldActive = battlefield.isActive();
+        this.isSubscribed = new AtomicBoolean();
     }
 
 
@@ -207,6 +208,15 @@ public class DecryptManager {
         this.taskSize = taskSize;
         jobProgressInfo.setTotalAmountOfTasks(totalPossibleConfigurations / taskSize);
     }
+
+    public void setIsSubscribed(boolean isSubscribed) {
+        this.isSubscribed.set(isSubscribed);
+    }
+
+    public boolean isSubscribed() {
+        return isSubscribed.get();
+    }
+
 
     public void setDMReady(boolean isReady) {
         this.isDMReady = isReady;

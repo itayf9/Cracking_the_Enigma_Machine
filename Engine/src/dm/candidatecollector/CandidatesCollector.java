@@ -18,8 +18,6 @@ public class CandidatesCollector implements Runnable {
     private BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final long totalPossibleConfigurations;
     private final List<AgentConclusion> allConclusions;
-    private final LongProperty totalTimeDecryptProperty;
-    private final BooleanProperty isBruteForceActionPaused;
     private final AtomicBoolean isBruteForceActionCancelled;
     private JobProgressInfo jobProgressInfo;
     private Map<String, AgentInfo> agentName2agentInfo;
@@ -30,8 +28,6 @@ public class CandidatesCollector implements Runnable {
         this.agentReportsOfCandidateQueue = dm.getCandidatesQueue();
         this.uboatCandidateQueue = dm.getUboatCandidateQueue();
         this.totalPossibleConfigurations = dm.getTotalPossibleConfigurations();
-        this.totalTimeDecryptProperty = dm.getTotalTimeDecryptProperty();
-        this.isBruteForceActionPaused = dm.getIsBruteForceActionPaused();
         this.isBruteForceActionCancelled = dm.getIsBruteForceActionCancelled();
         this.jobProgressInfo = dm.getJobProgressInfo();
         this.agentName2agentInfo = dm.getAgentName2agentInfo();
