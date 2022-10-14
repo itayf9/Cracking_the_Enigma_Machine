@@ -74,23 +74,9 @@ public class DecryptManager {
         this.isBruteForceActionPaused = new SimpleBooleanProperty(false);
     }
 
-    /**
-     * pauses execution
-     */
-    public void pauseDecrypt() {
-        synchronized (isBruteForceActionPaused) {
-            isBruteForceActionPaused.setValue(true);
-        }
-    }
 
-    /**
-     * resume the execution after being paused
-     */
-    public void resumeDecrypt() {
-        synchronized (isBruteForceActionPaused) {
-            isBruteForceActionPaused.setValue(false);
-            isBruteForceActionPaused.notifyAll();
-        }
+    public AtomicBoolean getIsBattlefieldActive() {
+        return isBattlefieldActive;
     }
 
     /**

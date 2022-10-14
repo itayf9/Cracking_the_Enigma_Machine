@@ -1358,15 +1358,14 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
-    public DTOallies getAllieWinnerInfo(String usernameFromSession, String allieName) {
+    public DTOwinner getAllieWinnerInfo(String uboatName) {
 
         List<AllieInfo> allieInfos = new ArrayList<>();
-        Battlefield battlefield = uboatName2battleField.get(usernameFromSession);
+        Battlefield battlefield = uboatName2battleField.get(uboatName);
         if (battlefield == null) {
-            return new DTOallies(false, Problem.UBOAT_NAME_DOESNT_EXIST, allieInfos);
+            return new DTOwinner(false, Problem.UBOAT_NAME_DOESNT_EXIST, battlefield.getWinnerAllieInfo());
         }
-        allieInfos.add(battlefield.getWinnerAllieInfo());
-        return new DTOallies(true, Problem.NO_PROBLEM, allieInfos);
+        return new DTOwinner(true, Problem.NO_PROBLEM, battlefield.getWinnerAllieInfo());
     }
 
     @Override

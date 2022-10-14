@@ -73,4 +73,12 @@ public class ContestTileController {
         this.difficultyLevelLabel.setText(battlefieldInfo.getDifficultyLevel().name());
         this.alliesSubscribedRequiredLabel.setText(battlefieldInfo.getNumOfLoggedAllies() + " / " + battlefieldInfo.getNumOfRequiredAllies());
     }
+
+    public void clearOldResult() {
+        battlefieldNameLabel.setText("-");
+        uboatNameLabel.setText("-");
+        isActiveStatusLabel.setText("-");
+        difficultyLevelLabel.setText("-");
+        alliesSubscribedRequiredLabel.setText("- / -");
+    }
 }

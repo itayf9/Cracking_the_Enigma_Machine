@@ -29,7 +29,7 @@
                      <children>
                         <fx:include fx:id="agentsInfo" source="screen1/agentsinfo/agentsinfo.fxml" />
                         <fx:include fx:id="contestsArea" source="screen1/contest/area/contestsArea.fxml" GridPane.columnIndex="2" GridPane.rowSpan="3" />
-                        <fx:include source="screen1/alliesetting/allieSetting.fxml" GridPane.rowIndex="2" />
+                        <fx:include fx:id="allieSettings" source="screen1/alliesetting/allieSetting.fxml" GridPane.rowIndex="2" />
                      </children>
                         </GridPane>
                     </content>

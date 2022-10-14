@@ -45,4 +45,8 @@ public class ActiveTeamsController {
             teamsTable.getItems().add(allieInfo);
         }
     }
+
+    public void clearOldResult() {
+        teamsTable.getItems().clear();
+    }
 }

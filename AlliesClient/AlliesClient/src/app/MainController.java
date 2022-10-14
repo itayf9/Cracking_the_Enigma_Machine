@@ -137,8 +137,6 @@ public class MainController {
                 dynamicContestInfoTimer.schedule(fetchDynamicContestInfoTimer, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // contest == not active => winner found
-                fetchAllCandidatesTimer.cancel();
-                allCandidatesTimer.cancel();
                 fetchAlliesInfoTimer.cancel();
                 alliesInfoTimer.cancel();
             }
@@ -280,7 +278,6 @@ public class MainController {
 
                 } else {
                     Platform.runLater(() -> {
-                        cleanOldResults();
                         contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
                         setStatusMessage("Allie is Ready", MessageTone.INFO);
                     });
