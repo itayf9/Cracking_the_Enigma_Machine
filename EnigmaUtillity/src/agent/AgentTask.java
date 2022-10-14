@@ -4,6 +4,7 @@ import candidate.AgentConclusion;
 import candidate.Candidate;
 import dictionary.Dictionary;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import machine.Machine;
 
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class AgentTask implements Runnable {
     private BlockingQueue<AgentConclusion> candidatesQueue;
 
     private BooleanProperty isContestActiveProperty;
+
+    private IntegerProperty numOfCompletedTasksProperty;
     private String agentName;
 
     private String allieName;
@@ -87,6 +90,10 @@ public class AgentTask implements Runnable {
         this.candidatesQueue = candidatesQueue;
     }
 
+    public void setNumOfCompletedTasksProperty(IntegerProperty numOfTotalCompletedTasks) {
+        this.numOfCompletedTasksProperty = numOfTotalCompletedTasks;
+    }
+
 
     private boolean AllWindowsOffsetsAtBeginning() {
         for (Integer offset : windowOffsets) {
@@ -146,6 +153,7 @@ public class AgentTask implements Runnable {
         try {
             long timeElapsed = System.nanoTime() - startMeasureTime;
             candidatesQueue.put(new AgentConclusion(candidates, numOfConfigScanned, timeElapsed, agentName, allieName));
+            numOfCompletedTasksProperty.set(numOfCompletedTasksProperty.get() + 1);
         } catch (InterruptedException ignored) {
 
         }

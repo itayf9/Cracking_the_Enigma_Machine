@@ -25,6 +25,7 @@ import static http.url.Client.AGENT;
 import static http.url.Client.UBOAT;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
+import static http.url.URLconst.LOGIN_SRC;
 
 public class LoginController {
 
@@ -121,7 +122,7 @@ public class LoginController {
 
         String body = "";
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/login").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGIN_SRC).newBuilder();
         urlBuilder.addQueryParameter(Constants.USERNAME, userNameTextField.getText());
         urlBuilder.addQueryParameter(QueryParameter.ALLIE_NAME, teamComboBox.getEditor().getText());
         urlBuilder.addQueryParameter(QueryParameter.NUM_OF_THREADS, String.valueOf(threadsSlider.getValue()));

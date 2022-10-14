@@ -3,24 +3,24 @@ package tasks;
 import app.MainController;
 import app.MessageTone;
 import com.google.gson.Gson;
-import dto.DTOagentConclusions;
+import dto.DTOactive;
 import dto.DTOstatus;
+import dto.DTOtasks;
 import javafx.application.Platform;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.util.TimerTask;
 
-import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
-import static http.url.URLconst.FETCH_CANDIDATES_SRC;
+import static http.url.URLconst.*;
 
-public class FetchCandidatesTimer extends TimerTask {
+public class WaitForAllieApproveFinishGameTimer extends TimerTask {
 
     private OkHttpClient client;
     private MainController mainController;
 
-    public FetchCandidatesTimer(MainController mainController) {
+    public WaitForAllieApproveFinishGameTimer(MainController mainController) {
         this.mainController = mainController;
     }
 
@@ -30,7 +30,7 @@ public class FetchCandidatesTimer extends TimerTask {
 
     @Override
     public void run() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CANDIDATES_SRC).newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_APPROVAL_STATUS_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -48,16 +48,18 @@ public class FetchCandidatesTimer extends TimerTask {
 
 
                 if (response.code() != 200) {
-                    DTOstatus candidatesStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    DTOstatus tasksStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
-                        mainController.setStatusMessage(mainController.convertProblemToMessage(candidatesStatus.getDetails()), MessageTone.ERROR);
+                        mainController.setStatusMessage(mainController.convertProblemToMessage(tasksStatus.getDetails()), MessageTone.ERROR);
                     });
 
                 } else {
-                    // start scanning candidates
-                    DTOagentConclusions candidatesStatus = gson.fromJson(dtoAsStr, DTOagentConclusions.class);
+                    DTOactive approvalStatus = gson.fromJson(dtoAsStr, DTOactive.class);
                     Platform.runLater(() -> {
-                        mainController.displayAllCandidates(candidatesStatus.getAgentConclusions());
+                        if (approvalStatus.isActive()) {
+                            mainController.cleanOldResults();
+                            mainController.setIsSubscribed(false);
+                        }
                     });
                 }
             }

@@ -13,6 +13,7 @@ import java.util.TimerTask;
 
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
+import static http.url.URLconst.FETCH_ALLIES_INFO_SRC;
 
 public class FetchAlliesInfoTimer extends TimerTask {
 
@@ -33,7 +34,7 @@ public class FetchAlliesInfoTimer extends TimerTask {
         System.out.println("client is " + client);
         System.out.println("mainController is " + mainController);
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/allies-info").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_ALLIES_INFO_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.*;
 
-import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
+import static http.url.URLconst.*;
 
 public class MainController {
 
@@ -178,6 +178,9 @@ public class MainController {
             }
         });
 
+        // bindings
+        agentProgressController.bindComponents(numOfTasksInQueue, numOfTotalPulledTasks, numOfTotalCompletedTasks);
+
         // general setting to initialize sub components
         messageLabel.textProperty().bind(statusLabel.textProperty());
         messageLabel.opacityProperty().bind(statusBackShape.opacityProperty());
@@ -191,9 +194,7 @@ public class MainController {
      * fetch the winner allie name from server and display it to everyone
      */
     private void fetchWinnerMessage() {
-        String body = "";
-
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/winner").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CONTEST_WINNER).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
@@ -279,7 +280,7 @@ public class MainController {
     public void fetchStaticInfoContest() {
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/static").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_STATIC_CONTEST_INFO_SRC).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
@@ -338,8 +339,15 @@ public class MainController {
     /**
      * clear all findings of last process and labels progress
      */
-    private void cleanOldResults() {
+    public void cleanOldResults() {
+
         totalDistinctCandidates.set(0);
+        numOfTasksInQueue.set(0);
+        numOfTotalPulledTasks.set(0);
+        numOfTotalCompletedTasks.set(0);
+        contestAndTeamAreaController.clearOldResult();
+        candidatesAreaController.clearOldResult();
+
     }
 
     /**
@@ -473,6 +481,10 @@ public class MainController {
         return conclusions;
     }
 
+    public void setIsSubscribed(boolean isSubscribed) {
+        this.isSubscribed.set(isSubscribed);
+    }
+
     public void setInitialSettings(String allieName, int numOfThreads, int numOfTasksPerPull, String agentName) {
         this.allieName = allieName;
         this.numOfThreads = numOfThreads;
@@ -492,10 +504,7 @@ public class MainController {
             task.setDictionary(dictionary);
             task.setIsContestActiveProperty(isContestActive);
             task.setCandidatesQueue(conclusionsQueue);
-
-            // add a lock to the candidateQueue, so all agent threads will be synchronized when inserting
-            // a new conclusion to the queue, and when the submitting thread is taking conclusions from
-            // the queue
+            task.setNumOfCompletedTasksProperty(numOfTotalCompletedTasks);
 
             threadPool.execute(task);
         }

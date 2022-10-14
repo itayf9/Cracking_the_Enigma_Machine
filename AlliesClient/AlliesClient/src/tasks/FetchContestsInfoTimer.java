@@ -14,6 +14,7 @@ import java.util.TimerTask;
 
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
+import static http.url.URLconst.FETCH_BATTLEFIELDS_INFO_SRC;
 
 public class FetchContestsInfoTimer extends TimerTask {
 
@@ -37,7 +38,7 @@ public class FetchContestsInfoTimer extends TimerTask {
     @Override
     public void run() {
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/battlefields").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_BATTLEFIELDS_INFO_SRC).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())

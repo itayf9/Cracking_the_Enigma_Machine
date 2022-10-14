@@ -13,6 +13,7 @@ import java.util.TimerTask;
 
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
+import static http.url.URLconst.FETCH_CANDIDATES_SRC;
 
 public class FetchCandidatesTimer extends TimerTask {
 
@@ -29,7 +30,7 @@ public class FetchCandidatesTimer extends TimerTask {
 
     @Override
     public void run() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/candidates").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CANDIDATES_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

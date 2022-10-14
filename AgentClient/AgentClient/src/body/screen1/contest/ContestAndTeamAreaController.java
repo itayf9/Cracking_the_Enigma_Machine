@@ -28,4 +28,8 @@ public class ContestAndTeamAreaController {
         contestInfoController.setContestInfo(battlefieldInfo);
 
     }
+
+    public void clearOldResult() {
+        contestInfoController.clearOldResult();
+    }
 }

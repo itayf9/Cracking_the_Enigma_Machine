@@ -24,6 +24,7 @@ import java.net.URL;
 import static http.url.Client.ALLIE;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
+import static http.url.URLconst.LOGIN_SRC;
 
 public class LoginController {
 
@@ -51,7 +52,7 @@ public class LoginController {
 
         String body = "";
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/login").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGIN_SRC).newBuilder();
         urlBuilder.addQueryParameter(Constants.USERNAME, userNameTextField.getText());
         urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, ALLIE.getClientTypeAsString());
         System.out.println(urlBuilder.build().toString());

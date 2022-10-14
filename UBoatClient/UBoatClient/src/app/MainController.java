@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.Timer;
 
 import static http.url.QueryParameter.*;
-import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
+import static http.url.URLconst.*;
 
 public class MainController {
 
@@ -248,7 +248,7 @@ public class MainController {
                     .addFormDataPart("contest", selectedMachineFile,
                             RequestBody.create(arr))
                     .build();
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/load").newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOAD_XML_SRC).newBuilder();
             Request request = new Request.Builder()
                     .url(urlBuilder.build().toString())
                     .post(body)
@@ -319,7 +319,7 @@ public class MainController {
 
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/calibrate/manual").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + CALIB_MANUAL_SRC).newBuilder();
         urlBuilder.addQueryParameter(ROTORS_IDS, rotors);
         urlBuilder.addQueryParameter(WINDOWS_CHARS, windows);
         urlBuilder.addQueryParameter(REFLECTOR_ID, String.valueOf(reflector));
@@ -374,7 +374,7 @@ public class MainController {
     public void setRandomMachineConfig() {
 
         String body = "";
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/calibrate/auto").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + CALIB_AUTO_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -439,7 +439,7 @@ public class MainController {
 
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/cipher").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + CIPHER_SRC).newBuilder();
         urlBuilder.addQueryParameter(TEXT_TO_CIPHER, line);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
@@ -489,7 +489,7 @@ public class MainController {
     public void resetMachineConfiguration() {
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/reset").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + RESET_CONFIG_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -541,7 +541,7 @@ public class MainController {
 
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/ready").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + CLIENT_IS_READY_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -637,7 +637,7 @@ public class MainController {
 
         String body = "";
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/contest/winner-found").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + WINNER_FOUND_SRC).newBuilder();
         urlBuilder.addQueryParameter(ALLIE_NAME, allieWinnerName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())

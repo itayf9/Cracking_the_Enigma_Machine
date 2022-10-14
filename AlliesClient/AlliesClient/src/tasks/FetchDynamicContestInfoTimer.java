@@ -13,6 +13,7 @@ import java.util.TimerTask;
 
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
+import static http.url.URLconst.FETCH_DYNAMIC_CONTEST_INFO_SRC;
 
 public class FetchDynamicContestInfoTimer extends TimerTask {
 
@@ -35,7 +36,7 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
 
     @Override
     public void run() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/dynamic").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_DYNAMIC_CONTEST_INFO_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
