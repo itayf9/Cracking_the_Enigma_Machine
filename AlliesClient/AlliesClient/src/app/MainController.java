@@ -8,7 +8,7 @@ import candidate.Candidate;
 import com.google.gson.Gson;
 import dto.*;
 import header.HeaderController;
-import http.url.Constants;
+import http.url.QueryParameter;
 import info.agent.AgentInfo;
 import info.allie.AllieInfo;
 import info.battlefield.BattlefieldInfo;
@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.Timer;
 
 import static http.url.URLconst.BASE_URL;
-import static http.url.URLconst.CONTENT_TYPE;
+import static http.url.Constants.CONTENT_TYPE;
 
 public class MainController {
 
@@ -157,7 +157,7 @@ public class MainController {
         String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/winner").newBuilder();
-        urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -244,7 +244,7 @@ public class MainController {
         String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/subscribe").newBuilder();
-        urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatNameToRegister);
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatNameToRegister);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -291,8 +291,8 @@ public class MainController {
         String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/ready").newBuilder();
-        urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatName);
-        urlBuilder.addQueryParameter(Constants.TASK_SIZE, String.valueOf(taskSize));
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(QueryParameter.TASK_SIZE, String.valueOf(taskSize));
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -334,7 +334,7 @@ public class MainController {
         String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/static").newBuilder();
-        urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -407,7 +407,7 @@ public class MainController {
         String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/contest/static").newBuilder();
-        urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

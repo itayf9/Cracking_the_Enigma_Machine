@@ -1,6 +1,6 @@
 package servlets.common;
 
-import dm.decryptmanager.DecryptManager;
+import http.url.QueryParameter;
 import info.agent.AgentInfo;
 import battlefield.Battlefield;
 import com.google.gson.Gson;
@@ -78,10 +78,10 @@ public class LoginServlet extends HttpServlet {
                         break;
                     case AGENT:
                         String agentName = request.getParameter(Constants.USERNAME);
-                        String allieNameToJoin = request.getParameter(Constants.ALLIE_NAME);
+                        String allieNameToJoin = request.getParameter(QueryParameter.ALLIE_NAME);
                         int numOfThreads;
                         try {
-                            numOfThreads = Integer.parseInt(request.getParameter(Constants.NUM_OF_THREADS));
+                            numOfThreads = Integer.parseInt(request.getParameter(QueryParameter.NUM_OF_THREADS));
                         } catch (NullPointerException | NumberFormatException e) {
                             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                             response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
@@ -89,7 +89,7 @@ public class LoginServlet extends HttpServlet {
                         }
                         int numOfMissionsToPull;
                         try {
-                            numOfMissionsToPull = Integer.parseInt(request.getParameter(Constants.MISSION_COUNT));
+                            numOfMissionsToPull = Integer.parseInt(request.getParameter(QueryParameter.MISSION_COUNT));
                         } catch (NullPointerException | NumberFormatException e) {
                             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                             response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));

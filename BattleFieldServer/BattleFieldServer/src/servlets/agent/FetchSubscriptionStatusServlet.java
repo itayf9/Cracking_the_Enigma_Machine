@@ -6,6 +6,7 @@ import dto.DTOstatus;
 import engine.Engine;
 import http.url.Client;
 import http.url.Constants;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +36,7 @@ public class FetchSubscriptionStatusServlet extends HttpServlet {
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
             String allieName;
 
-            allieName = req.getParameter(Constants.ALLIE_NAME);
+            allieName = req.getParameter(QueryParameter.ALLIE_NAME);
             if (allieName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_ALLIE_NAME)));

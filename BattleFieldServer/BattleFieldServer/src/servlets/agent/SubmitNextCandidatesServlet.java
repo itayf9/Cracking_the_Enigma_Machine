@@ -6,6 +6,7 @@ import http.url.Client;
 import http.url.Constants;
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,8 +36,8 @@ public class SubmitNextCandidatesServlet extends HttpServlet {
                 return;
             }
 
-            String uboatName = req.getParameter(Constants.UBOAT_NAME);
-            String allieName = req.getParameter(Constants.ALLIE_NAME);
+            String uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
+            String allieName = req.getParameter(QueryParameter.ALLIE_NAME);
             if (uboatName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
@@ -46,7 +47,7 @@ public class SubmitNextCandidatesServlet extends HttpServlet {
             } else {
 
                 // get the conclusions
-                AgentConclusion[] conclusionsArray = gson.fromJson(req.getParameter(Constants.CONCLUSIONS), AgentConclusion[].class);
+                AgentConclusion[] conclusionsArray = gson.fromJson(req.getParameter(QueryParameter.CONCLUSIONS), AgentConclusion[].class);
 
                 DTOstatus submitStatus = engine.submitConclusions(Arrays.asList(conclusionsArray), allieName, uboatName);
                 if (!submitStatus.isSucceed()) {

@@ -18,6 +18,7 @@ import machine.EnigmaMachine;
 import machine.Machine;
 import machine.component.Reflector;
 import machine.component.Rotor;
+import machine.jaxb.generated.*;
 import problem.Problem;
 import statistics.StatisticRecord;
 

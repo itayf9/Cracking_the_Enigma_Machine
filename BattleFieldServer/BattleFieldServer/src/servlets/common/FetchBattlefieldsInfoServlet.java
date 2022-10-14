@@ -6,6 +6,7 @@ import http.url.Constants;
 import dto.DTObattlefields;
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,8 +36,8 @@ public class FetchBattlefieldsInfoServlet extends HttpServlet {
 
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
 
-            String onlyMyBattlefield = req.getParameter(Constants.ONLY_MY);
-            String uboatName = req.getParameter(Constants.UBOAT_NAME);
+            String onlyMyBattlefield = req.getParameter(QueryParameter.ONLY_MY);
+            String uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
             boolean isOnlyMyBattlefield = Boolean.parseBoolean(onlyMyBattlefield);
 
             if (!isOnlyMyBattlefield || uboatName == null) {

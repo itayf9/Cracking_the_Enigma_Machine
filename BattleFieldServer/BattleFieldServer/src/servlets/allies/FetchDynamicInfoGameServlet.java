@@ -6,6 +6,7 @@ import http.url.Constants;
 import dto.DTOdynamicContestInfo;
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +35,7 @@ public class FetchDynamicInfoGameServlet extends HttpServlet {
                 return;
             }
 
-            String uboatName = req.getParameter(Constants.UBOAT_NAME);
+            String uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
             if (uboatName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));

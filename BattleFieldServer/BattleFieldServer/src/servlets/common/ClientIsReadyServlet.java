@@ -6,6 +6,7 @@ import http.url.Constants;
 
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,7 +49,7 @@ public class ClientIsReadyServlet extends HttpServlet {
                     engine.setUboatReady(userNameFromSession, true);
                     break;
                 case ALLIE:
-                    uboatName = req.getParameter(Constants.UBOAT_NAME);
+                    uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
                     if (uboatName == null) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
@@ -56,7 +57,7 @@ public class ClientIsReadyServlet extends HttpServlet {
                     }
                     int taskSize;
                     try {
-                        taskSize = Integer.parseInt(req.getParameter(Constants.TASK_SIZE));
+                        taskSize = Integer.parseInt(req.getParameter(QueryParameter.TASK_SIZE));
                     } catch (NumberFormatException e) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));

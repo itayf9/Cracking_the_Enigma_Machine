@@ -8,6 +8,7 @@ import http.url.Constants;
 import dm.decryptmanager.DecryptManager;
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +41,7 @@ public class WinnerFoundServlet extends HttpServlet {
                 return;
             }
 
-            String allieName = req.getParameter(Constants.ALLIE_NAME);
+            String allieName = req.getParameter(QueryParameter.ALLIE_NAME);
             if (allieName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));

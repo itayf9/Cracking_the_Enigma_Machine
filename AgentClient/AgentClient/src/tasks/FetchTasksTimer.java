@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.TimerTask;
 
 import static http.url.URLconst.BASE_URL;
-import static http.url.URLconst.CONTENT_TYPE;
+import static http.url.Constants.CONTENT_TYPE;
 
 public class FetchTasksTimer extends TimerTask {
 

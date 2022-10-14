@@ -4,9 +4,8 @@ import app.MainController;
 import app.MessageTone;
 import com.google.gson.Gson;
 import dto.DTObattlefields;
-import dto.DTOstaticContestInfo;
 import dto.DTOstatus;
-import http.url.Constants;
+import http.url.QueryParameter;
 import javafx.application.Platform;
 import okhttp3.*;
 
@@ -14,7 +13,7 @@ import java.io.IOException;
 import java.util.TimerTask;
 
 import static http.url.URLconst.BASE_URL;
-import static http.url.URLconst.CONTENT_TYPE;
+import static http.url.Constants.CONTENT_TYPE;
 
 public class FetchContestsInfoTimer extends TimerTask {
 
@@ -39,7 +38,7 @@ public class FetchContestsInfoTimer extends TimerTask {
     public void run() {
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/fetch/battlefields").newBuilder();
-        urlBuilder.addQueryParameter(Constants.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

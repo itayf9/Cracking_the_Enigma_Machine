@@ -6,6 +6,7 @@ import http.url.Constants;
 import dto.DTOactive;
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,8 +35,8 @@ public class FetchAllieApprovalStatusServlet extends HttpServlet {
                 return;
             }
 
-            String uboatName = req.getParameter(Constants.UBOAT_NAME);
-            String allieName = req.getParameter(Constants.ALLIE_NAME);
+            String uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
+            String allieName = req.getParameter(QueryParameter.ALLIE_NAME);
 
             if (uboatName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

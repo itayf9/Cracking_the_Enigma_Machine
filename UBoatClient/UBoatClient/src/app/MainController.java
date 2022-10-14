@@ -8,8 +8,6 @@ import candidate.Candidate;
 import com.google.gson.Gson;
 import dto.*;
 import header.HeaderController;
-import http.cookie.SimpleCookieManager;
-import http.url.Constants;
 import info.allie.AllieInfo;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -40,7 +38,7 @@ import java.util.Timer;
 
 import static http.url.QueryParameter.*;
 import static http.url.URLconst.BASE_URL;
-import static http.url.URLconst.CONTENT_TYPE;
+import static http.url.Constants.CONTENT_TYPE;
 
 public class MainController {
 
@@ -640,7 +638,7 @@ public class MainController {
         String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/contest/winner-found").newBuilder();
-        urlBuilder.addQueryParameter(Constants.ALLIE_NAME, allieWinnerName);
+        urlBuilder.addQueryParameter(ALLIE_NAME, allieWinnerName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

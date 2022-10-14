@@ -2,7 +2,6 @@ package tasks;
 
 import app.MainController;
 import com.google.gson.Gson;
-import dto.DTOactive;
 import dto.DTOloggedAgents;
 import dto.DTOstatus;
 import javafx.application.Platform;
@@ -12,7 +11,7 @@ import java.io.IOException;
 import java.util.TimerTask;
 
 import static http.url.URLconst.BASE_URL;
-import static http.url.URLconst.CONTENT_TYPE;
+import static http.url.Constants.CONTENT_TYPE;
 
 public class FetchLoggedAgentsInfoTimer extends TimerTask {
 

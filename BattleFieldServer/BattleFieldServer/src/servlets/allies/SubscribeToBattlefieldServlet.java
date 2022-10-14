@@ -5,6 +5,7 @@ import http.url.Client;
 import http.url.Constants;
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +34,7 @@ public class SubscribeToBattlefieldServlet extends HttpServlet {
                 return;
             }
 
-            String uboatNameToRegister = req.getParameter(Constants.UBOAT_NAME);
+            String uboatNameToRegister = req.getParameter(QueryParameter.UBOAT_NAME);
             if (uboatNameToRegister == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));

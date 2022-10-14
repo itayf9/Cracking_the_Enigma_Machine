@@ -5,7 +5,6 @@ import app.MessageTone;
 import com.google.gson.Gson;
 import dto.DTOallies;
 import dto.DTOstatus;
-import http.url.Constants;
 import javafx.application.Platform;
 import okhttp3.*;
 
@@ -13,7 +12,7 @@ import java.io.IOException;
 import java.util.TimerTask;
 
 import static http.url.URLconst.BASE_URL;
-import static http.url.URLconst.CONTENT_TYPE;
+import static http.url.Constants.CONTENT_TYPE;
 
 public class FetchAlliesInfoTimer extends TimerTask {
 

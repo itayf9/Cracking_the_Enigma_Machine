@@ -6,6 +6,7 @@ import http.url.Constants;
 import dto.DTOallies;
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,7 +45,7 @@ public class FetchAlliesInfoServlet extends HttpServlet {
                     uboatName = usernameFromSession;
                     break;
                 case ALLIE:
-                    uboatName = req.getParameter(Constants.UBOAT_NAME);
+                    uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
                     if (uboatName == null) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));

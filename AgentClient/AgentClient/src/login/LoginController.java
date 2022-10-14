@@ -6,6 +6,7 @@ import dto.DTOloggedAllies;
 import dto.DTOstatus;
 import http.cookie.SimpleCookieManager;
 import http.url.Constants;
+import http.url.QueryParameter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +24,7 @@ import java.net.URL;
 import static http.url.Client.AGENT;
 import static http.url.Client.UBOAT;
 import static http.url.URLconst.BASE_URL;
-import static http.url.URLconst.CONTENT_TYPE;
+import static http.url.Constants.CONTENT_TYPE;
 
 public class LoginController {
 
@@ -122,9 +123,9 @@ public class LoginController {
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/login").newBuilder();
         urlBuilder.addQueryParameter(Constants.USERNAME, userNameTextField.getText());
-        urlBuilder.addQueryParameter(Constants.ALLIE_NAME, teamComboBox.getEditor().getText());
-        urlBuilder.addQueryParameter(Constants.NUM_OF_THREADS, String.valueOf(threadsSlider.getValue()));
-        urlBuilder.addQueryParameter(Constants.MISSION_COUNT, tasksPerPullSpinner.getEditor().getText());
+        urlBuilder.addQueryParameter(QueryParameter.ALLIE_NAME, teamComboBox.getEditor().getText());
+        urlBuilder.addQueryParameter(QueryParameter.NUM_OF_THREADS, String.valueOf(threadsSlider.getValue()));
+        urlBuilder.addQueryParameter(QueryParameter.MISSION_COUNT, tasksPerPullSpinner.getEditor().getText());
         urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, UBOAT.getClientTypeAsString());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
