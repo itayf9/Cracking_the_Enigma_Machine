@@ -91,6 +91,7 @@ public class MainController {
     private FetchDynamicContestInfoTimer fetchDynamicContestInfoTimer;
     private Timer contestsInfoTimer;
     private FetchContestsInfoTimer fetchContestsInfoTimer;
+    private BooleanProperty isReady;
 
     @FXML
     public void initialize() {
@@ -115,6 +116,7 @@ public class MainController {
         this.fetchDynamicContestInfoTimer = new FetchDynamicContestInfoTimer(this);
         this.contestsInfoTimer = new Timer();
         this.fetchContestsInfoTimer = new FetchContestsInfoTimer(this);
+        this.isReady = new SimpleBooleanProperty(false);
 
         isContestActive.addListener((o, oldVal, newVal) -> {
             if (newVal) {
@@ -132,6 +134,7 @@ public class MainController {
                 fetchAlliesInfoTimer.cancel();
                 alliesInfoTimer.cancel();
                 fetchWinnerMessage();
+                isReady.set(false);
             }
         });
 
@@ -305,7 +308,6 @@ public class MainController {
                 String dtoAsStr = response.body().string();
                 System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
-
 
                 if (response.code() != 200) {
                     DTOstatus readyStatus = gson.fromJson(dtoAsStr, DTOstatus.class);

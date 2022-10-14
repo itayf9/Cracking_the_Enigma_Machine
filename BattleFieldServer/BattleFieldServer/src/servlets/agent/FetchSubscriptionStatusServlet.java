@@ -40,11 +40,13 @@ public class FetchSubscriptionStatusServlet extends HttpServlet {
             if (allieName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_ALLIE_NAME)));
-                return;
             } else {
                 DTOactive activeStatus = engine.checkIfAllieIsSubscribedToContest(allieName);
-                resp.setStatus(HttpServletResponse.SC_OK);
-                resp.getWriter().println(gson.toJson(activeStatus));
+                if (!activeStatus.isSucceed()) {
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                } else {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                }
                 resp.getWriter().println(gson.toJson(activeStatus));
             }
         }

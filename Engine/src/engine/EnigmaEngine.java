@@ -1092,7 +1092,7 @@ public class EnigmaEngine implements Engine {
 
         for (DecryptManager allie : uboatName2battleField.get(uboatUserName).getAllies()) {
             String allieName = allie.getAllieName();
-            int numOfAgents = allie.getNumOfAgents();
+            int numOfAgents = loggedAllieName2loggedAgents.get(allieName).size();
             int taskSize = allie.getTaskSize();
 
             AllieInfo currentAllieInfo = new AllieInfo(allieName, numOfAgents, taskSize);
@@ -1252,8 +1252,9 @@ public class EnigmaEngine implements Engine {
         }
 
         AgentInfo agentInfoToInsert = new AgentInfo(agentName, numOfThreads, numOfMissionsToPull);
-
         agentsOfAllie.add(agentInfoToInsert);
+
+        // agent manager
         agentName2agentInfo.put(agentName, agentInfoToInsert);
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }

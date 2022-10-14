@@ -125,10 +125,10 @@ public class LoginController {
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGIN_SRC).newBuilder();
         urlBuilder.addQueryParameter(Constants.USERNAME, userNameTextField.getText());
-        urlBuilder.addQueryParameter(QueryParameter.ALLIE_NAME, teamComboBox.getEditor().getText());
-        urlBuilder.addQueryParameter(QueryParameter.NUM_OF_THREADS, String.valueOf(threadsSlider.getValue()));
+        urlBuilder.addQueryParameter(QueryParameter.ALLIE_NAME, teamComboBox.getValue());
+        urlBuilder.addQueryParameter(QueryParameter.NUM_OF_THREADS, String.valueOf((int) threadsSlider.getValue()));
         urlBuilder.addQueryParameter(QueryParameter.MISSION_COUNT, tasksPerPullSpinner.getEditor().getText());
-        urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, UBOAT.getClientTypeAsString());
+        urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, AGENT.getClientTypeAsString());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -162,7 +162,7 @@ public class LoginController {
                         app = loader.load();
                         appController = loader.getController();
                         appController.setOkHttpClient(client);
-                        appController.setInitialSettings(teamComboBox.getEditor().getText(), (int) threadsSlider.getValue(), tasksPerPullSpinner.getValue(), userNameTextField.getText());
+                        appController.setInitialSettings(teamComboBox.getValue(), (int) threadsSlider.getValue(), tasksPerPullSpinner.getValue(), userNameTextField.getText());
 
                     } catch (IOException e) {
                         throw new RuntimeException(e);

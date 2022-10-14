@@ -35,7 +35,6 @@ public class DecryptManager {
     private int taskSize;
     private final String allieName;
     private boolean isDMReady;
-    private final int numOfAgents;
     private final JobProgressInfo jobProgressInfo;
     private final BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final AtomicBoolean isBruteForceActionCancelled;
@@ -53,7 +52,6 @@ public class DecryptManager {
         this.enigmaMachine = battlefield.getMachine();
         this.difficultyLevel = battlefield.getDifficultyLevel();
         this.allieName = allieName;
-        this.numOfAgents = 0;
         this.uboatCandidateQueue = battlefield.getUboatCandidatesQueue();
         this.totalPossibleWindowsPositions = (long) Math.pow(enigmaMachine.getAlphabet().length(), enigmaMachine.getRotorsCount());
         this.isDMReady = false;
@@ -100,22 +98,6 @@ public class DecryptManager {
         // setting up the collector of the candidates
         collector = new Thread(new CandidatesCollector(this));
         collector.setName("THE_COLLECTOR");
-
-        // starting the thread pool
-        // threadExecutor = new ThreadPoolExecutor(numOfSelectedAgents, numOfSelectedAgents,
-        //     0L, TimeUnit.MILLISECONDS, threadPoolBlockingQueue);
-
-        // setting up thr thread factory for the thread pool
-        /* threadExecutor.setThreadFactory(new ThreadFactory() {
-
-            private int nameCounter = 0;
-
-            @Override
-            public Thread newThread(Runnable r) {
-                nameCounter++;
-                return new Thread(r, String.valueOf(nameCounter));
-            }
-        });*/
 
         // setting a thread that produces tasks
         taskProducer = new Thread(new TaskProducer(this));
@@ -187,11 +169,7 @@ public class DecryptManager {
     public String getAllieName() {
         return allieName;
     }
-
-    public int getNumOfAgents() {
-        return numOfAgents;
-    }
-
+    
     public int getTaskSize() {
         return taskSize;
     }

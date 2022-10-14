@@ -5,6 +5,7 @@ import dto.DTOactive;
 import dto.DTOstatus;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -20,9 +21,11 @@ public class FetchSubscriptionStatusTimer extends TimerTask {
 
     private OkHttpClient client;
     private final BooleanProperty isSubscribed;
+    private StringProperty allieName;
 
-    public FetchSubscriptionStatusTimer(BooleanProperty isSubscribed) {
+    public FetchSubscriptionStatusTimer(BooleanProperty isSubscribed, StringProperty allieName) {
         this.isSubscribed = isSubscribed;
+        this.allieName = allieName;
     }
 
     public void setClient(OkHttpClient client) {
@@ -33,6 +36,7 @@ public class FetchSubscriptionStatusTimer extends TimerTask {
     public void run() {
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_SUBSCRIPTION_STATUS_SRC).newBuilder();
+        urlBuilder.addQueryParameter(ALLIE_NAME, allieName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

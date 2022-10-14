@@ -14,10 +14,7 @@ import header.HeaderController;
 import http.url.QueryParameter;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -111,7 +108,7 @@ public class MainController {
     public final static int REFRESH_RATE = 2000;
     private BooleanProperty isContestActive;
     private String agentName;
-    private String allieName;
+    private StringProperty allieName;
     private String uboatName;
     private int numOfThreads;
     private int numOfTasksToPull;
@@ -146,6 +143,7 @@ public class MainController {
         this.numOfTasksInQueue = new SimpleIntegerProperty();
         this.numOfTotalPulledTasks = new SimpleIntegerProperty();
         this.numOfTotalCompletedTasks = new SimpleIntegerProperty();
+        this.allieName = new SimpleStringProperty("");
 
         // Timers
         this.contestStatusTimer = new Timer();
@@ -156,8 +154,9 @@ public class MainController {
         this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive);
         this.submitAllConclusionsTimer = new SubmitConclusionsTimer(this);
         this.fetchTasksTimer = new FetchTasksTimer(this);
-        this.fetchSubscribeTimer = new FetchSubscriptionStatusTimer(isSubscribed);
         this.waitForAllieApprovalTimer = new WaitForAllieApproveFinishGameTimer(this);
+        this.fetchSubscribeTimer = new FetchSubscriptionStatusTimer(isSubscribed, allieName);
+
 
         isSubscribed.addListener((o, oldVal, newVal) -> {
             if (newVal) {
@@ -186,7 +185,7 @@ public class MainController {
                 // contest == not active => winner found
                 fetchWinnerMessage();
                 threadPool.shutdownNow();
-
+                waitForAllieApproveTimer.schedule(waitForAllieApprovalTimer, REFRESH_RATE, REFRESH_RATE);
             }
         });
 
@@ -243,47 +242,6 @@ public class MainController {
     }
 
     /**
-     * #3 let the server know we are ready for contest to start
-     */
-    public void setReady(int taskSize) {
-        String body = "";
-
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + CLIENT_IS_READY_SRC).newBuilder();
-        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
-        urlBuilder.addQueryParameter(QueryParameter.TASK_SIZE, String.valueOf(taskSize));
-        Request request = new Request.Builder()
-                .url(urlBuilder.build().toString())
-                .addHeader(CONTENT_TYPE, "text/plain")
-                .post(RequestBody.create(body.getBytes()))
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-
-            public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
-                String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
-                Gson gson = new Gson();
-
-
-                if (response.code() != 200) {
-                    DTOstatus readyStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-                    Platform.runLater(() -> setStatusMessage(convertProblemToMessage(readyStatus.getDetails()), MessageTone.ERROR));
-
-                } else {
-                    Platform.runLater(() -> {
-                        contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
-                        setStatusMessage("Allie is Ready", MessageTone.INFO);
-                    });
-                }
-            }
-
-            public void onFailure(Call call, IOException e) {
-                System.out.println("Oops... something went wrong..." + e.getMessage());
-            }
-        });
-    }
-
-    /**
      * #4 fetch static info about the contest from the server via http request
      */
     public void fetchStaticInfoContest() {
@@ -313,7 +271,7 @@ public class MainController {
                 } else {
                     DTOstaticContestInfo staticInfoStatus = gson.fromJson(dtoAsStr, DTOstaticContestInfo.class);
                     Platform.runLater(() -> {
-                        contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo(), allieName);
+                        contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo(), allieName.get());
                         dictionary = staticInfoStatus.getBattlefieldInfo().getDictionary();
                     });
 
