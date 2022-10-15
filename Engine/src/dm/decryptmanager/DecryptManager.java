@@ -14,9 +14,7 @@ import machine.Machine;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static utill.Utility.factorial;
 import static utill.Utility.nCk;
@@ -72,9 +70,6 @@ public class DecryptManager {
      * cancel the bruteForce execution
      */
     public void stopDecrypt() {
-
-        isContestActive.set(true);
-
         //  stopping the collector Task / Thread
         collector.interrupt();
 
@@ -86,10 +81,7 @@ public class DecryptManager {
      * initiates the thread needed to start the brute force process
      */
     public void startDecrypt() {
-
         this.agentReportsOfCandidatesQueue = new LinkedBlockingQueue<>();
-        isContestActive.set(false);
-
         // updates the total configs property
         setTotalConfigs(difficultyLevel);
 

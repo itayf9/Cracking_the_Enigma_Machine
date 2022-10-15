@@ -31,10 +31,6 @@ public class FetchContestsInfoTimer extends TimerTask {
         this.client = client;
     }
 
-    public void setUboatName(String uboatName) {
-        this.uboatName = uboatName;
-    }
-
     @Override
     public void run() {
 

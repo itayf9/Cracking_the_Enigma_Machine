@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import dto.DTOagentConclusions;
 import dto.DTOstatus;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -19,9 +20,12 @@ public class FetchCandidatesTimer extends TimerTask {
 
     private OkHttpClient client;
     private MainController mainController;
+    private StringProperty uboatName;
 
-    public FetchCandidatesTimer(MainController mainController) {
+    public FetchCandidatesTimer(MainController mainController, StringProperty uboatName) {
         this.mainController = mainController;
+        this.uboatName = uboatName;
+
     }
 
     public void setClient(OkHttpClient client) {

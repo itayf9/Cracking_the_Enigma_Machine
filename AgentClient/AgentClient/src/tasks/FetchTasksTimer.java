@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import dto.DTOstatus;
 import dto.DTOtasks;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -19,10 +20,14 @@ import static http.url.Constants.CONTENT_TYPE;
 public class FetchTasksTimer extends TimerTask {
 
     private OkHttpClient client;
-    private MainController mainController;
+    private final MainController mainController;
+    private final StringProperty allieName;
+    private final StringProperty uboatName;
 
-    public FetchTasksTimer(MainController mainController) {
+    public FetchTasksTimer(MainController mainController, StringProperty allieName, StringProperty uboatName) {
         this.mainController = mainController;
+        this.allieName = allieName;
+        this.uboatName = uboatName;
     }
 
     public void setClient(OkHttpClient client) {
@@ -43,7 +48,7 @@ public class FetchTasksTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch candidates task response");
+                System.out.println("fetch agentTasks task response");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 System.out.println("Body: " + dtoAsStr);

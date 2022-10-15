@@ -1,13 +1,18 @@
 package tasks;
 
 import app.MainController;
+import app.MessageTone;
 import com.google.gson.Gson;
 import dto.DTOstatus;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.util.TimerTask;
+
+import static http.url.QueryParameter.ALLIE_NAME;
+import static http.url.QueryParameter.UBOAT_NAME;
 import static http.url.URLconst.*;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
@@ -15,11 +20,15 @@ import static http.url.Constants.CONTENT_TYPE;
 public class SubmitConclusionsTimer extends TimerTask {
 
     private OkHttpClient client;
-    private MainController mainController;
-    private Gson gson = new Gson();
+    private final MainController mainController;
+    private final StringProperty uboatName;
+    private final StringProperty allieName;
+    private final Gson gson = new Gson();
 
-    public SubmitConclusionsTimer(MainController mainController) {
+    public SubmitConclusionsTimer(MainController mainController, StringProperty allieName, StringProperty uboatName) {
         this.mainController = mainController;
+        this.allieName = allieName;
+        this.uboatName = uboatName;
     }
 
     public void setClient(OkHttpClient client) {
@@ -32,6 +41,8 @@ public class SubmitConclusionsTimer extends TimerTask {
         String conclusions = gson.toJson(mainController.getConclusions());
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + SUBMIT_NEXT_CANDIDATES_SRC).newBuilder();
+        urlBuilder.addQueryParameter(ALLIE_NAME, allieName.get());
+        urlBuilder.addQueryParameter(UBOAT_NAME, uboatName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -52,8 +63,6 @@ public class SubmitConclusionsTimer extends TimerTask {
                     Platform.runLater(() -> mainController.setStatusMessage(mainController.convertProblemToMessage(submitStatus.getDetails()), MessageTone.ERROR));
 
                 } else {
-                    DTOstatus agentsInfoStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-
                     Platform.runLater(() -> {
                     });
                 }

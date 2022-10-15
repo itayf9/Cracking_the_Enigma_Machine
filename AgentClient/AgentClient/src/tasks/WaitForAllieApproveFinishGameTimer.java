@@ -19,7 +19,7 @@ import static http.url.URLconst.*;
 public class WaitForAllieApproveFinishGameTimer extends TimerTask {
 
     private OkHttpClient client;
-    private MainController mainController;
+    private final MainController mainController;
 
     private final StringProperty uboatName;
     private final StringProperty allieName;

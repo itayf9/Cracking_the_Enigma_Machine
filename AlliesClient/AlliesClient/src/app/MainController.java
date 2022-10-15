@@ -91,6 +91,8 @@ public class MainController {
     private FetchDynamicContestInfoTimer fetchDynamicContestInfoTimer;
     private Timer contestsInfoTimer;
     private FetchContestsInfoTimer fetchContestsInfoTimer;
+    private Timer candidatesTimer;
+    private FetchCandidatesTimer fetchCandidatesTimer;
     private BooleanProperty isReady;
 
     @FXML
@@ -117,6 +119,8 @@ public class MainController {
         this.fetchDynamicContestInfoTimer = new FetchDynamicContestInfoTimer(this, uboatName);
         this.contestsInfoTimer = new Timer();
         this.fetchContestsInfoTimer = new FetchContestsInfoTimer(this);
+        this.candidatesTimer = new Timer();
+        this.fetchCandidatesTimer = new FetchCandidatesTimer(this, uboatName);
         this.isReady = new SimpleBooleanProperty(false);
 
         isContestActive.addListener((o, oldVal, newVal) -> {
@@ -135,6 +139,8 @@ public class MainController {
                 // contest == not active => winner found
                 fetchAlliesInfoTimer.cancel();
                 alliesInfoTimer.cancel();
+                candidatesTimer.cancel();
+                fetchCandidatesTimer.cancel();
                 fetchWinnerMessage();
                 isReady.set(false);
             }
@@ -499,6 +505,7 @@ public class MainController {
         this.fetchAlliesInfoTimer.setClient(client);
         this.fetchDynamicContestInfoTimer.setClient(client);
         this.fetchContestsInfoTimer.setClient(client);
+        this.fetchCandidatesTimer.setClient(client);
     }
 
     /**

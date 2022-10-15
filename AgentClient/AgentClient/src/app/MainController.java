@@ -109,7 +109,7 @@ public class MainController {
     private BooleanProperty isContestActive;
     private String agentName;
     private StringProperty allieName;
-    private String uboatName;
+    private StringProperty uboatName;
     private int numOfThreads;
     private int numOfTasksToPull;
     private Timer contestStatusTimer;
@@ -153,9 +153,9 @@ public class MainController {
         this.subscribeTimer = new Timer();
         this.waitForAllieApproveTimer = new Timer();
         this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive, allieName);
-        this.submitAllConclusionsTimer = new SubmitConclusionsTimer(this);
-        this.fetchTasksTimer = new FetchTasksTimer(this);
-        this.waitForAllieApprovalTimer = new WaitForAllieApproveFinishGameTimer(this);
+        this.submitAllConclusionsTimer = new SubmitConclusionsTimer(this, allieName, uboatName);
+        this.fetchTasksTimer = new FetchTasksTimer(this, allieName, uboatName);
+        this.waitForAllieApprovalTimer = new WaitForAllieApproveFinishGameTimer(this, allieName, uboatName);
         this.fetchSubscribeTimer = new FetchSubscriptionStatusTimer(isSubscribed, allieName);
 
 
@@ -208,7 +208,7 @@ public class MainController {
      */
     private void fetchWinnerMessage() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CONTEST_WINNER).newBuilder();
-        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -263,7 +263,6 @@ public class MainController {
                 System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
-
                 if (response.code() != 200) {
                     DTOstatus staticInfoStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
 
@@ -272,6 +271,7 @@ public class MainController {
                 } else {
                     DTOstaticContestInfo staticInfoStatus = gson.fromJson(dtoAsStr, DTOstaticContestInfo.class);
                     Platform.runLater(() -> {
+                        uboatName.set(staticInfoStatus.getBattlefieldInfo().getUboatName());
                         contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo(), allieName.get());
                         dictionary = staticInfoStatus.getBattlefieldInfo().getDictionary();
                     });

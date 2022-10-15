@@ -21,7 +21,7 @@ public class FetchSubscriptionStatusTimer extends TimerTask {
 
     private OkHttpClient client;
     private final BooleanProperty isSubscribed;
-    private StringProperty allieName;
+    private final StringProperty allieName;
 
     public FetchSubscriptionStatusTimer(BooleanProperty isSubscribed, StringProperty allieName) {
         this.isSubscribed = isSubscribed;

@@ -32,11 +32,6 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
         this.client = client;
     }
 
-    public void setUboatName(StringProperty uboatName) {
-        this.uboatName = uboatName;
-    }
-
-
     @Override
     public void run() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_DYNAMIC_CONTEST_INFO_SRC).newBuilder();

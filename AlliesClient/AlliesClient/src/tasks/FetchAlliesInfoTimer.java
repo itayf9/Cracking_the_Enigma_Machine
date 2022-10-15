@@ -5,6 +5,7 @@ import app.MessageTone;
 import com.google.gson.Gson;
 import dto.DTOallies;
 import dto.DTOstatus;
+import static http.url.QueryParameter.*;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
@@ -35,6 +36,7 @@ public class FetchAlliesInfoTimer extends TimerTask {
     @Override
     public void run() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_ALLIES_INFO_SRC).newBuilder();
+        urlBuilder.addQueryParameter(UBOAT_NAME, uboatName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
