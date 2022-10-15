@@ -35,7 +35,9 @@
       <Label fx:id="difficultyLevelLabel" text="Easy" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
       <Label styleClass="sub-title" text="Allies:" GridPane.columnIndex="2" GridPane.rowIndex="3" />
       <Label fx:id="alliesSubscribedRequiredLabel" text="2 / 3" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-      <Button fx:id="subscribeButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#subscribeToBattlefieldAction" styleClass="action-btn" text="Subscribe" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="2" />
+      <Button fx:id="subscribeButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+              onMouseClicked="#subscribeToBattlefield" styleClass="action-btn" text="Subscribe" GridPane.columnIndex="4"
+              GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="2"/>
    </children>
    <stylesheets>
       <URL value="@../../../../app/app-default.css" />

@@ -190,6 +190,7 @@ public class MainController {
         });
 
         // bindings
+        contestAndTeamAreaController.bindComponents(allieName);
         agentProgressController.bindComponents(numOfTasksInQueue, numOfTotalPulledTasks, numOfTotalCompletedTasks);
 
         // general setting to initialize sub components
@@ -245,7 +246,6 @@ public class MainController {
      * #4 fetch static info about the contest from the server via http request
      */
     public void fetchStaticInfoContest() {
-        String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_STATIC_CONTEST_INFO_SRC).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);

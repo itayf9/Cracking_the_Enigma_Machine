@@ -6,11 +6,13 @@ import com.google.gson.Gson;
 import dto.DTOdynamicContestInfo;
 import dto.DTOstatus;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.util.TimerTask;
 
+import static http.url.QueryParameter.*;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
 import static http.url.URLconst.FETCH_DYNAMIC_CONTEST_INFO_SRC;
@@ -18,18 +20,19 @@ import static http.url.URLconst.FETCH_DYNAMIC_CONTEST_INFO_SRC;
 public class FetchDynamicContestInfoTimer extends TimerTask {
 
     private OkHttpClient client;
-    private MainController mainController;
-    private String uboatName;
+    private final MainController mainController;
+    private StringProperty uboatName;
 
-    public FetchDynamicContestInfoTimer(MainController mainController) {
+    public FetchDynamicContestInfoTimer(MainController mainController, StringProperty uboatName) {
         this.mainController = mainController;
+        this.uboatName = uboatName;
     }
 
     public void setClient(OkHttpClient client) {
         this.client = client;
     }
 
-    public void setUboatName(String uboatName) {
+    public void setUboatName(StringProperty uboatName) {
         this.uboatName = uboatName;
     }
 
@@ -37,6 +40,7 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
     @Override
     public void run() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_DYNAMIC_CONTEST_INFO_SRC).newBuilder();
+        urlBuilder.addQueryParameter(UBOAT_NAME, uboatName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

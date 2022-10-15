@@ -1,8 +1,9 @@
 package body.screen1.contest;
 
 import app.MainController;
-import body.screen1.contest.tile.ContestTileController;
+import body.screen1.contest.tile.controller.ContestTileController;
 import info.battlefield.BattlefieldInfo;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -31,5 +32,9 @@ public class ContestAndTeamAreaController {
 
     public void clearOldResult() {
         contestInfoController.clearOldResult();
+    }
+
+    public void bindComponents(StringProperty allieName) {
+        teamNameLabel.textProperty().bind(allieName);
     }
 }

@@ -43,7 +43,7 @@ public class CandidatesCollector implements Runnable {
         long tasksCounter = 0;
         double averageTasksProcessTime;
 
-        while (scannedConfigsCount < totalPossibleConfigurations && !isBruteForceActionCancelled.get()) {
+        while (scannedConfigsCount < totalPossibleConfigurations && isContestActive.get()) {
             AgentConclusion currentConclusion;
             try {
                 currentConclusion = agentReportsOfCandidateQueue.take();

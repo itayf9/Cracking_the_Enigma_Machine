@@ -58,7 +58,7 @@ public class LoginServlet extends HttpServlet {
                             }
 
                             //add the new user to the users list
-                            uboatName2battleField.put(usernameFromParameter, new Battlefield());
+                            uboatName2battleField.put(usernameFromParameter, new Battlefield(usernameFromParameter));
                         }
                         break;
                     case ALLIE: //

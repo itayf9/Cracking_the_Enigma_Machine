@@ -1,13 +1,10 @@
-package body.screen1.contest.tile;
+package body.screen1.contest.tile.controller;
 
 import app.MainController;
 
 import info.battlefield.BattlefieldInfo;
-import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 
 public class ContestTileController {
     private MainController parentController;
@@ -27,8 +24,6 @@ public class ContestTileController {
     @FXML
     private Label alliesSubscribedRequiredLabel;
 
-    @FXML
-    private Button subscribeButton;
 
     public void setBattlefieldName(String battlefieldName) {
         this.battlefieldNameLabel.setText(battlefieldName);
@@ -48,10 +43,6 @@ public class ContestTileController {
 
     public void setAlliesSubscribedRequired(String alliesSubscribed, String alliesRequired) {
         this.alliesSubscribedRequiredLabel.setText(alliesSubscribed + " / " + alliesRequired);
-    }
-
-    public void bindSubscriptionButton(BooleanProperty isSubscribedToContest) {
-        subscribeButton.disableProperty().bind(isSubscribedToContest);
     }
 
     public void setParentController(MainController bodyController) {

@@ -16,6 +16,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Battlefield {
 
     // updated stuff
+    private String uboatName;
+
     private Machine machine;
     private Set<DecryptManager> allies;
     private Dictionary dictionary;
@@ -30,7 +32,8 @@ public class Battlefield {
     private String textToDecipher;
     private boolean isBattlefieldConfigured;
 
-    public Battlefield() {
+    public Battlefield(String uboatName) {
+        this.uboatName = uboatName;
         this.uboatCandidatesQueue = new LinkedBlockingQueue<>();
         this.allies = new HashSet<>();
         this.battlefieldName = "";
@@ -39,6 +42,10 @@ public class Battlefield {
         this.difficultyLevel = DifficultyLevel.UNDEFINED;
         this.isBattlefieldConfigured = false;
         this.textToDecipher = "";
+    }
+
+    public String getUboatName() {
+        return uboatName;
     }
 
     public Machine getMachine() {

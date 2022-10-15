@@ -1316,7 +1316,7 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
-    public DTOstatus assignAllieToBattlefield(String alliesName, String uboatUserName) {
+    public DTOsubscribe assignAllieToBattlefield(String alliesName, String uboatUserName) {
         Battlefield battlefield = uboatName2battleField.get(uboatUserName);
 
         if (battlefield == null) {
@@ -1490,20 +1490,30 @@ public class EnigmaEngine implements Engine {
 
     @Override
     public DTOactive checkIfAllieIsSubscribedToContest(String allieName) {
-        DecryptManager allie = allieName2decryptManager.get(allieName);
-        if (allie == null) {
+        Boolean isSubscribed = loggedAllieName2isSubscribed.get(allieName);
+        if (isSubscribed == null) {
             return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
         }
-        return new DTOactive(true, Problem.NO_PROBLEM, allie.isSubscribed());
+
+        return new DTOactive(true, Problem.NO_PROBLEM, isSubscribed);
     }
 
     @Override
     public DTOactive checkIfAllieIsSubscribedToContestHasStarted(String allieName) {
+        Boolean isSubscribed = loggedAllieName2isSubscribed.get(allieName);
+        if (isSubscribed == null) {
+            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
+        }
+
+        if (!isSubscribed) {
+            return new DTOactive(false, Problem.ALLIE_NOT_SUBSCRIBED, false);
+        }
+
         DecryptManager allie = allieName2decryptManager.get(allieName);
         if (allie == null) {
             return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
         }
-        return new DTOactive(true, Problem.NO_PROBLEM, allie.getIsBattlefieldActive().get());
+        return new DTOactive(true, Problem.NO_PROBLEM, allie.getIsContestActive().get());
     }
 
     @Override

@@ -35,12 +35,28 @@ public class FetchStaticInfoGameServlet extends HttpServlet {
                 return;
             }
 
-            String uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
-            if (uboatName == null) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
-                return;
+            String uboatName = "";
+
+            switch (typeOfClient) {
+                case ALLIE:
+                    uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
+                    if (uboatName == null) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
+                        return;
+                    }
+                    break;
+                case AGENT:
+                    String allieName = req.getParameter(QueryParameter.ALLIE_NAME);
+                    if (allieName == null) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_ALLIE_NAME)));
+                        return;
+                    }
+                    uboatName = engine.getUboatNameFromAllieName(allieName);
+                    break;
             }
+
             DTOstaticContestInfo staticContestInfo = engine.getStaticContestInfo(uboatName);
             if (!staticContestInfo.isSucceed()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

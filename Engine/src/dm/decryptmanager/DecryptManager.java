@@ -39,9 +39,8 @@ public class DecryptManager {
     private final BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final AtomicBoolean isBruteForceActionCancelled;
     private final Map<String, AgentInfo> agentName2agentInfo;
-    private String textToDecipher;
-    private AtomicBoolean isBattlefieldActive;
-    private AtomicBoolean isSubscribed;
+    private final String textToDecipher;
+    private BooleanProperty isContestActive;
     private boolean isDMapprovedFinishGame;
 
     public DecryptManager(String allieName, Battlefield battlefield, Map<String, AgentInfo> agentName2agentInfo) {
@@ -61,13 +60,12 @@ public class DecryptManager {
         this.textToDecipher = battlefield.getTextToDecipher();
         this.isBruteForceActionCancelled = battlefield.isActive();
         this.isDMapprovedFinishGame = false;
-        this.isBattlefieldActive = battlefield.isActive();
-        this.isSubscribed = new AtomicBoolean();
+        this.isContestActive = battlefield.isActive();
+        this.uboatName = battlefield.getUboatName();
     }
 
-
-    public AtomicBoolean getIsBattlefieldActive() {
-        return isBattlefieldActive;
+    public BooleanProperty getIsContestActive() {
+        return isContestActive;
     }
 
     /**
@@ -174,12 +172,8 @@ public class DecryptManager {
         return taskSize;
     }
 
-    public String getDictionaryExcludeCharacters() {
-        return dictionary.getExcludeChars();
-    }
-
-    public boolean isAllWordsInDictionary(String text) {
-        return dictionary.isAllWordsInDictionary(text);
+    public long getTotalPossibleWindowsPositions() {
+        return totalPossibleWindowsPositions;
     }
 
     public void setTaskSize(int taskSize) {

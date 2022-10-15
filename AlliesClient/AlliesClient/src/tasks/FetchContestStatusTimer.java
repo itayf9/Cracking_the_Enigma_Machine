@@ -4,6 +4,7 @@ package tasks;
 import com.google.gson.Gson;
 import dto.DTOactive;
 import dto.DTOstatus;
+import http.url.QueryParameter;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import okhttp3.*;
@@ -11,6 +12,7 @@ import okhttp3.*;
 import java.io.IOException;
 import java.util.TimerTask;
 
+import static http.url.QueryParameter.UBOAT_NAME;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
 import static http.url.URLconst.FETCH_CONTEST_STATUS_SRC;
@@ -32,6 +34,7 @@ public class FetchContestStatusTimer extends TimerTask {
     public void run() {
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CONTEST_STATUS_SRC).newBuilder();
+        urlBuilder.addQueryParameter(UBOAT_NAME, uboatName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
