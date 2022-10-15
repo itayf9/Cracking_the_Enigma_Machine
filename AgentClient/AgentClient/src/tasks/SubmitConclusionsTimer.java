@@ -48,9 +48,8 @@ public class SubmitConclusionsTimer extends TimerTask {
                 Gson gson = new Gson();
 
                 if (response.code() != 200) {
-                    DTOstatus agentsInfoStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-                    Platform.runLater(() -> {
-                    });
+                    DTOstatus submitStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    Platform.runLater(() -> mainController.setStatusMessage(mainController.convertProblemToMessage(submitStatus.getDetails()), MessageTone.ERROR));
 
                 } else {
                     DTOstatus agentsInfoStatus = gson.fromJson(dtoAsStr, DTOstatus.class);

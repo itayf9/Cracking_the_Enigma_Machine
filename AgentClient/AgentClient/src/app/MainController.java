@@ -143,6 +143,7 @@ public class MainController {
         this.numOfTasksInQueue = new SimpleIntegerProperty();
         this.numOfTotalPulledTasks = new SimpleIntegerProperty();
         this.numOfTotalCompletedTasks = new SimpleIntegerProperty();
+        this.uboatName = new SimpleStringProperty("");
         this.allieName = new SimpleStringProperty("");
 
         // Timers

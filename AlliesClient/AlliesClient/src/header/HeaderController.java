@@ -23,6 +23,7 @@ public class HeaderController {
 
     public void initialize() {
         loseWinAreaController.setParentController(this);
+        loseWinArea.setVisible(false);
     }
 
 

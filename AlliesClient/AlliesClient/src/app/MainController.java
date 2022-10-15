@@ -129,6 +129,7 @@ public class MainController {
                 // schedule fetch candidates timer & fetch active teams
                 alliesInfoTimer.schedule(fetchAlliesInfoTimer, REFRESH_RATE, REFRESH_RATE);
                 dynamicContestInfoTimer.schedule(fetchDynamicContestInfoTimer, REFRESH_RATE, REFRESH_RATE);
+                candidatesTimer.schedule(fetchCandidatesTimer, REFRESH_RATE, REFRESH_RATE);
             } else {
 
                 // contest == not active => winner found
@@ -333,14 +334,13 @@ public class MainController {
      * #4 fetch static info about the contest from the server via http request
      */
     public void fetchStaticInfoContest() {
-        String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_STATIC_CONTEST_INFO_SRC).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
-                .post(RequestBody.create(body.getBytes()))
+                .get()
                 .build();
         client.newCall(request).enqueue(new Callback() {
 
