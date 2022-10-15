@@ -7,6 +7,7 @@ import dm.candidatecollector.CandidatesCollector;
 import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
 import dm.taskproducer.TaskProducer;
+import javafx.beans.property.BooleanProperty;
 import jobprogress.JobProgressInfo;
 import machine.Machine;
 
@@ -37,11 +38,11 @@ public class DecryptManager {
     private boolean isDMReady;
     private final JobProgressInfo jobProgressInfo;
     private final BlockingQueue<AgentConclusion> uboatCandidateQueue;
-    private final AtomicBoolean isBruteForceActionCancelled;
     private final Map<String, AgentInfo> agentName2agentInfo;
     private final String textToDecipher;
     private BooleanProperty isContestActive;
     private boolean isDMapprovedFinishGame;
+    private String uboatName;
 
     public DecryptManager(String allieName, Battlefield battlefield, Map<String, AgentInfo> agentName2agentInfo) {
         this.agentName2agentInfo = agentName2agentInfo;
@@ -58,7 +59,6 @@ public class DecryptManager {
         this.taskSize = UNDEFINED;
         this.jobProgressInfo = new JobProgressInfo();
         this.textToDecipher = battlefield.getTextToDecipher();
-        this.isBruteForceActionCancelled = battlefield.isActive();
         this.isDMapprovedFinishGame = false;
         this.isContestActive = battlefield.isActive();
         this.uboatName = battlefield.getUboatName();
@@ -73,7 +73,7 @@ public class DecryptManager {
      */
     public void stopDecrypt() {
 
-        isBruteForceActionCancelled.set(true);
+        isContestActive.set(true);
 
         //  stopping the collector Task / Thread
         collector.interrupt();
@@ -88,7 +88,7 @@ public class DecryptManager {
     public void startDecrypt() {
 
         this.agentReportsOfCandidatesQueue = new LinkedBlockingQueue<>();
-        isBruteForceActionCancelled.set(false);
+        isContestActive.set(false);
 
         // updates the total configs property
         setTotalConfigs(difficultyLevel);
@@ -136,10 +136,6 @@ public class DecryptManager {
         return allConclusions;
     }
 
-    public Set<String> getDictionaryWords() {
-        return dictionary.getWords();
-    }
-
     public Machine getEnigmaMachine() {
         return enigmaMachine;
     }
@@ -156,18 +152,10 @@ public class DecryptManager {
         return waitingTasksBlockingQueue;
     }
 
-    public boolean isIsBruteForceActionCancelled() {
-        return isBruteForceActionCancelled.get();
-    }
-
-    public AtomicBoolean isBruteForceActionCancelledProperty() {
-        return isBruteForceActionCancelled;
-    }
-
     public String getAllieName() {
         return allieName;
     }
-    
+
     public int getTaskSize() {
         return taskSize;
     }
@@ -180,15 +168,6 @@ public class DecryptManager {
         this.taskSize = taskSize;
         jobProgressInfo.setTotalAmountOfTasks(totalPossibleConfigurations / taskSize);
     }
-
-    public void setIsSubscribed(boolean isSubscribed) {
-        this.isSubscribed.set(isSubscribed);
-    }
-
-    public boolean isSubscribed() {
-        return isSubscribed.get();
-    }
-
 
     public void setDMReady(boolean isReady) {
         this.isDMReady = isReady;
@@ -222,10 +201,6 @@ public class DecryptManager {
         return uboatCandidateQueue;
     }
 
-    public AtomicBoolean getIsBruteForceActionCancelled() {
-        return isBruteForceActionCancelled;
-    }
-
     public boolean isDMapprovedFinishGame() {
         return isDMapprovedFinishGame;
     }
@@ -236,5 +211,9 @@ public class DecryptManager {
 
     public Map<String, AgentInfo> getAgentName2agentInfo() {
         return agentName2agentInfo;
+    }
+
+    public String getUboatName() {
+        return uboatName;
     }
 }

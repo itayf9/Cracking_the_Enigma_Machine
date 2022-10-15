@@ -189,7 +189,7 @@ public interface Engine {
 
     DTOdynamicContestInfo getDynamicContestInfo(String uboatName, String usernameFromSession);
 
-    DTOstatus assignAllieToBattlefield(String alliesName, String uboatUserName);
+    DTOsubscribe assignAllieToBattlefield(String alliesName, String uboatUserName);
 
     DTOstatus setAllieWinnerInfo(String uboatName, String allieName);
 
@@ -214,4 +214,8 @@ public interface Engine {
     Map<String, DecryptManager> getAllieMap();
 
     DTOactive checkIfAllieIsSubscribedToContestHasStarted(String allieName);
+
+    Map<String, Boolean> getLoggedAlliesMap();
+
+    String getUboatNameFromAllieName(String allieName);
 }

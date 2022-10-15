@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import dto.DTOallies;
 import dto.DTOstatus;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -19,21 +20,17 @@ public class FetchAlliesInfoTimer extends TimerTask {
 
     private OkHttpClient client;
     private MainController mainController;
-    private String uboatName;
+    private StringProperty uboatName;
 
 
-    public FetchAlliesInfoTimer(MainController mainController) {
+    public FetchAlliesInfoTimer(MainController mainController, StringProperty uboatName) {
         this.mainController = mainController;
+        this.uboatName = uboatName;
     }
 
     public void setClient(OkHttpClient client) {
         this.client = client;
     }
-
-    public void setUboatName(String uboatName) {
-        this.uboatName = uboatName;
-    }
-
 
     @Override
     public void run() {

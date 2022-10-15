@@ -7,6 +7,7 @@ import dto.DTOstatus;
 import http.url.QueryParameter;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -21,9 +22,11 @@ public class FetchContestStatusTimer extends TimerTask {
 
     private OkHttpClient client;
     private BooleanProperty isContestActive;
+    private StringProperty uboatName;
 
-    public FetchContestStatusTimer(BooleanProperty isContestActive) {
+    public FetchContestStatusTimer(BooleanProperty isContestActive, StringProperty uboatName) {
         this.isContestActive = isContestActive;
+        this.uboatName = uboatName;
     }
 
     public void setClient(OkHttpClient client) {

@@ -68,6 +68,17 @@ public class ServletUtils {
         return engine.getLoggedAlliesNamesManager();
     }
 
+    public static Map<String, Boolean> getLoggedAlliesMap(ServletContext servletContext) {
+        synchronized (allieManagerLock) {
+            if (servletContext.getAttribute(Constants.ENGINE) == null) {
+                servletContext.setAttribute(Constants.ENGINE, new EnigmaEngine());
+            }
+        }
+        Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
+
+        return engine.getLoggedAlliesMap();
+    }
+
     public static Map<String, AgentInfo> getLoggedAgentNames(ServletContext servletContext) {
         synchronized (agentManagerLock) {
             if (servletContext.getAttribute(Constants.ENGINE) == null) {
@@ -87,10 +98,5 @@ public class ServletUtils {
         }
         Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
         return engine.checkNameValidity(usernameFromSession);
-    }
-
-    public static Map<String, DecryptManager> getAlliesMap(ServletContext servletContext) {
-        Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
-        return engine.getAllieMap();
     }
 }

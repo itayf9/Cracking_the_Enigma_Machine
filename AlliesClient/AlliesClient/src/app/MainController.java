@@ -80,7 +80,7 @@ public class MainController {
      */
     public final static int REFRESH_RATE = 2000;
     private BooleanProperty isContestActive;
-    private String uboatName;
+    private StringProperty uboatName;
     private Timer contestStatusTimer;
     private FetchContestStatusTimer fetchContestStatusTimer;
     private Timer alliesInfoTimer;
@@ -104,16 +104,17 @@ public class MainController {
         this.totalDistinctCandidates = new SimpleIntegerProperty();
         this.isSubscribedToContest = new SimpleBooleanProperty();
         this.isContestActive = new SimpleBooleanProperty(false);
+        this.uboatName = new SimpleStringProperty();
 
         // Timers
         this.contestStatusTimer = new Timer();
-        this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive);
+        this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive, uboatName);
         this.alliesInfoTimer = new Timer();
-        this.fetchAlliesInfoTimer = new FetchAlliesInfoTimer(this);
+        this.fetchAlliesInfoTimer = new FetchAlliesInfoTimer(this, uboatName);
         this.loggedAgentsTimer = new Timer();
         this.fetchLoggedAgentsInfoTimer = new FetchLoggedAgentsInfoTimer(this);
         this.dynamicContestInfoTimer = new Timer();
-        this.fetchDynamicContestInfoTimer = new FetchDynamicContestInfoTimer(this);
+        this.fetchDynamicContestInfoTimer = new FetchDynamicContestInfoTimer(this, uboatName);
         this.contestsInfoTimer = new Timer();
         this.fetchContestsInfoTimer = new FetchContestsInfoTimer(this);
         this.isReady = new SimpleBooleanProperty(false);
@@ -160,7 +161,7 @@ public class MainController {
         String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CONTEST_WINNER).newBuilder();
-        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -271,9 +272,7 @@ public class MainController {
                     DTOsubscribe subscribeStatus = gson.fromJson(dtoAsStr, DTOsubscribe.class);
 
                     Platform.runLater(() -> {
-                        uboatName = uboatNameToRegister;
-                        fetchDynamicContestInfoTimer.setUboatName(uboatName);
-                        fetchAlliesInfoTimer.setUboatName(uboatName);
+                        uboatName.set(uboatNameToRegister);
                         isSubscribedToContest.set(true);
                         bodyController.setTaskSizeSpinner(subscribeStatus.getTotalPossibleWindowsPositions());
                         setStatusMessage("Subscribed Successfully", MessageTone.SUCCESS);
@@ -294,7 +293,7 @@ public class MainController {
         String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + CLIENT_IS_READY_SRC).newBuilder();
-        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName.get());
         urlBuilder.addQueryParameter(QueryParameter.TASK_SIZE, String.valueOf(taskSize));
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
@@ -337,7 +336,7 @@ public class MainController {
         String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_STATIC_CONTEST_INFO_SRC).newBuilder();
-        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -410,7 +409,7 @@ public class MainController {
         String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + APPROVE_ALLIE_FINISH_GAME_SRC).newBuilder();
-        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

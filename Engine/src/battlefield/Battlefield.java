@@ -5,6 +5,8 @@ import candidate.AgentConclusion;
 import dm.decryptmanager.DecryptManager;
 import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import machine.Machine;
 
 import java.util.HashSet;
@@ -26,7 +28,7 @@ public class Battlefield {
     private DifficultyLevel difficultyLevel;
     private BlockingQueue<AgentConclusion> uboatCandidatesQueue;
     private boolean isUboatReady;
-    private AtomicBoolean isActive;
+    private BooleanProperty isActive;
 
     private AllieInfo winnerAllieInfo;
     private String textToDecipher;
@@ -38,7 +40,7 @@ public class Battlefield {
         this.allies = new HashSet<>();
         this.battlefieldName = "";
         this.isUboatReady = false;
-        this.isActive = new AtomicBoolean(false);
+        this.isActive = new SimpleBooleanProperty(false);
         this.difficultyLevel = DifficultyLevel.UNDEFINED;
         this.isBattlefieldConfigured = false;
         this.textToDecipher = "";
@@ -114,7 +116,7 @@ public class Battlefield {
         System.out.println(allies);
     }
 
-    public AtomicBoolean isActive() {
+    public BooleanProperty isActive() {
         return isActive;
     }
 

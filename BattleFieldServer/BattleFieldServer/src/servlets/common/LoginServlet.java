@@ -63,6 +63,7 @@ public class LoginServlet extends HttpServlet {
                         break;
                     case ALLIE: //
                         Map<String, Set<AgentInfo>> loggedAlliesNames = ServletUtils.getLoggedAlliesNames(getServletContext());
+                        Map<String, Boolean> loggedAlliesMap = ServletUtils.getLoggedAlliesMap(getServletContext());
 
                         synchronized (this) {
                             if (!ServletUtils.checkNameValidity(getServletContext(), usernameFromParameter)) {
@@ -74,6 +75,7 @@ public class LoginServlet extends HttpServlet {
 
                             //add the new user to the allies list
                             loggedAlliesNames.put(usernameFromParameter, new HashSet<>());
+                            loggedAlliesMap.put(usernameFromParameter, false);
                         }
                         break;
                     case AGENT:

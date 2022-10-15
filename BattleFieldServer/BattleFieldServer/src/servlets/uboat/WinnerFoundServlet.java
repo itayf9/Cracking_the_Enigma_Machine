@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import javafx.beans.property.BooleanProperty;
 import problem.Problem;
 import utils.ServletUtils;
 import utils.SessionUtils;
@@ -48,7 +49,7 @@ public class WinnerFoundServlet extends HttpServlet {
             }
             // check if battlefield isActive
             Map<String, Battlefield> battlefields = ServletUtils.getUboatName2battleField(getServletContext());
-            AtomicBoolean isContestActive = battlefields.get(usernameFromSession).isActive();
+            BooleanProperty isContestActive = battlefields.get(usernameFromSession).isActive();
             if (isContestActive.get()) {
 
                 // check if winner allie name is exist

@@ -38,15 +38,14 @@ public class EnigmaEngine implements Engine {
 
     // The engine contains Machine instance and machine records object.
     private boolean charByCharState;
-    private long currentCipherProcessTimeElapsed;
-    private String currentCipherProcessOutputText;
-    private String currentCipherProcessInputText;
     private final List<StatisticRecord> machineRecords;
 
     private final Map<String, Battlefield> uboatName2battleField;
     private final Map<String, Set<AgentInfo>> loggedAllieName2loggedAgents;
     private final Map<String, AgentInfo> agentName2agentInfo;
     private final Map<String, DecryptManager> allieName2decryptManager;
+    private final Map<String, Boolean> loggedAllieName2isSubscribed;
+
 
     private final Object waitingTasksQueueLock;
     private final Object conclusionQueueLock;
@@ -61,6 +60,7 @@ public class EnigmaEngine implements Engine {
         this.loggedAllieName2loggedAgents = new HashMap<>();
         this.agentName2agentInfo = new HashMap<>();
         this.allieName2decryptManager = new HashMap<>();
+        this.loggedAllieName2isSubscribed = new HashMap<>();
         this.waitingTasksQueueLock = new Object();
         this.conclusionQueueLock = new Object();
     }
@@ -720,9 +720,6 @@ public class EnigmaEngine implements Engine {
                 // sets the text to decipher in the battlefield
                 battlefield.setTextToDecipher(outputText);
                 long timeElapsed = System.nanoTime() - startMeasureTime;
-                currentCipherProcessTimeElapsed += timeElapsed; // value that engine holds for current  cipher time
-                currentCipherProcessInputText += inputText;
-                currentCipherProcessOutputText += outputText;
             }
         }
 
@@ -1053,9 +1050,7 @@ public class EnigmaEngine implements Engine {
      * resets the current cipher process (for char-by-char mode)
      */
     private void resetCurrentCipherProcess() {
-        currentCipherProcessTimeElapsed = 0;
-        currentCipherProcessInputText = "";
-        currentCipherProcessOutputText = "";
+
     }
 
     /**
@@ -1063,10 +1058,7 @@ public class EnigmaEngine implements Engine {
      */
     @Override
     public void doneCurrentCipherProcess() {
-//        Pair<Pair<String, String>, Long> inputTextToOutputTextToTimeElapsed = new Pair<>(new Pair<>(currentCipherProcessInputText, currentCipherProcessOutputText), currentCipherProcessTimeElapsed);
-//        machineRecords.get(machineRecords.size() - 1).getCipherHistory().add(inputTextToOutputTextToTimeElapsed);
-//        resetCurrentCipherProcess();
-//        machine.advanceCipherCounter();
+
     }
 
     @Override
@@ -1125,11 +1117,11 @@ public class EnigmaEngine implements Engine {
         } else {
             return new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS);
         }
-
     }
 
     @Override
     public boolean allClientsReady(String uboatName) {
+
         final boolean[] isAllReady = {true};
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         Set<DecryptManager> allies = battlefield.getAllies();
@@ -1138,7 +1130,7 @@ public class EnigmaEngine implements Engine {
             Optional<DecryptManager> unreadyDM = allies.stream().filter(allie -> !allie.getDMReady()).findFirst();
 
             unreadyDM.ifPresent(decryptManager -> isAllReady[0] = false);
-            return isAllReady[0];
+            return isAllReady[0] && battlefield.getIsUboatReady();
         }
         return false;
     }
@@ -1320,16 +1312,17 @@ public class EnigmaEngine implements Engine {
         Battlefield battlefield = uboatName2battleField.get(uboatUserName);
 
         if (battlefield == null) {
-            return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
+            return new DTOsubscribe(false, Problem.UBOAT_NAME_DOESNT_EXIST, -1);
         }
 
         if (battlefield.getAllies().size() < battlefield.getNumOfRequiredAllies()) {
             DecryptManager allie = new DecryptManager(alliesName, battlefield, agentName2agentInfo);
             allieName2decryptManager.put(alliesName, allie);
+            loggedAllieName2isSubscribed.put(alliesName, true);
             battlefield.addDecryptManager(allie); // cant fail..
-            return new DTOstatus(true, Problem.NO_PROBLEM);
+            return new DTOsubscribe(true, Problem.NO_PROBLEM, allie.getTotalPossibleWindowsPositions());
         } else {
-            return new DTOstatus(false, Problem.CONTEST_IS_FULL);
+            return new DTOsubscribe(false, Problem.CONTEST_IS_FULL, -1);
         }
     }
 
@@ -1517,8 +1510,23 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
+    public Map<String, Boolean> getLoggedAlliesMap() {
+        return loggedAllieName2isSubscribed;
+    }
+
+    @Override
     public Map<String, DecryptManager> getAllieMap() {
         return allieName2decryptManager;
+    }
+
+    @Override
+    public String getUboatNameFromAllieName(String allieName) {
+        DecryptManager allie = allieName2decryptManager.get(allieName);
+        if (allie == null) {
+            return "";
+        }
+
+        return allie.getUboatName();
     }
 
     @Override

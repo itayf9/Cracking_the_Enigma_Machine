@@ -64,6 +64,9 @@ public class FetchStaticInfoGameServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_OK);
             }
             resp.getWriter().println(gson.toJson(staticContestInfo));
+
         }
+
+
     }
 }

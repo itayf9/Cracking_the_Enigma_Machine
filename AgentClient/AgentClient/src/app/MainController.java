@@ -151,7 +151,7 @@ public class MainController {
         this.tasksTimer = new Timer();
         this.subscribeTimer = new Timer();
         this.waitForAllieApproveTimer = new Timer();
-        this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive);
+        this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive, allieName);
         this.submitAllConclusionsTimer = new SubmitConclusionsTimer(this);
         this.fetchTasksTimer = new FetchTasksTimer(this);
         this.waitForAllieApprovalTimer = new WaitForAllieApproveFinishGameTimer(this);
@@ -248,11 +248,11 @@ public class MainController {
     public void fetchStaticInfoContest() {
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_STATIC_CONTEST_INFO_SRC).newBuilder();
-        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
+        urlBuilder.addQueryParameter(QueryParameter.ALLIE_NAME, allieName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
-                .post(RequestBody.create(body.getBytes()))
+                .get()
                 .build();
         client.newCall(request).enqueue(new Callback() {
 

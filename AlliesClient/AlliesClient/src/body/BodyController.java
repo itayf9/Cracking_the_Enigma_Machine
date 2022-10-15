@@ -75,6 +75,7 @@ public class BodyController {
         //screen 1
         agentsInfoController.setParentController(this);
         contestsAreaController.setParentController(this);
+        allieSettingsController.setParentController(this);
 
         //screen 2
         candidatesAreaController.setParentController(this);

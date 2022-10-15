@@ -68,10 +68,11 @@ public class ClientIsReadyServlet extends HttpServlet {
                     System.out.println("set ready to allie : " + userNameFromSession + " (uboat=" + uboatName);
                     break;
             }
-            if (engine.allClientsReady(uboatName) && engine.getIsUboatReady(uboatName)) {
+            if (engine.allClientsReady(uboatName)) {
+                System.out.println("all client ready brute force started !!");
                 engine.startBruteForceProcess(uboatName);
             }
-            
+
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().println(gson.toJson(new DTOstatus(true, Problem.NO_PROBLEM)));
         }

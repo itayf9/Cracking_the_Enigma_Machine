@@ -1,6 +1,7 @@
 package servlets.allies;
 
 import com.google.gson.Gson;
+import dto.DTOsubscribe;
 import http.url.Client;
 import http.url.Constants;
 import dto.DTOstatus;
@@ -41,7 +42,7 @@ public class SubscribeToBattlefieldServlet extends HttpServlet {
                 return;
             }
 
-            DTOstatus assignStatus = engine.assignAllieToBattlefield(usernameFromSession, uboatNameToRegister);
+            DTOsubscribe assignStatus = engine.assignAllieToBattlefield(usernameFromSession, uboatNameToRegister);
             if (!assignStatus.isSucceed()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(assignStatus));

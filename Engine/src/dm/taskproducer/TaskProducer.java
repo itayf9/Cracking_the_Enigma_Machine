@@ -98,7 +98,7 @@ public class TaskProducer implements Runnable {
             //throw new RuntimeException(e);
         }
 
-        while (!finishedAllTasks && !dm.isIsBruteForceActionCancelled()) {
+        while (!finishedAllTasks && dm.getIsContestActive().get()) {
 
             // first clone a machine to send to the agent
             // copyOfMachine = new EnigmaMachine((EnigmaMachine) machine);

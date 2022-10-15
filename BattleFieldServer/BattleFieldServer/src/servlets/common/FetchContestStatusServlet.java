@@ -51,6 +51,7 @@ public class FetchContestStatusServlet extends HttpServlet {
                 } else {
                     DTOactive activeStatus = engine.checkIfAllieIsSubscribedToContestHasStarted(allieName);
                     resp.setStatus(HttpServletResponse.SC_OK);
+                    System.out.println("agent contest active servlet response = " + activeStatus.isActive());
                     resp.getWriter().println(gson.toJson(activeStatus));
                 }
                 return;
@@ -63,6 +64,7 @@ public class FetchContestStatusServlet extends HttpServlet {
 
             Map<String, Battlefield> battlefields = ServletUtils.getUboatName2battleField(getServletContext());
             resp.setStatus(HttpServletResponse.SC_OK);
+            System.out.println("uboat & allies isActive servlet response = " + battlefields.get(uboatName).isActive().get());
             resp.getWriter().println(gson.toJson(new DTOactive(true, Problem.NO_PROBLEM, battlefields.get(uboatName).isActive().get())));
         }
     }

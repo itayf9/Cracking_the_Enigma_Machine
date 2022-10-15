@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import static http.url.Client.AGENT;
-import static http.url.Client.UBOAT;
 import static http.url.URLconst.*;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
