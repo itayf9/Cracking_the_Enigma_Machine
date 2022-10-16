@@ -16,10 +16,12 @@ import problem.Problem;
 import utils.SessionUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 import static utils.ServletUtils.validateAuthorization;
 
@@ -51,11 +53,11 @@ public class SubmitNextCandidatesServlet extends HttpServlet {
             } else {
 
                 // get the conclusions
-                Type listAgentConclusionsType = new TypeToken<ArrayList<Integer>>() {
-                }.getType();
-                List<AgentConclusion> conclusionsArray = gson.fromJson(req.getParameter(QueryParameter.CONCLUSIONS), listAgentConclusionsType);
-
-                DTOstatus submitStatus = engine.submitConclusions(conclusionsArray, allieName, uboatName);
+                String conclusionsAsStr = readFromInputStream(req.getInputStream());
+                System.out.println("conclusionsAsStr : " + conclusionsAsStr);
+                DTOagentConclusions conclusionsDto = gson.fromJson(conclusionsAsStr, DTOagentConclusions.class);
+                System.out.println("conclusionsAsList " + conclusionsDto.getAgentConclusions());
+                DTOstatus submitStatus = engine.submitConclusions(conclusionsDto.getAgentConclusions(), allieName, uboatName);
                 if (!submitStatus.isSucceed()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 } else {
@@ -64,5 +66,9 @@ public class SubmitNextCandidatesServlet extends HttpServlet {
                 resp.getWriter().println(gson.toJson(submitStatus));
             }
         }
+    }
+
+    private String readFromInputStream(InputStream inputStream) {
+        return new Scanner(inputStream).useDelimiter("\\Z").next();
     }
 }

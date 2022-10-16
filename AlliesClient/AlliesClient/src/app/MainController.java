@@ -466,7 +466,7 @@ public class MainController {
     private void createCandidateTile(Candidate candidate, String allieName, String agentName) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/body/screen3/candidate/tile/candidateTile.fxml"));
+            loader.setLocation(getClass().getResource("/body/screen2/candidate/tile/candidateTile.fxml"));
             Node singleCandidateTile = loader.load();
             CandidateTileController candidateTileController = loader.getController();
 

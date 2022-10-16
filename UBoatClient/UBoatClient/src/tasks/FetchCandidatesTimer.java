@@ -2,13 +2,18 @@ package tasks;
 
 import app.MainController;
 import app.MessageTone;
+import candidate.AgentConclusion;
+import candidate.Candidate;
 import com.google.gson.Gson;
 import dto.DTOagentConclusions;
 import dto.DTOstatus;
 import javafx.application.Platform;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.TimerTask;
 
 import static http.url.URLconst.BASE_URL;
@@ -17,11 +22,27 @@ import static http.url.URLconst.FETCH_CANDIDATES_SRC;
 
 public class FetchCandidatesTimer extends TimerTask {
 
-    OkHttpClient client;
-    MainController mainController;
+    private OkHttpClient client;
+    private MainController mainController;
 
-    public FetchCandidatesTimer(MainController mainController) {
+    private ListProperty<Integer> inUseRotorsIDsProperty;
+
+    private StringProperty currentWindowsCharactersProperty;
+
+    private StringProperty inUseReflectorSymbolProperty;
+
+    private StringProperty originalText;
+
+    public FetchCandidatesTimer(MainController mainController,
+                                ListProperty<Integer> inUseRotorsIDsProperty,
+                                StringProperty currentWindowsCharactersProperty,
+                                StringProperty inUseReflectorSymbolProperty,
+                                StringProperty originalText) {
         this.mainController = mainController;
+        this.inUseRotorsIDsProperty = inUseRotorsIDsProperty;
+        this.currentWindowsCharactersProperty = currentWindowsCharactersProperty;
+        this.inUseReflectorSymbolProperty = inUseReflectorSymbolProperty;
+        this.originalText = originalText;
     }
 
     public void setClient(OkHttpClient client) {
@@ -55,8 +76,9 @@ public class FetchCandidatesTimer extends TimerTask {
                 } else {
                     // start scanning candidates
                     DTOagentConclusions candidatesStatus = gson.fromJson(dtoAsStr, DTOagentConclusions.class);
+                    scanCandidates(candidatesStatus.getAgentConclusions());
                     Platform.runLater(() -> {
-                        mainController.scanCandidates(candidatesStatus.getAgentConclusions());
+
                     });
                 }
             }
@@ -66,4 +88,35 @@ public class FetchCandidatesTimer extends TimerTask {
             }
         });
     }
+
+    public void scanCandidates(List<AgentConclusion> conclusions) {
+
+        // goes through all the conclusions
+        for (AgentConclusion conclusion : conclusions) {
+            String currentAllieName = conclusion.getAllieName();
+            String currentAgentName = conclusion.getAgentName();
+
+            // goes through all the candidates of each conclusion
+            for (Candidate candidate : conclusion.getCandidates()) {
+
+                // checks for a winner
+                if (candidate.getRotorsIDs().equals(inUseRotorsIDsProperty.getValue())
+                        && candidate.getWindowChars().equals(currentWindowsCharactersProperty.get())
+                        && candidate.getReflectorSymbol().equals(inUseReflectorSymbolProperty.get())
+                        && candidate.getDecipheredText().equals(originalText.get())) {
+
+                    // winner has been found...
+                    mainController.announceTheWinnerOfTheContest(conclusion.getAllieName());
+                    return;
+                }
+
+                // adds a new tile to the candidates area
+                Platform.runLater(() -> mainController.createCandidateTile(candidate, currentAllieName, currentAgentName));
+
+            }
+
+        }
+    }
+
+
 }

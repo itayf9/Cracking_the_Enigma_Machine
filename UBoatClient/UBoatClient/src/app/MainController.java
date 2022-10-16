@@ -3,7 +3,6 @@ package app;
 import bindings.CurrWinCharsAndNotchPosBinding;
 import body.BodyController;
 import body.screen2.candidate.tile.CandidateTileController;
-import candidate.AgentConclusion;
 import candidate.Candidate;
 import com.google.gson.Gson;
 import dto.*;
@@ -156,7 +155,7 @@ public class MainController {
         this.alliesInfoTimer = new Timer();
         this.fetchAlliesInfoTimer = new FetchAlliesInfoTimer(this);
         this.candidatesTimer = new Timer();
-        this.fetchCandidatesTimer = new FetchCandidatesTimer(this);
+        this.fetchCandidatesTimer = new FetchCandidatesTimer(this, inUseRotorsIDsProperty, currentWindowsCharactersProperty, inUseReflectorSymbolProperty, originalText);
         this.originalText = new SimpleStringProperty();
 
         // add event change listener
@@ -592,7 +591,7 @@ public class MainController {
      *
      * @param candidate the candidate to create a tile from
      */
-    private void createCandidateTile(Candidate candidate, String AllieName, String AgentName) {
+    public void createCandidateTile(Candidate candidate, String AllieName, String AgentName) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/body/screen2/candidate/tile/candidateTile.fxml"));
@@ -753,34 +752,6 @@ public class MainController {
 
     public void updateAlliesInfo(List<AllieInfo> alliesInfoList) {
         bodyController.updateAlliesInfo(alliesInfoList);
-    }
-
-    public void scanCandidates(List<AgentConclusion> conclusions) {
-
-        // goes through all the conclusions
-        for (AgentConclusion conclusion : conclusions) {
-            String currentAllieName = conclusion.getAllieName();
-            String currentAgentName = conclusion.getAgentName();
-
-            // goes through all the candidates of each conclusion
-            for (Candidate candidate : conclusion.getCandidates()) {
-
-                // adds a new tile to the candidates area
-                createCandidateTile(candidate, currentAllieName, currentAgentName);
-
-                // checks for a winner
-                if (candidate.getRotorsIDs().equals(inUseRotorsIDsProperty.getValue())
-                        && candidate.getWindowChars().equals(currentWindowsCharactersProperty.get())
-                        && candidate.getReflectorSymbol().equals(inUseReflectorSymbolProperty.get())
-                        && candidate.getDecipheredText().equals(originalText.get())) {
-
-                    // winner has been found...
-                    announceTheWinnerOfTheContest(conclusion.getAllieName());
-                    return;
-                }
-            }
-
-        }
     }
 
     public OkHttpClient getHTTPClient() {
