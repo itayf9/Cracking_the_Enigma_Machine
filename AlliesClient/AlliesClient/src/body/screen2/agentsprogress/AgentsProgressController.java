@@ -57,6 +57,7 @@ public class AgentsProgressController {
     }
 
     public void setProgressInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobProgressInfo) {
+        agentsTable.getItems().clear();
 
         for (AgentInfo agentInfo : agentsInfo) {
             agentsTable.getItems().add(agentInfo);

@@ -24,11 +24,8 @@ public class AgentTask implements Runnable {
     private final List<Integer> windowOffsets;
     private final int inUseReflectorID;
     private BlockingQueue<AgentConclusion> candidatesQueue;
-
     private BooleanProperty isContestActiveProperty;
-
     private IntegerProperty numOfTasksInQueueProperty;
-
     private IntegerProperty numOfCompletedTasksProperty;
     private String agentName;
 

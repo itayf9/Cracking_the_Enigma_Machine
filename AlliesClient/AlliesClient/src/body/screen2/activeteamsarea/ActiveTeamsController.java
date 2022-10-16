@@ -41,6 +41,7 @@ public class ActiveTeamsController {
     }
 
     public void setTeams(List<AllieInfo> alliesInfoList) {
+        teamsTable.getItems().clear();
         for (AllieInfo allieInfo : alliesInfoList) {
             teamsTable.getItems().add(allieInfo);
         }
