@@ -481,6 +481,7 @@ public class MainController {
             candidateTileController.setReflectorSymbol(candidate.getReflectorSymbol());
             candidateTileController.setProcessedByAllieName(allieName);
             candidateTileController.setProcessedByAgentName(agentName);
+            totalDistinctCandidates.set(totalDistinctCandidates.get() + 1);
             bodyController.insertCandidateToFlowPane(singleCandidateTile);
         } catch (IOException e) {
             e.printStackTrace();

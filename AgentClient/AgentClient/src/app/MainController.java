@@ -122,6 +122,11 @@ public class MainController {
     private FetchSubscriptionStatusTimer fetchSubscribeTimer;
     private Timer waitForAllieApproveTimer;
     private WaitForAllieApproveFinishGameTimer waitForAllieApprovalTimer;
+
+    private Timer fetchStaticInfoContestTimer;
+
+    private FetchStaticContestInfoTimer staticInfoContestTimer;
+
     private BooleanProperty isSubscribed;
 
 
@@ -165,7 +170,7 @@ public class MainController {
                 fetchSubscribeTimer.cancel();
                 // allie just subscribed
                 setStatusMessage("Allie has subscribed to a Contest", MessageTone.INFO);
-                fetchStaticInfoContest();
+                fetchStaticInfoContestTimer.schedule(staticInfoContestTimer, REFRESH_RATE, REFRESH_RATE);
                 contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // allie has unsubscribed, when the contest is finished
@@ -192,6 +197,7 @@ public class MainController {
         });
 
         // bindings
+        candidatesAreaController.bindInitPropertiesToLabels(totalDistinctCandidates);
         contestAndTeamAreaController.bindComponents(allieName);
         agentProgressController.bindComponents(numOfTasksInQueue, numOfTotalPulledTasks, numOfTotalCompletedTasks);
 
@@ -247,44 +253,7 @@ public class MainController {
     /**
      * fetch static info about the contest from the server via http request
      */
-    public void fetchStaticInfoContest() {
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_STATIC_CONTEST_INFO_SRC).newBuilder();
-        urlBuilder.addQueryParameter(QueryParameter.ALLIE_NAME, allieName.get());
-        Request request = new Request.Builder()
-                .url(urlBuilder.build().toString())
-                .addHeader(CONTENT_TYPE, "text/plain")
-                .get()
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-
-            public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
-                String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
-                Gson gson = new Gson();
-
-                if (response.code() != 200) {
-                    DTOstatus staticInfoStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-
-                    Platform.runLater(() -> setStatusMessage(convertProblemToMessage(staticInfoStatus.getDetails()), MessageTone.ERROR));
-
-                } else {
-                    DTOstaticContestInfo staticInfoStatus = gson.fromJson(dtoAsStr, DTOstaticContestInfo.class);
-                    Platform.runLater(() -> {
-                        uboatName.set(staticInfoStatus.getBattlefieldInfo().getUboatName());
-                        contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo(), allieName.get());
-                        dictionary = staticInfoStatus.getBattlefieldInfo().getDictionary();
-                    });
-
-                }
-            }
-
-            public void onFailure(Call call, IOException e) {
-                System.out.println("Oops... something went wrong..." + e.getMessage());
-            }
-        });
-    }
 
     /**
      * display all candidates from server
@@ -341,6 +310,7 @@ public class MainController {
             candidateTileController.setReflectorSymbol(candidate.getReflectorSymbol());
             candidateTileController.setProcessedByAllieName(allieName);
             candidateTileController.setProcessedByAgentName(agentName);
+            totalDistinctCandidates.set(totalDistinctCandidates.get() + 1);
             candidatesAreaController.insertCandidateToFlowPane(singleCandidateTile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -369,8 +339,9 @@ public class MainController {
         this.client = okHttpClient;
         this.fetchContestStatusTimer.setClient(client);
         this.fetchSubscribeTimer.setClient(client);
-        this.fetchTasksTimer.setClient(client);
+        this.fetchTasksThread.setClient(client);
         this.submitAllConclusionsTimer.setClient(client);
+        this.staticInfoContestTimer.setClient(client);
         this.waitForAllieApprovalTimer.setClient(client);
     }
 
@@ -511,6 +482,16 @@ public class MainController {
 
             threadPool.execute(task);
         }
+    }
+
+    public CountDownLatch getCountDownLatch() {
+        return cdl;
+    }
+
+    public void updateStaticContestInfo(DTOstaticContestInfo staticInfoStatus) {
+        uboatName.set(staticInfoStatus.getBattlefieldInfo().getUboatName());
+        contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo(), allieName.get());
+        dictionary = staticInfoStatus.getBattlefieldInfo().getDictionary();
     }
 }
 

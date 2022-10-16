@@ -4,6 +4,7 @@ import candidate.AgentConclusion;
 import agent.AgentTask;
 import dm.decryptmanager.DecryptManager;
 import difficultylevel.DifficultyLevel;
+import javafx.beans.property.StringProperty;
 import machine.EnigmaMachine;
 import machine.Machine;
 
@@ -18,7 +19,7 @@ public class TaskProducer implements Runnable {
     private final String alphabet;
     private final int taskSize;
     private final DifficultyLevel difficulty;
-    private final String textToDecipher;
+    private final StringProperty textToDecipher;
     private final BlockingQueue<AgentConclusion> candidatesQueue;
     private final DecryptManager dm;
     private int taskCounter;
@@ -117,7 +118,7 @@ public class TaskProducer implements Runnable {
             try {
                 taskCounter++;
                 dm.getJobProgressInfo().setNumberOfTasksProduced(taskCounter);
-                agentTaskQueue.put(new AgentTask(rotorsIDs, nextWindowsOffsets, reflectorID, machine, taskSize, textToDecipher, dm.getAllieName()));
+                agentTaskQueue.put(new AgentTask(rotorsIDs, nextWindowsOffsets, reflectorID, machine, taskSize, textToDecipher.get(), dm.getAllieName()));
             } catch (InterruptedException e) {
                 // producer Stopped so need to die
                 return;

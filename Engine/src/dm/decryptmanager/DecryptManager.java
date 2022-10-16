@@ -8,6 +8,7 @@ import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
 import dm.taskproducer.TaskProducer;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
 import jobprogress.JobProgressInfo;
 import machine.Machine;
 
@@ -37,7 +38,7 @@ public class DecryptManager {
     private final JobProgressInfo jobProgressInfo;
     private final BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final Map<String, AgentInfo> agentName2agentInfo;
-    private final String textToDecipher;
+    private final StringProperty textToDecipher;
     private BooleanProperty isContestActive;
     private boolean isDMapprovedFinishGame;
     private String uboatName;
