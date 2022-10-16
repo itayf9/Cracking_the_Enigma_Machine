@@ -111,6 +111,11 @@ public class FetchCandidatesTimer extends TimerTask {
                 }
 
                 // adds a new tile to the candidates area
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 Platform.runLater(() -> mainController.createCandidateTile(candidate, currentAllieName, currentAgentName));
 
             }

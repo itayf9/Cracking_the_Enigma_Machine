@@ -403,6 +403,11 @@ public class MainController {
             for (Candidate candidate : conclusion.getCandidates()) {
 
                 // adds a new tile to the candidates area
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 createCandidateTile(candidate, currentAllieName, currentAgentName);
             }
         }
@@ -603,6 +608,11 @@ public class MainController {
             String allieName = agentConclusion.getAllieName();
             String agentName = agentConclusion.getAgentName();
             for (Candidate candidate : agentConclusion.getCandidates()) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 createCandidateTile(candidate, allieName, agentName);
             }
         }
