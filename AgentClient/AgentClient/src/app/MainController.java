@@ -168,6 +168,7 @@ public class MainController {
                 fetchStaticInfoContest();
                 contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
             } else {
+                // allie has unsubscribed, when the contest is finished
                 subscribeTimer.schedule(fetchSubscribeTimer, REFRESH_RATE, REFRESH_RATE);
             }
         });
@@ -244,7 +245,7 @@ public class MainController {
     }
 
     /**
-     * #4 fetch static info about the contest from the server via http request
+     * fetch static info about the contest from the server via http request
      */
     public void fetchStaticInfoContest() {
 
@@ -307,7 +308,7 @@ public class MainController {
     }
 
     /**
-     * clear all findings of last process and labels progress
+     * clear all findings of last contest and labels of progress
      */
     public void cleanOldResults() {
 
@@ -324,6 +325,8 @@ public class MainController {
      * creates a Candidate that shows in the flow-pane at the ui
      *
      * @param candidate the candidate to create a tile from
+     * @param allieName the name of the allie of the current agent
+     * @param agentName the name of the uboat of the current contest
      */
     private void createCandidateTile(Candidate candidate, String allieName, String agentName) {
         try {
@@ -359,6 +362,8 @@ public class MainController {
 
     /**
      * set the ok http client in the timers
+     *
+     * @param okHttpClient the okHttpClient to be set
      */
     public void setOkHttpClient(OkHttpClient okHttpClient) {
         this.client = okHttpClient;
@@ -442,6 +447,9 @@ public class MainController {
         }
     }
 
+    /**
+     * @return a list of AgentConclusion that are fetched from the conclusions queue
+     */
     public List<AgentConclusion> getConclusions() {
         List<AgentConclusion> conclusions = new ArrayList<>();
         while (!conclusionsQueue.isEmpty()) {
@@ -456,10 +464,23 @@ public class MainController {
         return conclusions;
     }
 
+    /**
+     * sets the isSubscribed property
+     *
+     * @param isSubscribed the boolean value to set the property to
+     */
     public void setIsSubscribed(boolean isSubscribed) {
         this.isSubscribed.set(isSubscribed);
     }
 
+    /**
+     * sets some settings of the current agent after the login
+     *
+     * @param allieName         the name of the allie of the agent
+     * @param numOfThreads      the number of threads as mentioned in the login screen
+     * @param numOfTasksPerPull the number of tasks per pull as mentioned in the login screen
+     * @param agentName         the username of the current agent
+     */
     public void setInitialSettings(String allieName, int numOfThreads, int numOfTasksPerPull, String agentName) {
         this.allieName.set(allieName);
         this.numOfThreads = numOfThreads;
@@ -472,6 +493,11 @@ public class MainController {
         subscribeTimer.schedule(fetchSubscribeTimer, REFRESH_RATE, REFRESH_RATE);
     }
 
+    /**
+     * given some AgentTask, injects some information to the AgentTask and sents in to the thread pool to execute
+     *
+     * @param taskList a list of the AgentTask to execute
+     */
     public void executeTasks(List<AgentTask> taskList) {
         numOfTotalPulledTasks.setValue(numOfTotalPulledTasks.get() + taskList.size());
         numOfTasksInQueue.setValue(numOfTasksInQueue.get() + taskList.size());
