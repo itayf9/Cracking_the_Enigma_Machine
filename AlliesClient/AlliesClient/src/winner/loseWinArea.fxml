@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="500.0" styleClass="component-with-background" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="winner.LoseWinAreaController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="winner.LoseWinAreaController">
     <columnConstraints>
       <ColumnConstraints hgrow="NEVER" maxWidth="239.0" minWidth="100.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="NEVER" maxWidth="239.0" minWidth="100.0" prefWidth="100.0" />
@@ -16,7 +17,7 @@
       <ColumnConstraints hgrow="NEVER" maxWidth="388.3333435058594" minWidth="10.0" prefWidth="71.6666259765625" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
         <Label styleClass="component-title" text="Message" />
@@ -31,4 +32,8 @@
     <padding>
         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
     </padding>
+   <styleClass>
+      <String fx:value="component-with-background" />
+      <String fx:value="component-with-border" />
+   </styleClass>
 </GridPane>

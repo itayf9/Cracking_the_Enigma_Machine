@@ -21,7 +21,7 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-        <RowConstraints maxHeight="54.666656494140625" minHeight="30.0" prefHeight="40.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="54.666656494140625" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
         <Label styleClass="enigma-title" text="Agent" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.halignment="CENTER" />
