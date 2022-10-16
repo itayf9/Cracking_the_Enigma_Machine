@@ -200,6 +200,7 @@ public class MainController {
 
         // header bindings & settings
         headerController.setProperties(isMachineLoadedProperty);
+        headerController.bindComponents(isMachineLoadedProperty);
         isMachineConfiguredProperty.addListener((observable, oldValue, newValue) -> clearOldComponents());
         bruteForceStatusMessage.addListener((observable, oldValue, newValue) -> setStatusMessage("Decrypt Manager: " + newValue, MessageTone.INFO));
     }

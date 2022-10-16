@@ -47,11 +47,16 @@ public class HeaderController {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
+
     public void displayFilePath() {
         filePathLoadMachineLabel.setText(selectedMachineFile);
     }
 
     public void setProperties(BooleanProperty isMachineLoadedProperty) {
         this.isMachineLoadedProperty = isMachineLoadedProperty;
+    }
+
+    public void bindComponents(BooleanProperty isMachineLoadedProperty) {
+        loadFileButton.disableProperty().bind(isMachineLoadedProperty);
     }
 }
