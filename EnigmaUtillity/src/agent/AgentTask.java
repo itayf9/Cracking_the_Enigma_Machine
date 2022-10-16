@@ -3,6 +3,7 @@ package agent;
 import candidate.AgentConclusion;
 import candidate.Candidate;
 import dictionary.Dictionary;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import machine.Machine;
@@ -31,7 +32,7 @@ public class AgentTask implements Runnable {
     private IntegerProperty numOfCompletedTasksProperty;
     private String agentName;
 
-    private String allieName;
+    private final String allieName;
 
     public AgentTask(List<Integer> rotorsIDs, List<Integer> windowOffsets, int inUseReflectorID, Machine copyOfMachine, int taskSize, String textToDecipher, String allieName) {
         this.machine = copyOfMachine;
@@ -112,7 +113,7 @@ public class AgentTask implements Runnable {
 
     @Override
     public void run() {
-        long startMeasureTime = System.nanoTime();
+
 
         List<Candidate> candidates = new ArrayList<>();
         int numOfConfigScanned = 0;
@@ -138,10 +139,7 @@ public class AgentTask implements Runnable {
                 String nextCandidateReflectorSymbol = decimalToRoman(inUseReflectorID);
 
                 // fetch the notch positions
-                List<Integer> notchPositions = machine.getOriginalNotchPositions(); // I trust this !
-
-                // fetch the current thread's name
-                String processedByAgentName = Thread.currentThread().getName();
+                List<Integer> notchPositions = machine.getOriginalNotchPositions(); // I trust t
 
                 Candidate nextCandidate = new Candidate(decipherResult, rotorsIDs, windowCharacters, nextCandidateReflectorSymbol, notchPositions);
                 candidates.add(nextCandidate);
@@ -159,9 +157,8 @@ public class AgentTask implements Runnable {
         }
         // send conclusion to DM
         try {
-            long timeElapsed = System.nanoTime() - startMeasureTime;
-            candidatesQueue.put(new AgentConclusion(candidates, numOfConfigScanned, timeElapsed, agentName, allieName));
-            numOfCompletedTasksProperty.set(numOfCompletedTasksProperty.get() + 1);
+            candidatesQueue.put(new AgentConclusion(candidates, numOfConfigScanned, agentName, allieName));
+            Platform.runLater(() -> numOfCompletedTasksProperty.set(numOfCompletedTasksProperty.get() + 1));
         } catch (InterruptedException ignored) {
 
         }

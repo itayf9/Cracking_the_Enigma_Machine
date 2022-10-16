@@ -22,8 +22,6 @@ public class CandidatesCollector implements Runnable {
     private JobProgressInfo jobProgressInfo;
     private Map<String, AgentInfo> agentName2agentInfo;
 
-    private long pauseMeasuring;
-
     public CandidatesCollector(DecryptManager dm) {
         this.agentReportsOfCandidateQueue = dm.getCandidatesQueue();
         this.uboatCandidateQueue = dm.getUboatCandidateQueue();
@@ -31,17 +29,14 @@ public class CandidatesCollector implements Runnable {
         this.isContestActive = dm.getIsContestActive();
         this.jobProgressInfo = dm.getJobProgressInfo();
         this.agentName2agentInfo = dm.getAgentName2agentInfo();
-        this.pauseMeasuring = 0;
         this.allConclusions = dm.getAllConclusions();
     }
 
     @Override
     public void run() {
 
-        long totalTasksProcessTime = 0;
         long scannedConfigsCount = 0;
         long tasksCounter = 0;
-        double averageTasksProcessTime;
 
         while (scannedConfigsCount < totalPossibleConfigurations && isContestActive.get()) {
             AgentConclusion currentConclusion;
@@ -49,8 +44,6 @@ public class CandidatesCollector implements Runnable {
                 currentConclusion = agentReportsOfCandidateQueue.take();
                 tasksCounter++;
                 jobProgressInfo.setNumberOfTasksDone(tasksCounter);
-                totalTasksProcessTime += currentConclusion.getTimeTakenToDoTask();
-                averageTasksProcessTime = (double) totalTasksProcessTime / (double) tasksCounter;
                 scannedConfigsCount += currentConclusion.getNumOfScannedConfigurations();
 
             } catch (InterruptedException e) {

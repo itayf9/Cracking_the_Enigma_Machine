@@ -5,6 +5,7 @@ import app.MessageTone;
 import com.google.gson.Gson;
 import dto.DTOagentConclusions;
 import dto.DTOstatus;
+import http.url.QueryParameter;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
@@ -35,6 +36,8 @@ public class FetchCandidatesTimer extends TimerTask {
     @Override
     public void run() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CANDIDATES_SRC).newBuilder();
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName.get());
+        
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

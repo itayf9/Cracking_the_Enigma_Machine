@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DTOtasks extends DTOstatus {
 
-    private List<AgentTask> taskList;
+    private final List<AgentTask> taskList;
 
     public DTOtasks(boolean isSucceed, Problem details, List<AgentTask> taskList) {
         super(isSucceed, details);

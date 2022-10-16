@@ -455,7 +455,6 @@ public class MainController {
         while (!conclusionsQueue.isEmpty()) {
             AgentConclusion conclusion = conclusionsQueue.poll();
             if (conclusion != null) {
-                numOfTasksInQueue.set(numOfTasksInQueue.get() - 1);
                 conclusions.add(conclusion);
             } else {
                 break;

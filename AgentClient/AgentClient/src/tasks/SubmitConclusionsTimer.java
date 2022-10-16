@@ -2,6 +2,7 @@ package tasks;
 
 import app.MainController;
 import app.MessageTone;
+import candidate.AgentConclusion;
 import com.google.gson.Gson;
 import dto.DTOstatus;
 import javafx.application.Platform;
@@ -9,6 +10,7 @@ import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.TimerTask;
 
 import static http.url.QueryParameter.ALLIE_NAME;
@@ -53,7 +55,7 @@ public class SubmitConclusionsTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch logged agents task response");
+                System.out.println("submitConclusion timer response");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 System.out.println("Body: " + dtoAsStr);
