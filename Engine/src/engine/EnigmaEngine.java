@@ -11,7 +11,6 @@ import dm.decryptmanager.DecryptManager;
 import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
 import dto.*;
-import javafx.util.Pair;
 import jobprogress.JobProgressInfo;
 import machine.EnigmaMachine;
 
@@ -20,7 +19,6 @@ import machine.component.Reflector;
 import machine.component.Rotor;
 import machine.jaxb.generated.*;
 import problem.Problem;
-import statistics.StatisticRecord;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -37,8 +35,6 @@ import static utill.Utility.*;
 public class EnigmaEngine implements Engine {
 
     // The engine contains Machine instance and machine records object.
-    private boolean charByCharState;
-    private final List<StatisticRecord> machineRecords;
 
     private final Map<String, Battlefield> uboatName2battleField;
     private final Map<String, Set<AgentInfo>> loggedAllieName2loggedAgents;
@@ -54,8 +50,6 @@ public class EnigmaEngine implements Engine {
 
     public EnigmaEngine() {
         JAXB_XML_PACKAGE_NAME = "machine.jaxb.generated";
-        this.charByCharState = false;
-        this.machineRecords = new ArrayList<>();
         this.uboatName2battleField = new HashMap<>();
         this.loggedAllieName2loggedAgents = new HashMap<>();
         this.agentName2agentInfo = new HashMap<>();
@@ -70,8 +64,6 @@ public class EnigmaEngine implements Engine {
      */
     public void buildMachine(List<Rotor> availableRotors, List<Reflector> availableReflectors, int rotorsCount, String alphabet, Map<Character,
             Integer> character2index, String userName) {
-        //  currentCipherProcessOutputText = "";
-        //  currentCipherProcessInputText = "";
         uboatName2battleField.get(userName).setMachine(new EnigmaMachine(availableRotors, availableReflectors, rotorsCount, alphabet, character2index));
     }
 
@@ -97,10 +89,6 @@ public class EnigmaEngine implements Engine {
 
         // sets the new configuration into the machine.
         uboatName2battleField.get(userName).getMachine().setMachineConfiguration(rotorsIDs, windowOfssets, reflectorID, plugs);
-
-        // adds new configuration to statistical records.
-        StatisticRecord newRecord = new StatisticRecord(rotorsIDs, windowsChars, reflectorID, plugs, uboatName2battleField.get(userName).getMachine().getOriginalNotchPositions());
-        machineRecords.add(newRecord);
     }
 
     /**
@@ -116,10 +104,9 @@ public class EnigmaEngine implements Engine {
         for (Character currentChar : toCipher.toCharArray()) {
             cipheredText.append(uboatName2battleField.get(userName).getMachine().cipher(currentChar));
         }
-        if (!charByCharState) {
-            // increasing the cipher counter
-            uboatName2battleField.get(userName).getMachine().advanceCipherCounter();
-        }
+
+        // increasing the cipher counter
+        uboatName2battleField.get(userName).getMachine().advanceCipherCounter();
 
         return cipheredText.toString();
     }
@@ -157,7 +144,6 @@ public class EnigmaEngine implements Engine {
         }
         // resets the statistics when loading a new machine
         if (isSucceeded) {
-            machineRecords.clear();
             return displayMachineSpecifications(userName);
         }
 
@@ -697,30 +683,13 @@ public class EnigmaEngine implements Engine {
             return new DTOciphertext(false, Problem.NO_CONFIGURATION, outputText, "", new ArrayList<>(), 0);
         }
 
-
         // check valid ABC
         problem = isAllCharsInAlphabet(inputText, userName);
 
         if (problem.equals(Problem.NO_PROBLEM)) {
             isSucceed = true;
-
-            // cipher in line-by-line mode
-            if (!charByCharState) {
-                long startMeasureTime = System.nanoTime();
-                outputText = cipherText(inputText, userName);
-                long timeElapsed = System.nanoTime() - startMeasureTime;
-                Pair<Pair<String, String>, Long> inputTextToOutputTextToTimeElapsed = new Pair<>(new Pair<>(inputText, outputText), timeElapsed);
-
-                machineRecords.get(machineRecords.size() - 1).getCipherHistory().add(inputTextToOutputTextToTimeElapsed);
-
-            } else {
-                // cipher in char-by-char mode
-                long startMeasureTime = System.nanoTime();
-                outputText = cipherText(inputText, userName);
-                // sets the text to decipher in the battlefield
-                battlefield.setTextToDecipher(outputText);
-                long timeElapsed = System.nanoTime() - startMeasureTime;
-            }
+            outputText = cipherText(inputText, userName);
+            battlefield.setTextToDecipherValue(outputText);
         }
 
         String currentWindowCharacters = uboatName2battleField.get(userName).getMachine().getCurrentWindowsCharacters();
@@ -961,7 +930,7 @@ public class EnigmaEngine implements Engine {
         boolean isSucceeded = true;
         Problem details = Problem.NO_PROBLEM;
 
-        return new DTOstatistics(isSucceeded, details, machineRecords);
+        return new DTOstatistics(isSucceeded, details, new ArrayList<>());
     }
 
     /**
@@ -1039,11 +1008,7 @@ public class EnigmaEngine implements Engine {
      */
     @Override
     public void setCharByCharState(boolean newCharByCharState) {
-        if (!newCharByCharState) {
-            resetCurrentCipherProcess();
-        }
 
-        this.charByCharState = newCharByCharState;
     }
 
     /**
@@ -1195,7 +1160,7 @@ public class EnigmaEngine implements Engine {
                 Dictionary dictionary = battlefield.getDictionary();
                 int numOfRequiredAllies = battlefield.getNumOfRequiredAllies();
                 int numOfLoggedAllies = battlefield.getAllies().size();
-                String textToDecipher = battlefield.getTextToDecipher();
+                String textToDecipher = battlefield.getTextToDecipherProperty().get();
                 allBattlefieldsInfo.add(new BattlefieldInfo(battlefieldName, uboatUserName, isActive,
                         difficultyLevel, dictionary, numOfRequiredAllies, numOfLoggedAllies, textToDecipher));
             }
@@ -1212,7 +1177,7 @@ public class EnigmaEngine implements Engine {
                 Dictionary dictionary = entry.getValue().getDictionary();
                 int numOfRequiredAllies = entry.getValue().getNumOfRequiredAllies();
                 int numOfLoggedAllies = entry.getValue().getAllies().size();
-                String textToDecipher = entry.getValue().getTextToDecipher();
+                String textToDecipher = entry.getValue().getTextToDecipherProperty().get();
 
                 allBattlefieldsInfo.add(new BattlefieldInfo(battlefieldName, entry.getKey(), isActive,
                         difficultyLevel, dictionary, numOfRequiredAllies, numOfLoggedAllies, textToDecipher));

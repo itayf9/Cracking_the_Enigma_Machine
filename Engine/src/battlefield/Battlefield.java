@@ -7,13 +7,14 @@ import dictionary.Dictionary;
 import difficultylevel.DifficultyLevel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import machine.Machine;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Battlefield {
 
@@ -31,7 +32,7 @@ public class Battlefield {
     private BooleanProperty isActive;
 
     private AllieInfo winnerAllieInfo;
-    private String textToDecipher;
+    private StringProperty textToDecipher;
     private boolean isBattlefieldConfigured;
 
     public Battlefield(String uboatName) {
@@ -43,7 +44,7 @@ public class Battlefield {
         this.isActive = new SimpleBooleanProperty(false);
         this.difficultyLevel = DifficultyLevel.UNDEFINED;
         this.isBattlefieldConfigured = false;
-        this.textToDecipher = "";
+        this.textToDecipher = new SimpleStringProperty("");
     }
 
     public String getUboatName() {
@@ -140,11 +141,11 @@ public class Battlefield {
         isBattlefieldConfigured = battlefieldConfigured;
     }
 
-    public String getTextToDecipher() {
+    public StringProperty getTextToDecipherProperty() {
         return textToDecipher;
     }
 
-    public void setTextToDecipher(String textToDecipher) {
-        this.textToDecipher = textToDecipher;
+    public void setTextToDecipherValue(String textToDecipher) {
+        this.textToDecipher.set(textToDecipher);
     }
 }

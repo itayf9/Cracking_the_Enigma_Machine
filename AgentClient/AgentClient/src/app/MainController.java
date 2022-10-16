@@ -101,6 +101,7 @@ public class MainController {
     private IntegerProperty numOfTotalPulledTasks;
     private IntegerProperty numOfTasksInQueue;
     private IntegerProperty numOfTotalCompletedTasks;
+    private CountDownLatch cdl;
 
     /**
      * contest stuff
@@ -116,8 +117,7 @@ public class MainController {
     private FetchContestStatusTimer fetchContestStatusTimer;
     private Timer submitConclusionsTimer;
     private SubmitConclusionsTimer submitAllConclusionsTimer;
-    private Timer tasksTimer;
-    private FetchTasksTimer fetchTasksTimer;
+    private FetchTasksThread fetchTasksThread;
     private Timer subscribeTimer;
     private FetchSubscriptionStatusTimer fetchSubscribeTimer;
     private Timer waitForAllieApproveTimer;
@@ -138,14 +138,13 @@ public class MainController {
         candidatesAreaController.setParentController(this);
         contestAndTeamAreaController.setParentController(this);
         agentProgressController.setParentController(this);
-
         this.conclusionsQueue = new LinkedBlockingQueue<>();
 
         // property initialize
         this.totalDistinctCandidates = new SimpleIntegerProperty();
         this.isContestActive = new SimpleBooleanProperty(false);
         this.isSubscribed = new SimpleBooleanProperty();
-        this.numOfTasksInQueue = new SimpleIntegerProperty();
+        this.numOfTasksInQueue = new SimpleIntegerProperty(0);
         this.numOfTotalPulledTasks = new SimpleIntegerProperty();
         this.numOfTotalCompletedTasks = new SimpleIntegerProperty();
         this.uboatName = new SimpleStringProperty("");
@@ -154,12 +153,13 @@ public class MainController {
         // Timers
         this.contestStatusTimer = new Timer();
         this.submitConclusionsTimer = new Timer();
-        this.tasksTimer = new Timer();
         this.subscribeTimer = new Timer();
         this.waitForAllieApproveTimer = new Timer();
         this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive, allieName);
         this.submitAllConclusionsTimer = new SubmitConclusionsTimer(this, allieName, uboatName);
-        this.fetchTasksTimer = new FetchTasksTimer(this, allieName, uboatName);
+        this.fetchTasksThread = new FetchTasksThread(this, allieName, uboatName, cdl);
+        this.fetchStaticInfoContestTimer = new Timer();
+        this.staticInfoContestTimer = new FetchStaticContestInfoTimer(this, allieName);
         this.waitForAllieApprovalTimer = new WaitForAllieApproveFinishGameTimer(this, allieName, uboatName);
         this.fetchSubscribeTimer = new FetchSubscriptionStatusTimer(isSubscribed, allieName);
 
@@ -181,12 +181,15 @@ public class MainController {
 
         isContestActive.addListener((o, oldVal, newVal) -> {
             if (newVal) {
+                this.cdl = new CountDownLatch(numOfTasksInQueue.get());
+                new Thread(this.fetchTasksThread).start();
                 // contest == active
                 // stop allies & status timers
                 setStatusMessage("Contest has started", MessageTone.INFO);
-
+                fetchContestStatusTimer.run();
+                fetchStaticInfoContestTimer.cancel();
+                staticInfoContestTimer.cancel();
                 // schedule fetch candidates timer & fetch active teams
-                tasksTimer.schedule(fetchTasksTimer, REFRESH_RATE, REFRESH_RATE);
                 submitConclusionsTimer.schedule(submitAllConclusionsTimer, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // contest == not active => winner found
@@ -471,6 +474,9 @@ public class MainController {
     public void executeTasks(List<AgentTask> taskList) {
         numOfTotalPulledTasks.setValue(numOfTotalPulledTasks.get() + taskList.size());
         numOfTasksInQueue.setValue(numOfTasksInQueue.get() + taskList.size());
+        this.cdl = new CountDownLatch(numOfTasksInQueue.get());
+
+        new Thread(this.fetchTasksThread).start();
 
         for (AgentTask task : taskList) {
             task.setAgentName(agentName);
@@ -479,6 +485,7 @@ public class MainController {
             task.setCandidatesQueue(conclusionsQueue);
             task.setNumOfTasksInQueueProperty(numOfTasksInQueue);
             task.setNumOfCompletedTasksProperty(numOfTotalCompletedTasks);
+            task.setCdl(cdl);
 
             threadPool.execute(task);
         }

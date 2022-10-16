@@ -607,7 +607,7 @@ public class MainController {
             candidateTileController.setProcessedByAgentName(AgentName);
 
             // updates the total distinct candidates counter
-            totalDistinctCandidates.setValue(totalDistinctCandidates.getValue() + 1);
+            totalDistinctCandidates.set(totalDistinctCandidates.get() + 1);
 
             // inserts the new candidate to the area
             bodyController.insertCandidateToFlowPane(singleCandidateTile);

@@ -47,7 +47,6 @@ public class ClientIsReadyServlet extends HttpServlet {
                 case UBOAT:
                     uboatName = userNameFromSession;
                     engine.setUboatReady(userNameFromSession, true);
-                    System.out.println("set ready to uboat : " + userNameFromSession);
                     break;
                 case ALLIE:
                     uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
@@ -65,11 +64,9 @@ public class ClientIsReadyServlet extends HttpServlet {
                         return;
                     }
                     engine.setAllieReady(userNameFromSession, uboatName, true, taskSize);
-                    System.out.println("set ready to allie : " + userNameFromSession + " (uboat=" + uboatName);
                     break;
             }
             if (engine.allClientsReady(uboatName)) {
-                System.out.println("all client ready brute force started !!");
                 engine.startBruteForceProcess(uboatName);
             }
 

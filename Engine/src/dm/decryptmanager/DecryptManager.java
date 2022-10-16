@@ -41,7 +41,7 @@ public class DecryptManager {
     private final StringProperty textToDecipher;
     private BooleanProperty isContestActive;
     private boolean isDMapprovedFinishGame;
-    private String uboatName;
+    private final String uboatName;
 
     public DecryptManager(String allieName, Battlefield battlefield, Map<String, AgentInfo> agentName2agentInfo) {
         this.agentName2agentInfo = agentName2agentInfo;
@@ -57,7 +57,7 @@ public class DecryptManager {
         int UNDEFINED = 0;
         this.taskSize = UNDEFINED;
         this.jobProgressInfo = new JobProgressInfo();
-        this.textToDecipher = battlefield.getTextToDecipher();
+        this.textToDecipher = battlefield.getTextToDecipherProperty();
         this.isDMapprovedFinishGame = false;
         this.isContestActive = battlefield.isActive();
         this.uboatName = battlefield.getUboatName();
@@ -182,7 +182,7 @@ public class DecryptManager {
         return difficultyLevel;
     }
 
-    public String getTextToDecipher() {
+    public StringProperty getTextToDecipherProperty() {
         return textToDecipher;
     }
 

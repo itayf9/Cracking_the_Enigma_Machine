@@ -32,7 +32,8 @@ public class TaskProducer implements Runnable {
         this.alphabet = machine.getAlphabet();
         this.taskSize = dm.getTaskSize();
         this.difficulty = dm.getDifficultyLevel();
-        this.textToDecipher = dm.getTextToDecipher();
+        this.textToDecipher = dm.getTextToDecipherProperty();
+        System.out.println("textToDecipher = " + textToDecipher.get() + " ## end of textToDecipher");
         this.candidatesQueue = dm.getCandidatesQueue();
         this.taskCounter = 0;
     }
@@ -94,7 +95,7 @@ public class TaskProducer implements Runnable {
         try {
             taskCounter++;
             dm.getJobProgressInfo().setNumberOfTasksProduced(taskCounter);
-            agentTaskQueue.put(new AgentTask(rotorsIDs, new ArrayList<>(currentWindowsOffsets), reflectorID, machine, taskSize, textToDecipher, dm.getAllieName()));
+            agentTaskQueue.put(new AgentTask(rotorsIDs, new ArrayList<>(currentWindowsOffsets), reflectorID, machine, taskSize, textToDecipher.get(), dm.getAllieName()));
         } catch (InterruptedException ignored) {
             //throw new RuntimeException(e);
         }

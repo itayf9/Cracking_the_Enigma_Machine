@@ -55,9 +55,7 @@ public class SubmitNextCandidatesServlet extends HttpServlet {
 
                 // get the conclusions
                 String conclusionsAsStr = readFromInputStream(req.getInputStream());
-                System.out.println("conclusionsAsStr : " + conclusionsAsStr);
                 DTOagentConclusions conclusionsDto = gson.fromJson(conclusionsAsStr, DTOagentConclusions.class);
-                System.out.println("conclusionsAsList " + conclusionsDto.getAgentConclusions());
                 DTOstatus submitStatus = engine.submitConclusions(conclusionsDto.getAgentConclusions(), allieName, uboatName);
                 if (!submitStatus.isSucceed()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

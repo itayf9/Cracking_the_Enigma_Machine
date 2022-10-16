@@ -11,6 +11,7 @@ import machine.Machine;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CountDownLatch;
 
 import static utill.Utility.decimalToRoman;
 
@@ -28,6 +29,7 @@ public class AgentTask implements Runnable {
     private IntegerProperty numOfTasksInQueueProperty;
     private IntegerProperty numOfCompletedTasksProperty;
     private String agentName;
+    private CountDownLatch cdl;
 
     private final String allieName;
 
@@ -98,6 +100,10 @@ public class AgentTask implements Runnable {
         this.numOfCompletedTasksProperty = numOfTotalCompletedTasks;
     }
 
+    public void setCdl(CountDownLatch cdl) {
+        this.cdl = cdl;
+    }
+
 
     private boolean AllWindowsOffsetsAtBeginning() {
         for (Integer offset : windowOffsets) {
@@ -155,6 +161,7 @@ public class AgentTask implements Runnable {
         // send conclusion to DM
         try {
             candidatesQueue.put(new AgentConclusion(candidates, numOfConfigScanned, agentName, allieName));
+            cdl.countDown();
             Platform.runLater(() -> numOfCompletedTasksProperty.set(numOfCompletedTasksProperty.get() + 1));
         } catch (InterruptedException ignored) {
 

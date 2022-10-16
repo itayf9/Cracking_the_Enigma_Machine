@@ -36,7 +36,6 @@ public class LoadXMLServlet extends HttpServlet {
         String usernameFromSession = SessionUtils.getUsername(req);
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, new Gson());
         Client typeOFClient = SessionUtils.getTypeOfClient(req);
-        System.out.println(typeOFClient);
 
         if (isValidSession) {
 

@@ -11,26 +11,30 @@ import dto.DTOtasks;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
-
 import java.io.IOException;
-import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
 
 import static http.url.QueryParameter.*;
 import static http.url.URLconst.*;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
 
-public class FetchTasksTimer extends TimerTask {
+public class FetchTasksThread implements Runnable {
 
     private OkHttpClient client;
     private final MainController mainController;
     private final StringProperty allieName;
     private final StringProperty uboatName;
+    private CountDownLatch cdl;
 
-    public FetchTasksTimer(MainController mainController, StringProperty allieName, StringProperty uboatName) {
+    public FetchTasksThread(MainController mainController, StringProperty allieName, StringProperty uboatName, CountDownLatch cdl) {
         this.mainController = mainController;
         this.allieName = allieName;
         this.uboatName = uboatName;
+    }
+
+    public void setCountDownLatch(CountDownLatch cdl) {
+        this.cdl = cdl;
     }
 
     public void setClient(OkHttpClient client) {
@@ -39,6 +43,17 @@ public class FetchTasksTimer extends TimerTask {
 
     @Override
     public void run() {
+
+        this.cdl = mainController.getCountDownLatch();
+
+        try {
+            cdl.await();
+        } catch (InterruptedException ignored) {
+            // if we here then someone interrupted us, hopefully that means contest is Over...
+            return;
+        }
+
+
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_NEXT_TASKS_SRC).newBuilder();
         urlBuilder.addQueryParameter(ALLIE_NAME, allieName.get());
         urlBuilder.addQueryParameter(UBOAT_NAME, uboatName.get());
