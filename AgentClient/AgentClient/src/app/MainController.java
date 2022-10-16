@@ -507,6 +507,7 @@ public class MainController {
             task.setDictionary(dictionary);
             task.setIsContestActiveProperty(isContestActive);
             task.setCandidatesQueue(conclusionsQueue);
+            task.setNumOfTasksInQueueProperty(numOfTasksInQueue);
             task.setNumOfCompletedTasksProperty(numOfTotalCompletedTasks);
 
             threadPool.execute(task);

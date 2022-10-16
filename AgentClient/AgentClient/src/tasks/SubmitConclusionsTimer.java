@@ -38,7 +38,8 @@ public class SubmitConclusionsTimer extends TimerTask {
     @Override
     public void run() {
 
-        String conclusions = gson.toJson(mainController.getConclusions());
+        List<AgentConclusion> conclusionsList = mainController.getConclusions();
+        String conclusions = gson.toJson(conclusionsList);
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + SUBMIT_NEXT_CANDIDATES_SRC).newBuilder();
         urlBuilder.addQueryParameter(ALLIE_NAME, allieName.get());

@@ -2,6 +2,7 @@ package servlets.agent;
 
 import candidate.AgentConclusion;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import http.url.Client;
 import http.url.Constants;
 import dto.DTOstatus;
@@ -15,7 +16,10 @@ import problem.Problem;
 import utils.SessionUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static utils.ServletUtils.validateAuthorization;
 
@@ -47,9 +51,11 @@ public class SubmitNextCandidatesServlet extends HttpServlet {
             } else {
 
                 // get the conclusions
-                AgentConclusion[] conclusionsArray = gson.fromJson(req.getParameter(QueryParameter.CONCLUSIONS), AgentConclusion[].class);
+                Type listAgentConclusionsType = new TypeToken<ArrayList<Integer>>() {
+                }.getType();
+                List<AgentConclusion> conclusionsArray = gson.fromJson(req.getParameter(QueryParameter.CONCLUSIONS), listAgentConclusionsType);
 
-                DTOstatus submitStatus = engine.submitConclusions(Arrays.asList(conclusionsArray), allieName, uboatName);
+                DTOstatus submitStatus = engine.submitConclusions(conclusionsArray, allieName, uboatName);
                 if (!submitStatus.isSucceed()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 } else {

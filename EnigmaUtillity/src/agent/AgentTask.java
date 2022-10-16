@@ -26,6 +26,8 @@ public class AgentTask implements Runnable {
 
     private BooleanProperty isContestActiveProperty;
 
+    private IntegerProperty numOfTasksInQueueProperty;
+
     private IntegerProperty numOfCompletedTasksProperty;
     private String agentName;
 
@@ -90,6 +92,10 @@ public class AgentTask implements Runnable {
         this.candidatesQueue = candidatesQueue;
     }
 
+    public void setNumOfTasksInQueueProperty(IntegerProperty numOfTasksInQueueProperty) {
+        this.numOfTasksInQueueProperty = numOfTasksInQueueProperty;
+    }
+
     public void setNumOfCompletedTasksProperty(IntegerProperty numOfTotalCompletedTasks) {
         this.numOfCompletedTasksProperty = numOfTotalCompletedTasks;
     }
@@ -110,6 +116,8 @@ public class AgentTask implements Runnable {
 
         List<Candidate> candidates = new ArrayList<>();
         int numOfConfigScanned = 0;
+
+        Platform.runLater(() -> numOfTasksInQueueProperty.set(numOfTasksInQueueProperty.get() - 1));
 
         for (int i = 0; i < taskSize && isContestActiveProperty.get(); i++) {
             numOfConfigScanned++;

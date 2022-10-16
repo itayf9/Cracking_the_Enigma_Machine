@@ -1,8 +1,11 @@
 package tasks;
 
+import agent.AgentTask;
+import agent.AgentTaskDeserializer;
 import app.MainController;
 import app.MessageTone;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dto.DTOstatus;
 import dto.DTOtasks;
 import javafx.application.Platform;
@@ -52,7 +55,10 @@ public class FetchTasksTimer extends TimerTask {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 System.out.println("Body: " + dtoAsStr);
-                Gson gson = new Gson();
+                //Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(AgentTask.class, new AgentTaskDeserializer())
+                        .create();
 
 
                 if (response.code() != 200) {
