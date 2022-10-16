@@ -3,6 +3,7 @@ package servlets.agent;
 import candidate.AgentConclusion;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import dto.DTOagentConclusions;
 import http.url.Client;
 import http.url.Constants;
 import dto.DTOstatus;

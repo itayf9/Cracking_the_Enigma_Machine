@@ -4,6 +4,7 @@ import app.MainController;
 import app.MessageTone;
 import candidate.AgentConclusion;
 import com.google.gson.Gson;
+import dto.DTOagentConclusions;
 import dto.DTOstatus;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
@@ -40,8 +41,8 @@ public class SubmitConclusionsTimer extends TimerTask {
     @Override
     public void run() {
 
-        List<AgentConclusion> conclusionsList = mainController.getConclusions();
-        String conclusions = gson.toJson(conclusionsList);
+        DTOagentConclusions conclusionsDto = mainController.getConclusions();
+        String conclusionsDtoAsJsonStr = gson.toJson(conclusionsDto);
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + SUBMIT_NEXT_CANDIDATES_SRC).newBuilder();
         urlBuilder.addQueryParameter(ALLIE_NAME, allieName.get());
@@ -49,7 +50,7 @@ public class SubmitConclusionsTimer extends TimerTask {
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
-                .post(RequestBody.create(conclusions.getBytes()))
+                .post(RequestBody.create(conclusionsDtoAsJsonStr.getBytes()))
                 .build();
         client.newCall(request).enqueue(new Callback() {
 

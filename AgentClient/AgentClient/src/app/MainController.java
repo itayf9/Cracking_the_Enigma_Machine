@@ -450,7 +450,7 @@ public class MainController {
     /**
      * @return a list of AgentConclusion that are fetched from the conclusions queue
      */
-    public List<AgentConclusion> getConclusions() {
+    public DTOagentConclusions getConclusions() {
         List<AgentConclusion> conclusions = new ArrayList<>();
         while (!conclusionsQueue.isEmpty()) {
             AgentConclusion conclusion = conclusionsQueue.poll();
@@ -460,7 +460,7 @@ public class MainController {
                 break;
             }
         }
-        return conclusions;
+        return new DTOagentConclusions(true, Problem.NO_PROBLEM, conclusions);
     }
 
     /**
