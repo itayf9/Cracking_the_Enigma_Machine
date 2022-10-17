@@ -53,7 +53,6 @@ public class FetchCandidatesTimer extends TimerTask {
                 System.out.println("fetch candidates task response");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
 

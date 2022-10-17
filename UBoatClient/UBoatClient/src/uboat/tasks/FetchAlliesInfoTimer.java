@@ -35,10 +35,6 @@ public class FetchAlliesInfoTimer extends TimerTask {
 
     @Override
     public void run() {
-
-        System.out.println("client is " + client);
-        System.out.println("mainController is " + mainController);
-
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_ALLIES_INFO_SRC).newBuilder();
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
@@ -51,7 +47,6 @@ public class FetchAlliesInfoTimer extends TimerTask {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
 

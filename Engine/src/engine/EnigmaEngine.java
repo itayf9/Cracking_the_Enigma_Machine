@@ -1411,6 +1411,8 @@ public class EnigmaEngine implements Engine {
             }
         }
 
+        agentInfo.updateNumOfReceivedTasks(taskList.size());
+
         return new DTOtasks(true, Problem.NO_PROBLEM, taskList);
     }
 

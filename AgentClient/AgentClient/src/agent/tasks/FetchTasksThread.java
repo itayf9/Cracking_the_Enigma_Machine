@@ -70,7 +70,6 @@ public class FetchTasksThread implements Runnable {
                 System.out.println("fetch agentTasks task response");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 //Gson gson = new Gson();
                 Gson gson = new GsonBuilder()
                         .registerTypeAdapter(AgentTask.class, new AgentTaskDeserializer())

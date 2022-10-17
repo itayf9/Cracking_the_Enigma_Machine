@@ -100,14 +100,14 @@ public class BodyController {
      *
      * @param totalDistinctCandidates totalDistinctCandidates
      */
-    public void bindComponents(IntegerProperty totalDistinctCandidates, BooleanProperty isSubscribedToContest, BooleanProperty isReady) {
+    public void bindComponents(IntegerProperty totalDistinctCandidates, BooleanProperty isSubscribedToContest, BooleanProperty isReady, BooleanProperty isContestActive) {
 
         // brute force dashboard labels bind
         candidatesAreaController.bindInitPropertiesToLabels(totalDistinctCandidates);
 
         allieSettingsController.bindComponents(isSubscribedToContest, isReady);
 
-
+        contestTileController.bindLabels(isContestActive);
     }
 
     public void insertCandidateToFlowPane(Node singleCandidateTile) {

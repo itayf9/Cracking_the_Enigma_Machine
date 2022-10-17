@@ -276,7 +276,6 @@ public class MainController {
                     System.out.println("Code: " + response.code());
 
                     String dtoAsStr = response.body().string();
-                    System.out.println("Body: " + dtoAsStr);
                     Gson gson = new Gson();
 
                     if (response.code() != 200) {
@@ -348,8 +347,6 @@ public class MainController {
                 System.out.println("Code: " + response.code());
 
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
-
                 Gson gson = new Gson();
                 if (response.code() != 200) {
                     DTOstatus configStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
@@ -401,8 +398,6 @@ public class MainController {
                 System.out.println("Code: " + response.code());
 
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
-                System.out.println("headers: " + response.headers());
                 Gson gson = new Gson();
 
                 if (response.code() != 200) {
@@ -467,7 +462,6 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
 
@@ -516,9 +510,7 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
-
 
                 if (response.code() != 200) {
                     DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
@@ -568,7 +560,6 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
 
@@ -669,7 +660,6 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
                 DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
@@ -811,7 +801,6 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
                 DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);

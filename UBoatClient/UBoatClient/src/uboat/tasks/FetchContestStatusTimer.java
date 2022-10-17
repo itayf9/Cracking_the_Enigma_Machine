@@ -42,7 +42,6 @@ public class FetchContestStatusTimer extends TimerTask {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
                 DTOactive activeStatus = gson.fromJson(dtoAsStr, DTOactive.class);

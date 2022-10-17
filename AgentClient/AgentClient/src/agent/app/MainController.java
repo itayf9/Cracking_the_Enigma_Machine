@@ -25,7 +25,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import okhttp3.*;
 import problem.Problem;
-import agent.winner.LoseWinAreaController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,12 +73,6 @@ public class MainController {
 
     @FXML
     private CandidatesAreaController candidatesAreaController;
-
-    @FXML
-    private GridPane loseWinArea;
-
-    @FXML
-    private LoseWinAreaController loseWinAreaController;
 
     @FXML
     private HBox statusBar;
@@ -197,6 +190,7 @@ public class MainController {
             } else {
                 // contest == not active => winner found
                 fetchWinnerMessage();
+                setStatusMessage("Winner Found", MessageTone.INFO);
                 threadPool.shutdownNow();
                 submitConclusionsTimer.cancel();
                 submitAllConclusionsTimer.cancel();
@@ -208,6 +202,7 @@ public class MainController {
         candidatesAreaController.bindInitPropertiesToLabels(totalDistinctCandidates);
         contestAndTeamAreaController.bindComponents(allieName);
         agentProgressController.bindComponents(numOfTasksInQueue, numOfTotalPulledTasks, numOfTotalCompletedTasks);
+        contestAndTeamAreaController.bindIsActiveLabel(isContestActive);
 
         // general setting to initialize sub components
         messageLabel.textProperty().bind(statusLabel.textProperty());
@@ -237,9 +232,7 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
-
 
                 if (response.code() != 200) {
                     DTOstatus winnerStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
@@ -249,7 +242,7 @@ public class MainController {
                     DTOwinner winnerStatus = gson.fromJson(dtoAsStr, DTOwinner.class);
                     Platform.runLater(() -> {
                         setStatusMessage("Found a Winner !", MessageTone.SUCCESS);
-                        loseWinAreaController.setWinnerTeamLabelName(winnerStatus.getAllieWinner().getAllieName());
+                        headerController.displayWinnerMessage(winnerStatus.getAllieWinner());
                     });
                 }
             }
@@ -263,7 +256,6 @@ public class MainController {
     /**
      * fetch static info about the contest from the server via http request
      */
-
 
     /**
      * display all candidates from server
@@ -297,7 +289,6 @@ public class MainController {
         numOfTotalCompletedTasks.set(0);
         contestAndTeamAreaController.clearOldResult();
         candidatesAreaController.clearOldResult();
-
     }
 
     /**
@@ -483,9 +474,10 @@ public class MainController {
     public void executeTasks(List<AgentTask> taskList) {
         numOfTotalPulledTasks.setValue(numOfTotalPulledTasks.get() + taskList.size());
         numOfTasksInQueue.setValue(numOfTasksInQueue.get() + taskList.size());
-        this.cdl = new CountDownLatch(numOfTasksInQueue.get());
-
-        new Thread(this.fetchTasksThread).start();
+        if (isContestActive.get()) {
+            this.cdl = new CountDownLatch(numOfTasksInQueue.get());
+            new Thread(this.fetchTasksThread).start();
+        }
 
         for (AgentTask task : taskList) {
             task.setAgentName(agentName);

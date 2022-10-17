@@ -61,6 +61,7 @@ public class DecryptManager {
         this.isDMapprovedFinishGame = false;
         this.isContestActive = battlefield.isActive();
         this.uboatName = battlefield.getUboatName();
+        setTotalConfigs(difficultyLevel);
     }
 
     public BooleanProperty getIsContestActive() {

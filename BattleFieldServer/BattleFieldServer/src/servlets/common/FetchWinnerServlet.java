@@ -37,7 +37,7 @@ public class FetchWinnerServlet extends HttpServlet {
             // get engine from context
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
 
-            if (!typeOfClient.equals(Client.ALLIE)) {
+            if (!typeOfClient.equals(Client.ALLIE) && !typeOfClient.equals(Client.AGENT)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
                 return;

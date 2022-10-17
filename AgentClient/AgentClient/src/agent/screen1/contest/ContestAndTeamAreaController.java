@@ -3,6 +3,7 @@ package agent.screen1.contest;
 import agent.app.MainController;
 import agent.screen1.contest.tile.controller.ContestTileController;
 import info.battlefield.BattlefieldInfo;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -36,5 +37,9 @@ public class ContestAndTeamAreaController {
 
     public void bindComponents(StringProperty allieName) {
         teamNameLabel.textProperty().bind(allieName);
+    }
+
+    public void bindIsActiveLabel(BooleanProperty isContestActive) {
+        contestInfoController.bindIsActiveLabel(isContestActive);
     }
 }

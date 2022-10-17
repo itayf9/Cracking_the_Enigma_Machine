@@ -50,7 +50,6 @@ public class FetchSubscriptionStatusTimer extends TimerTask {
 
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
 

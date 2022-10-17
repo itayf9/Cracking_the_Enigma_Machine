@@ -51,7 +51,6 @@ public class FetchAlliesInfoTimer extends TimerTask {
                 System.out.println("allies info task response");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
 

@@ -157,7 +157,7 @@ public class MainController {
         });
 
         // binding initialize
-        bodyController.bindComponents(totalDistinctCandidates, isSubscribedToContest, isReady);
+        bodyController.bindComponents(totalDistinctCandidates, isSubscribedToContest, isReady, isContestActive);
 
         // general setting to initialize sub components
         messageLabel.textProperty().bind(statusLabel.textProperty());
@@ -192,7 +192,6 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
 
@@ -235,7 +234,6 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
 
@@ -279,7 +277,6 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
 
@@ -324,7 +321,6 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
                 if (response.code() != 200) {
@@ -365,7 +361,6 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
 
@@ -418,7 +413,6 @@ public class MainController {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
                 if (response.code() != 200) {

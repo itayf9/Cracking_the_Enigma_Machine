@@ -31,7 +31,7 @@ public class ContestTileController {
     private Button subscribeButton;
 
     @FXML
-    void subscribeToBattlefield(MouseEvent event) {
+    void subscribeToBattlefield(MouseEvent ignored) {
         parentController.subscribeToBattlefieldAction(uboatNameLabel.getText());
     }
 
@@ -66,11 +66,6 @@ public class ContestTileController {
     public void setContestInfo(BattlefieldInfo battlefieldInfo) {
         this.battlefieldNameLabel.setText(battlefieldInfo.getBattleName());
         this.uboatNameLabel.setText(battlefieldInfo.getUboatName());
-        String isActiveStr = "Idle";
-        if (battlefieldInfo.isActive()) {
-            isActiveStr = "Active";
-        }
-        this.isActiveStatusLabel.setText(isActiveStr);
         this.difficultyLevelLabel.setText(battlefieldInfo.getDifficultyLevel().name());
         this.alliesSubscribedRequiredLabel.setText(battlefieldInfo.getNumOfLoggedAllies() + " / " + battlefieldInfo.getNumOfRequiredAllies());
     }
@@ -78,12 +73,15 @@ public class ContestTileController {
     public void clearOldResult() {
         battlefieldNameLabel.setText("-");
         uboatNameLabel.setText("-");
-        isActiveStatusLabel.setText("-");
         difficultyLevelLabel.setText("-");
         alliesSubscribedRequiredLabel.setText("- / -");
     }
 
     public void setVisibleSubscribeButton(boolean isVisible) {
         subscribeButton.setVisible(isVisible);
+    }
+
+    public void bindLabels(BooleanProperty isContestActive) {
+        isActiveStatusLabel.textProperty().bind(Bindings.when(isContestActive.not()).then("Idle").otherwise("Active"));
     }
 }

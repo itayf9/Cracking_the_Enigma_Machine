@@ -63,7 +63,6 @@ public class FetchCandidatesTimer extends TimerTask {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
 
@@ -77,9 +76,6 @@ public class FetchCandidatesTimer extends TimerTask {
                     // start scanning candidates
                     DTOagentConclusions candidatesStatus = gson.fromJson(dtoAsStr, DTOagentConclusions.class);
                     scanCandidates(candidatesStatus.getAgentConclusions());
-                    Platform.runLater(() -> {
-
-                    });
                 }
             }
 

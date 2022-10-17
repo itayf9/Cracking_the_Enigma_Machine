@@ -48,7 +48,6 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
                 System.out.println("fetch dynamic info task response");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                // System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
                 
                 if (response.code() != 200) {

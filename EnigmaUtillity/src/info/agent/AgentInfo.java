@@ -40,4 +40,9 @@ public class AgentInfo {
     public void updateNumOfFoundCandidate(int newFoundCandidates) {
         numOfFoundCandidates += newFoundCandidates;
     }
+
+    public void updateNumOfReceivedTasks(int newReceivedTasks) {
+        numOfReceivedTasks += newReceivedTasks;
+    }
+
 }
