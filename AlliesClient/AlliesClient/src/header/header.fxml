@@ -26,6 +26,7 @@
     <children>
         <Label styleClass="enigma-title" text="Allies" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.halignment="CENTER" />
       <fx:include fx:id="loseWinArea" source="../winner/loseWinArea.fxml" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+      <Label fx:id="usernameLabel" text="-" />
     </children>
     <padding>
         <Insets bottom="10.0" left="15.0" right="15.0" top="5.0" />

@@ -43,6 +43,8 @@ public class MainController {
 
     private OkHttpClient client;
 
+    private StringProperty usernameProperty;
+
 
     /**
      * app private members
@@ -151,6 +153,7 @@ public class MainController {
         this.textHasBeenCiphered = new SimpleBooleanProperty(false);
         this.isContestActive = new SimpleBooleanProperty(false);
         this.originalText = new SimpleStringProperty();
+        this.usernameProperty = new SimpleStringProperty("");
 
         // timers initialize
         this.contestStatusTimer = new Timer();
@@ -205,7 +208,7 @@ public class MainController {
 
         // header bindings & settings
         headerController.setProperties(isMachineLoadedProperty);
-        headerController.bindComponents(isMachineLoadedProperty);
+        headerController.bindComponents(isMachineLoadedProperty, usernameProperty);
         isMachineConfiguredProperty.addListener((observable, oldValue, newValue) -> clearOldComponents());
         bruteForceStatusMessage.addListener((observable, oldValue, newValue) -> setStatusMessage("Decrypt Manager: " + newValue, MessageTone.INFO));
     }
@@ -780,5 +783,9 @@ public class MainController {
 
     public OkHttpClient getHTTPClient() {
         return client;
+    }
+
+    public void setUserName(String username) {
+        this.usernameProperty.set(username);
     }
 }

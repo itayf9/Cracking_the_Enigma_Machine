@@ -3,9 +3,11 @@ package header;
 import app.MainController;
 import body.screen1.contest.tile.ContestTileController;
 import info.allie.AllieInfo;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import winner.LoseWinAreaController;
 
@@ -20,6 +22,9 @@ public class HeaderController {
 
     @FXML
     private LoseWinAreaController loseWinAreaController;
+
+    @FXML
+    private Label usernameLabel;
 
     public void initialize() {
         loseWinAreaController.setParentController(this);
@@ -40,5 +45,9 @@ public class HeaderController {
     public void approveAllieFinishGameAction() {
         loseWinArea.setVisible(false);
         mainController.approveContestIsOver();
+    }
+
+    public void bindComponents(StringProperty usernameProperty) {
+        usernameLabel.textProperty().bind(usernameProperty);
     }
 }

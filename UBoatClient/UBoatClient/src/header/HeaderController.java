@@ -3,6 +3,7 @@ package header;
 import app.MainController;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -25,6 +26,9 @@ public class HeaderController {
 
     @FXML
     private Button loadFileButton;
+
+    @FXML
+    private Label usernameLabel;
 
     @FXML
     private Button logoutButton;
@@ -64,7 +68,9 @@ public class HeaderController {
         this.isMachineLoadedProperty = isMachineLoadedProperty;
     }
 
-    public void bindComponents(BooleanProperty isMachineLoadedProperty) {
+    public void bindComponents(BooleanProperty isMachineLoadedProperty, StringProperty usernameProperty) {
         loadFileButton.disableProperty().bind(isMachineLoadedProperty);
+        usernameLabel.textProperty().bind(usernameProperty);
     }
+
 }

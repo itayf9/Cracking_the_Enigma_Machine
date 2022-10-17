@@ -40,6 +40,8 @@ public class MainController {
 
     private OkHttpClient client;
 
+    private StringProperty usernameProperty;
+
     /**
      * app private members
      */
@@ -149,6 +151,7 @@ public class MainController {
         this.numOfTotalCompletedTasks = new SimpleIntegerProperty();
         this.uboatName = new SimpleStringProperty("");
         this.allieName = new SimpleStringProperty("");
+        this.usernameProperty = new SimpleStringProperty("");
 
         // Timers
         this.contestStatusTimer = new Timer();
@@ -211,6 +214,8 @@ public class MainController {
         statusBackShape.widthProperty().bind(statusLabel.widthProperty());
         statusBackShape.setStrokeWidth(0);
         statusBackShape.setOpacity(0);
+
+        headerController.bindComponents(usernameProperty);
     }
 
     /**
@@ -460,6 +465,8 @@ public class MainController {
         this.numOfTasksToPull = numOfTasksPerPull;
         this.agentName = agentName;
 
+        setUserName(agentName);
+
         // initializes the thread pool
         this.threadPool = Executors.newFixedThreadPool(numOfThreads);
 
@@ -499,6 +506,10 @@ public class MainController {
         uboatName.set(staticInfoStatus.getBattlefieldInfo().getUboatName());
         contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo(), allieName.get());
         dictionary = staticInfoStatus.getBattlefieldInfo().getDictionary();
+    }
+
+    public void setUserName(String username) {
+        this.usernameProperty.set(username);
     }
 }
 

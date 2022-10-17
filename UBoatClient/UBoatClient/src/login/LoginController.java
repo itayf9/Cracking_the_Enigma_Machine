@@ -89,6 +89,7 @@ public class LoginController {
                         app = loader.load();
                         appController = loader.getController();
                         appController.setOkHttpClient(client);
+                        appController.setUserName(userNameTextField.getText());
 
                     } catch (IOException e) {
                         throw new RuntimeException(e);

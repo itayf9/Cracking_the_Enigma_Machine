@@ -40,6 +40,8 @@ public class MainController {
 
     private OkHttpClient client;
 
+    private StringProperty usernameProperty;
+
     /**
      * app private members
      */
@@ -122,6 +124,7 @@ public class MainController {
         this.candidatesTimer = new Timer();
         this.fetchCandidatesTimer = new FetchCandidatesTimer(this, uboatName);
         this.isReady = new SimpleBooleanProperty(false);
+        this.usernameProperty = new SimpleStringProperty("");
 
         isContestActive.addListener((o, oldVal, newVal) -> {
             if (newVal) {
@@ -159,6 +162,8 @@ public class MainController {
 
         loggedAgentsTimer.schedule(fetchLoggedAgentsInfoTimer, REFRESH_RATE, REFRESH_RATE);
         contestsInfoTimer.schedule(fetchContestsInfoTimer, REFRESH_RATE, REFRESH_RATE);
+
+        headerController.bindComponents(usernameProperty);
     }
 
     /**
@@ -659,5 +664,9 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setUserName(String username) {
+        this.usernameProperty.set(username);
     }
 }

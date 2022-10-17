@@ -54,6 +54,7 @@
       </ScrollPane>
       <Label styleClass="enigma-title" text="UBoat" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.halignment="CENTER" />
       <Button fx:id="logoutButton" minHeight="29.0" minWidth="66.0" mnemonicParsing="false" onMouseClicked="#logoutAction" styleClass="logout-btn" text="Log Out" />
+      <Label fx:id="usernameLabel" text="-" GridPane.columnIndex="1" />
    </children>
     <padding>
         <Insets bottom="10.0" left="15.0" right="15.0" top="5.0" />
