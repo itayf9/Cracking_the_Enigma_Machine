@@ -10,19 +10,19 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="100.0" minWidth="200.0" prefHeight="300.0" prefWidth="550.0" styleClass="component-with-background" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.screen2.agentsprogress.AgentsProgressController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" minWidth="200.0" prefHeight="300.0" prefWidth="550.0" styleClass="component-with-background" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.screen2.agentsprogress.AgentsProgressController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="174.33334350585938" minWidth="10.0" prefWidth="162.33334350585938" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="277.3333740234375" minWidth="10.0" prefWidth="101.66665649414062" />
+    <ColumnConstraints hgrow="NEVER" maxWidth="163.0" minWidth="10.0" prefWidth="162.33334350585938" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="101.66665649414062" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="197.33334350585938" minWidth="10.0" prefWidth="30.33331298828125" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="209.0" minWidth="10.0" prefWidth="194.66668701171875" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="142.33331298828125" minWidth="10.0" prefWidth="85.6666259765625" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="ALWAYS" />
-    <RowConstraints maxHeight="1.7976931348623157E308" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="1.7976931348623157E308" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
@@ -40,14 +40,14 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Label fx:id="textToDecipherLabel" text="text to decipher" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+      <Label fx:id="textToDecipherLabel" text="-" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
       <Label styleClass="sub-title" text="Agents:" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
       <Label styleClass="sub-title" text="Total Tasks:" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-      <Label fx:id="totalTasksLabel" text="100002" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+      <Label fx:id="totalTasksLabel" text="-" GridPane.columnIndex="4" GridPane.rowIndex="4" />
       <Label styleClass="sub-title" text="Tasks Produced So Far:" GridPane.columnIndex="3" GridPane.rowIndex="5" />
       <Label styleClass="sub-title" text="Tasks Finished By Agents So Far:" GridPane.columnIndex="3" GridPane.rowIndex="6" />
-      <Label fx:id="finishedTasksLabel" text="100" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-      <Label fx:id="producedTasksLabel" text="11100" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+      <Label fx:id="finishedTasksLabel" text="-" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+      <Label fx:id="producedTasksLabel" text="-" GridPane.columnIndex="4" GridPane.rowIndex="5" />
       <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="4" />
       <Separator prefWidth="200.0" GridPane.columnSpan="5" GridPane.rowIndex="2" />
    </children>

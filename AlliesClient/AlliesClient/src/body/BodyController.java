@@ -82,6 +82,8 @@ public class BodyController {
         activeTeamsController.setParentController(this);
         agentProgressController.setParentController(this);
         contestTileController.setParentController(this);
+
+        contestTileController.setVisibleSubscribeButton(false);
     }
 
     /**

@@ -46,14 +46,14 @@
                         <GridPane minHeight="345.0" minWidth="890.0" prefHeight="451.0" prefWidth="900.0" styleClass="tab-gridpane">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="280.0" prefWidth="280.0" />
-                                <ColumnConstraints hgrow="NEVER" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
+                                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="5.0" prefWidth="5.0" />
                                 <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="40.0" prefWidth="219.33331298828125" />
                                 <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
                                 <ColumnConstraints hgrow="NEVER" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
                                 <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="187.6666259765625" prefWidth="231.66668701171875" />
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints maxHeight="190.66668701171875" minHeight="190.0" prefHeight="190.0" vgrow="NEVER" />
+                                <RowConstraints maxHeight="190.66668701171875" minHeight="190.0" prefHeight="190.0" vgrow="SOMETIMES" />
                                 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0" prefHeight="14.0" vgrow="NEVER" />
                                 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="150.0" prefHeight="257.6666717529297" vgrow="ALWAYS" />
                             </rowConstraints>

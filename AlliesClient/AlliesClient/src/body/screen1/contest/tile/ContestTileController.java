@@ -81,4 +81,8 @@ public class ContestTileController {
         difficultyLevelLabel.setText("-");
         alliesSubscribedRequiredLabel.setText("- / -");
     }
+
+    public void setVisibleSubscribeButton(boolean isVisible) {
+        subscribeButton.setVisible(isVisible);
+    }
 }
