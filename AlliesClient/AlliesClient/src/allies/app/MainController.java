@@ -27,7 +27,6 @@ import javafx.scene.shape.Rectangle;
 import jobprogress.JobProgressInfo;
 import okhttp3.*;
 import problem.Problem;
-import tasks.*;
 
 import java.io.IOException;
 import java.util.List;

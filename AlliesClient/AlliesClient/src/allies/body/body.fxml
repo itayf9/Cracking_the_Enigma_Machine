@@ -27,9 +27,12 @@
                                 <ColumnConstraints hgrow="ALWAYS" maxWidth="500.0" minWidth="60.0"/>
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="294.66668701171875" prefHeight="360.66668701171875" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0" prefHeight="5.0" vgrow="ALWAYS" />
-                                <RowConstraints maxHeight="294.0" minHeight="61.000030517578125" prefHeight="93.33334350585938" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="294.66668701171875"
+                                                prefHeight="360.66668701171875" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0" prefHeight="5.0"
+                                                vgrow="ALWAYS"/>
+                                <RowConstraints maxHeight="294.0" minHeight="61.000030517578125"
+                                                prefHeight="93.33334350585938" vgrow="SOMETIMES"/>
                             </rowConstraints>
                      <children>
                         <fx:include fx:id="agentsInfo" source="screen1/agentsinfo/agentsinfo.fxml" />

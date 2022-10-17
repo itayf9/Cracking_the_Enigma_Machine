@@ -41,6 +41,7 @@ public class CodeCalibrationController {
     @FXML
     private HBox reflectorBox;
 
+    @FXML
     private ToggleGroup reflectorToggles;
     private String alphabet;
 

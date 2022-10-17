@@ -81,8 +81,8 @@
             </ScrollPane>
          </content></Tab>
   </tabs>
-   <stylesheets>
-       <URL value="@../../../../DesktopUI/DesktopUI/src/app/app-default.css" />
-       <URL value="@../../../../DesktopUI/DesktopUI/src/body/body-default.css" />
-   </stylesheets>
+    <stylesheets>
+        <URL value="@/uboat/app/app-default.css"/>
+        <URL value="@/uboat/body/body-default.css"/>
+    </stylesheets>
 </TabPane>

@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -30,9 +29,6 @@
          <children>
             <Pane cache="true" styleClass="body-background" />
             <ImageView fx:id="startImage" fitHeight="400.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-               <image>
-                  <Image url="@../../../../DesktopUI/DesktopUI/src/app/starting-screen-enigma.png" />
-               </image>
                <viewport>
                   <Rectangle2D />
                </viewport>
@@ -40,7 +36,8 @@
             <fx:include fx:id="body" source="../body/body.fxml" />
          </children>
       </StackPane>
-      <HBox fx:id="statusBar" minHeight="25.0" prefHeight="25.0" prefWidth="200.0" styleClass="status-bar" stylesheets="@../../../../DesktopUI/DesktopUI/src/app/statusbar/statusbar-default.css" GridPane.rowIndex="2">
+      <HBox fx:id="statusBar" minHeight="25.0" prefHeight="25.0" prefWidth="200.0" styleClass="status-bar"
+            stylesheets="@/uboat/app/statusbar-default.css" GridPane.rowIndex="2">
          <children>
             <StackPane alignment="CENTER_LEFT">
                <children>

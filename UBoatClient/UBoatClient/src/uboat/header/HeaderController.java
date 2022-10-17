@@ -36,7 +36,6 @@ public class HeaderController {
 
     @FXML
     public void initialize() {
-
         filePathLoadMachineLabel.setText("");
     }
 
@@ -69,7 +68,7 @@ public class HeaderController {
         this.isMachineLoadedProperty = isMachineLoadedProperty;
     }
 
-    public void bindComponents(BooleanProperty isMachineLoadedProperty, StringProperty usernameProperty) {
+    public void bindComponents(BooleanProperty isMachineLoadedProperty, StringProperty usernameProperty, BooleanProperty isContestActive) {
         loadFileButton.disableProperty().bind(isMachineLoadedProperty);
         usernameLabel.textProperty().bind(usernameProperty);
         logoutButton.disableProperty().bind(isContestActive);

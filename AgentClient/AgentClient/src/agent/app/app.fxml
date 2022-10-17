@@ -31,9 +31,6 @@
          <children>
             <Pane cache="true" styleClass="body-background" />
             <ImageView fx:id="startImage" fitHeight="224.0" fitWidth="176.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-               <image>
-                  <Image url="@../../../../DesktopUI/DesktopUI/src/app/starting-screen-enigma.png" />
-               </image>
                <viewport>
                   <Rectangle2D />
                </viewport>
@@ -62,7 +59,8 @@
             </ScrollPane>
          </children>
       </StackPane>
-      <HBox fx:id="statusBar" minHeight="25.0" prefHeight="25.0" prefWidth="200.0" styleClass="status-bar" stylesheets="@../../../../DesktopUI/DesktopUI/src/app/statusbar/statusbar-default.css" GridPane.rowIndex="2">
+      <HBox fx:id="statusBar" minHeight="25.0" prefHeight="25.0" prefWidth="200.0" styleClass="status-bar"
+            stylesheets="@/agent/app/statusbar-default.css" GridPane.rowIndex="2">
          <children>
             <StackPane alignment="CENTER_LEFT">
                <children>

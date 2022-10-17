@@ -182,7 +182,6 @@ public class MainController {
 
                 fetchContestStatusTimer.cancel();
                 contestStatusTimer.cancel();
-                fetchAlliesInfoTimer.cancel();
                 alliesInfoTimer.cancel();
 
                 // schedule fetch candidates timer
@@ -220,7 +219,7 @@ public class MainController {
 
         // header bindings & settings
         headerController.setProperties(isMachineLoadedProperty);
-        headerController.bindComponents(isMachineLoadedProperty, usernameProperty);
+        headerController.bindComponents(isMachineLoadedProperty, usernameProperty, isContestActive);
         isMachineConfiguredProperty.addListener((observable, oldValue, newValue) -> clearOldComponents());
         bruteForceStatusMessage.addListener((observable, oldValue, newValue) -> setStatusMessage("Decrypt Manager: " + newValue, MessageTone.INFO));
     }
@@ -238,15 +237,6 @@ public class MainController {
      * @param selectedMachineFile file name to load the machine from
      */
     public void loadMachineFromFile(String selectedMachineFile) {
-        // check if brute force task is running ?
-        if (isBruteForceTaskActive.getValue()) {
-
-            /**
-             *  // let's stop the process
-             *     stopBruteForceProcess();
-             *     logout servlet request
-             * */
-        }
 
         // prevents double loading
         if (isMachineLoadedProperty.get()) {
@@ -658,9 +648,13 @@ public class MainController {
      * stops & cancel the engine Brute-Force process
      */
     public void announceTheWinnerOfTheContest(String allieWinnerName) {
+        Platform.runLater(() -> {
+            setStatusMessage("A Winner Was Found. " + allieWinnerName, MessageTone.INFO);
+            isContestActive.set(false);
+            isClientReady.set(false);
+        });
 
         String body = "";
-
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + WINNER_FOUND_SRC).newBuilder();
         urlBuilder.addQueryParameter(ALLIE_NAME, allieWinnerName);
         Request request = new Request.Builder()
@@ -677,20 +671,16 @@ public class MainController {
                 System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
+                DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
 
                 if (response.code() != 200) {
-                    DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
                         setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR);
                     });
 
                 } else {
-                    DTOresetConfig resetStatus = gson.fromJson(dtoAsStr, DTOresetConfig.class);
-
                     Platform.runLater(() -> {
-                        setStatusMessage("A Winner Was Found. " + allieWinnerName, MessageTone.INFO);
-                        isContestActive.set(false);
-                        isClientReady.set(false);
+
                     });
                 }
             }
