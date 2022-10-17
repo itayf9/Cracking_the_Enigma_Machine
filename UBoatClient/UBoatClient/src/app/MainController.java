@@ -167,6 +167,8 @@ public class MainController {
                 // contest == active
                 // stop allies & status timers
                 setStatusMessage("Contest has started", MessageTone.INFO);
+                fetchAlliesInfoTimer.run();
+
                 fetchContestStatusTimer.cancel();
                 contestStatusTimer.cancel();
                 fetchAlliesInfoTimer.cancel();
