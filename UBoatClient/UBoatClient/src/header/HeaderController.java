@@ -27,6 +27,9 @@ public class HeaderController {
     private Button loadFileButton;
 
     @FXML
+    private Button logoutButton;
+
+    @FXML
     public void initialize() {
 
         filePathLoadMachineLabel.setText("");
@@ -42,6 +45,11 @@ public class HeaderController {
             this.selectedMachineFile = chosenFile.getAbsolutePath();
             mainController.loadMachineFromFile(selectedMachineFile);
         }
+    }
+
+    @FXML
+    void logoutAction(MouseEvent event) {
+
     }
 
     public void setMainController(MainController mainController) {

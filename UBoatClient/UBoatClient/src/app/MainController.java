@@ -150,15 +150,18 @@ public class MainController {
         this.isClientReady = new SimpleBooleanProperty(false);
         this.textHasBeenCiphered = new SimpleBooleanProperty(false);
         this.isContestActive = new SimpleBooleanProperty(false);
+        this.originalText = new SimpleStringProperty();
+
+        // timers initialize
         this.contestStatusTimer = new Timer();
         this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive);
         this.alliesInfoTimer = new Timer();
         this.fetchAlliesInfoTimer = new FetchAlliesInfoTimer(this);
         this.candidatesTimer = new Timer();
         this.fetchCandidatesTimer = new FetchCandidatesTimer(this, inUseRotorsIDsProperty, currentWindowsCharactersProperty, inUseReflectorSymbolProperty, originalText);
-        this.originalText = new SimpleStringProperty();
 
-        // add event change listener
+
+        // isContestActive event listener
         isContestActive.addListener((o, oldVal, newVal) -> {
             if (newVal) {
                 // contest == active
@@ -205,6 +208,9 @@ public class MainController {
         bruteForceStatusMessage.addListener((observable, oldValue, newValue) -> setStatusMessage("Decrypt Manager: " + newValue, MessageTone.INFO));
     }
 
+    /**
+     * clears the old data from the components
+     */
     private void clearOldComponents() {
         bodyController.clearOldComponents();
     }
@@ -212,7 +218,7 @@ public class MainController {
     /**
      * Q1 + Q2 Load the machine
      *
-     * @param selectedMachineFile fileName
+     * @param selectedMachineFile file name to load the machine from
      */
     public void loadMachineFromFile(String selectedMachineFile) {
         // check if brute force task is running ?
@@ -225,6 +231,7 @@ public class MainController {
              * */
         }
 
+        // prevents double loading
         if (isMachineLoadedProperty.get()) {
             setStatusMessage("Can't load more then 1 file.", MessageTone.ERROR);
         } else {
@@ -253,7 +260,6 @@ public class MainController {
                     .url(urlBuilder.build().toString())
                     .post(body)
                     .build();
-            // should insert also the header of Content Type ????
 
             System.out.println(request.headers());
 
@@ -430,8 +436,7 @@ public class MainController {
     /**
      * Q5 cipher line
      *
-     * @param line String that contains one character
-     * @return ciphered Character
+     * @param line String that contains the text to cipher
      */
     public void cipher(String line) {
 
@@ -618,7 +623,7 @@ public class MainController {
     }
 
     /**
-     * set the Status m
+     * set the Status message
      *
      * @param newStatus   the status text message to show
      * @param messageTone Red for Errors, Blue for normal Status updates.
@@ -677,6 +682,11 @@ public class MainController {
 
     }
 
+    /**
+     * sets the okHttp client
+     *
+     * @param okHttpClient the okHttpClient to be set
+     */
     public void setOkHttpClient(OkHttpClient okHttpClient) {
         this.client = okHttpClient;
         fetchContestStatusTimer.setClient(client);
@@ -684,6 +694,12 @@ public class MainController {
         fetchAlliesInfoTimer.setClient(client);
     }
 
+    /**
+     * converts a {@link Problem} to a specific message
+     *
+     * @param problem the {@link Problem} to convert
+     * @return a {@link String} representing the problem
+     */
     public String convertProblemToMessage(Problem problem) {
         switch (problem) {
             case CIPHER_INPUT_EMPTY_STRING:
@@ -751,6 +767,11 @@ public class MainController {
         }
     }
 
+    /**
+     * updates the active teams information
+     *
+     * @param alliesInfoList a list of {@link info.agent.AgentInfo} representing the active teams information
+     */
     public void updateAlliesInfo(List<AllieInfo> alliesInfoList) {
         bodyController.updateAlliesInfo(alliesInfoList);
     }
