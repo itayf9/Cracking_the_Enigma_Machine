@@ -2,6 +2,7 @@ package allies.body.screen1.contest.tile;
 
 import allies.body.BodyController;
 import info.battlefield.BattlefieldInfo;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

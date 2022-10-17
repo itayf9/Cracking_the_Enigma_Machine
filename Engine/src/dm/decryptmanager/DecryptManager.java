@@ -83,8 +83,6 @@ public class DecryptManager {
      */
     public void startDecrypt() {
         this.agentReportsOfCandidatesQueue = new LinkedBlockingQueue<>();
-        // updates the total configs property
-        setTotalConfigs(difficultyLevel);
 
         // setting up the collector of the candidates
         collector = new Thread(new CandidatesCollector(this));

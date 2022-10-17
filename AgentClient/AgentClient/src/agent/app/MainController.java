@@ -290,7 +290,7 @@ public class MainController {
      * clear all findings of last contest and labels of progress
      */
     public void cleanOldResults() {
-
+        headerController.approveAllieFinishGameAction();
         totalDistinctCandidates.set(0);
         numOfTasksInQueue.set(0);
         numOfTotalPulledTasks.set(0);

@@ -37,14 +37,6 @@ public class AgentInfo {
         return numOfFoundCandidates;
     }
 
-    public void setNumOfReceivedTasks(int numOfReceivedTasks) {
-        this.numOfReceivedTasks = numOfReceivedTasks;
-    }
-
-    public void setNumOfFoundCandidates(int numOfFoundCandidates) {
-        this.numOfFoundCandidates = numOfFoundCandidates;
-    }
-
     public void updateNumOfFoundCandidate(int newFoundCandidates) {
         numOfFoundCandidates += newFoundCandidates;
     }

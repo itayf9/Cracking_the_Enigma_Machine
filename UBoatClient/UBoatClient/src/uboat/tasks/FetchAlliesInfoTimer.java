@@ -24,6 +24,11 @@ public class FetchAlliesInfoTimer extends TimerTask {
         this.mainController = mainController;
     }
 
+    public FetchAlliesInfoTimer(OkHttpClient client, MainController mainController) {
+        this.client = client;
+        this.mainController = mainController;
+    }
+
     public void setClient(OkHttpClient client) {
         this.client = client;
     }

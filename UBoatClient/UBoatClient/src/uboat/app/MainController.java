@@ -193,6 +193,7 @@ public class MainController {
                 fetchCandidatesTimer.cancel();
                 candidatesTimer.cancel();
                 alliesInfoTimer = new Timer();
+                fetchAlliesInfoTimer = new FetchAlliesInfoTimer(client, this);
                 alliesInfoTimer.schedule(fetchAlliesInfoTimer, REFRESH_RATE, REFRESH_RATE);
             }
         });
