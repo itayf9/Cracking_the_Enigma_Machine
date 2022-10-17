@@ -85,6 +85,8 @@ public class MainController {
     private BooleanProperty isMachineLoadedProperty;
     private ListProperty<Integer> inUseRotorsIDsProperty;
     private StringProperty currentWindowsCharactersProperty;
+
+    private StringProperty originalWindowsPositionsProperty;
     private StringProperty inUseReflectorSymbolProperty;
     private StringProperty inUsePlugsProperty;
     private ListProperty<Integer> currentNotchDistances;
@@ -134,6 +136,7 @@ public class MainController {
         this.isMachineLoadedProperty = new SimpleBooleanProperty(false);
         this.inUseRotorsIDsProperty = new SimpleListProperty<>();
         this.currentWindowsCharactersProperty = new SimpleStringProperty("");
+        this.originalWindowsPositionsProperty = new SimpleStringProperty("");
         this.inUseReflectorSymbolProperty = new SimpleStringProperty("");
         this.inUsePlugsProperty = new SimpleStringProperty("");
         this.currentNotchDistances = new SimpleListProperty<>();
@@ -161,7 +164,7 @@ public class MainController {
         this.alliesInfoTimer = new Timer();
         this.fetchAlliesInfoTimer = new FetchAlliesInfoTimer(this);
         this.candidatesTimer = new Timer();
-        this.fetchCandidatesTimer = new FetchCandidatesTimer(this, inUseRotorsIDsProperty, currentWindowsCharactersProperty, inUseReflectorSymbolProperty, originalText);
+        this.fetchCandidatesTimer = new FetchCandidatesTimer(this, inUseRotorsIDsProperty, originalWindowsPositionsProperty, inUseReflectorSymbolProperty, originalText);
 
 
         // isContestActive event listener
@@ -360,6 +363,7 @@ public class MainController {
                     DTOsecretConfig configStatus = gson.fromJson(dtoAsStr, DTOsecretConfig.class);
                     ObservableList<Integer> rotorsObservableList = FXCollections.observableArrayList(configStatus.getRotors());
                     inUseRotorsIDsProperty.setValue(rotorsObservableList);
+                    originalWindowsPositionsProperty.setValue(configStatus.getWindows());
                     currentWindowsCharactersProperty.setValue(configStatus.getWindows());
                     inUseReflectorSymbolProperty.setValue(configStatus.getReflectorSymbol());
                     inUsePlugsProperty.setValue(configStatus.getPlugs());
@@ -420,6 +424,7 @@ public class MainController {
                     ObservableList<Integer> rotorsObservableList = FXCollections.observableArrayList(configStatus.getRotors());
                     inUseRotorsIDsProperty.setValue(rotorsObservableList);
 
+                    originalWindowsPositionsProperty.setValue(configStatus.getWindows());
                     currentWindowsCharactersProperty.setValue(configStatus.getWindows());
                     inUseReflectorSymbolProperty.setValue(configStatus.getReflectorSymbol());
                     inUsePlugsProperty.setValue(configStatus.getPlugs());
@@ -674,6 +679,7 @@ public class MainController {
                     DTOresetConfig resetStatus = gson.fromJson(dtoAsStr, DTOresetConfig.class);
 
                     Platform.runLater(() -> {
+                        setStatusMessage("A Winner Was Found. " + allieWinnerName, MessageTone.INFO);
                         isContestActive.set(false);
                         isClientReady.set(false);
                     });

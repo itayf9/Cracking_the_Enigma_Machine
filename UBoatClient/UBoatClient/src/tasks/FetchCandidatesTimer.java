@@ -27,7 +27,7 @@ public class FetchCandidatesTimer extends TimerTask {
 
     private ListProperty<Integer> inUseRotorsIDsProperty;
 
-    private StringProperty currentWindowsCharactersProperty;
+    private StringProperty originalWindowsPositionsProperty;
 
     private StringProperty inUseReflectorSymbolProperty;
 
@@ -35,12 +35,12 @@ public class FetchCandidatesTimer extends TimerTask {
 
     public FetchCandidatesTimer(MainController mainController,
                                 ListProperty<Integer> inUseRotorsIDsProperty,
-                                StringProperty currentWindowsCharactersProperty,
+                                StringProperty originalWindowsPositionsProperty,
                                 StringProperty inUseReflectorSymbolProperty,
                                 StringProperty originalText) {
         this.mainController = mainController;
         this.inUseRotorsIDsProperty = inUseRotorsIDsProperty;
-        this.currentWindowsCharactersProperty = currentWindowsCharactersProperty;
+        this.originalWindowsPositionsProperty = originalWindowsPositionsProperty;
         this.inUseReflectorSymbolProperty = inUseReflectorSymbolProperty;
         this.originalText = originalText;
     }
@@ -99,17 +99,6 @@ public class FetchCandidatesTimer extends TimerTask {
             // goes through all the candidates of each conclusion
             for (Candidate candidate : conclusion.getCandidates()) {
 
-                // checks for a winner
-                if (candidate.getRotorsIDs().equals(inUseRotorsIDsProperty.getValue())
-                        && candidate.getWindowChars().equals(currentWindowsCharactersProperty.get())
-                        && candidate.getReflectorSymbol().equals(inUseReflectorSymbolProperty.get())
-                        && candidate.getDecipheredText().equals(originalText.get())) {
-
-                    // winner has been found...
-                    mainController.announceTheWinnerOfTheContest(conclusion.getAllieName());
-                    return;
-                }
-
                 // adds a new tile to the candidates area
                 try {
                     Thread.sleep(1000);
@@ -118,10 +107,23 @@ public class FetchCandidatesTimer extends TimerTask {
                 }
                 Platform.runLater(() -> mainController.createCandidateTile(candidate, currentAllieName, currentAgentName));
 
+                System.out.println("candidate: " + candidate);
+                System.out.println("original: " + inUseRotorsIDsProperty + " " + originalWindowsPositionsProperty + " " + inUseReflectorSymbolProperty + " " + originalText);
+                // checks for a winner
+                if (candidate.getRotorsIDs().equals(inUseRotorsIDsProperty.getValue())
+                        && candidate.getWindowChars().equals(originalWindowsPositionsProperty.get())
+                        && candidate.getReflectorSymbol().equals(inUseReflectorSymbolProperty.get())
+                        && candidate.getDecipheredText().equals(originalText.get())) {
+
+                    // winner has been found...
+                    mainController.announceTheWinnerOfTheContest(conclusion.getAllieName());
+                    return;
+                }
+
+
             }
 
         }
     }
-
 
 }
