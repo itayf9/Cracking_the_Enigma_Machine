@@ -40,6 +40,11 @@ public class ActiveTeamsController {
         this.parentController = parentController;
     }
 
+    /**
+     * given a list of teams' information, clears the old info from the teamTable and sets the new info
+     *
+     * @param alliesInfoList a list of {@link AllieInfo} representing the teams' information
+     */
     public void setTeams(List<AllieInfo> alliesInfoList) {
         teamsTable.getItems().clear();
         for (AllieInfo allieInfo : alliesInfoList) {
