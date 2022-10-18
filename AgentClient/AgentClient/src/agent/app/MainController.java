@@ -172,6 +172,7 @@ public class MainController {
 
         isContestActive.addListener((o, oldVal, newVal) -> {
             if (newVal) {
+                threadPool = Executors.newFixedThreadPool(numOfThreads);
                 this.cdl = new CountDownLatch(numOfTasksInQueue.get());
                 new Thread(this.fetchTasksThread).start();
                 // contest == active
@@ -455,7 +456,6 @@ public class MainController {
         setUserName(agentName);
 
         // initializes the thread pool
-        this.threadPool = Executors.newFixedThreadPool(numOfThreads);
         this.fetchSubscribeTimer = new Timer();
         this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client);
         fetchSubscribeTimer.schedule(fetchSubscribeTimerTask, REFRESH_RATE, REFRESH_RATE);

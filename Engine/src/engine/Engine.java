@@ -218,4 +218,6 @@ public interface Engine {
     Map<String, Boolean> getLoggedAlliesMap();
 
     String getUboatNameFromAllieName(String allieName);
+
+    void resetOldContestJobStatus(String uboatName);
 }

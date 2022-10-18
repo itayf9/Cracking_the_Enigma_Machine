@@ -195,6 +195,12 @@ public class DecryptManager {
         return agentName2agentInfo;
     }
 
+    public void resetJobStatusInfo() {
+        jobProgressInfo.setTotalAmountOfTasks(0);
+        jobProgressInfo.setNumberOfTasksProduced(0);
+        jobProgressInfo.setNumberOfTasksDone(0);
+    }
+
     public String getUboatName() {
         return uboatName;
     }

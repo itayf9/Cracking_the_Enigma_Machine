@@ -52,7 +52,7 @@ public class WinnerFoundServlet extends HttpServlet {
             BooleanProperty isContestActive = battlefields.get(usernameFromSession).isActive();
             if (isContestActive.get()) {
 
-                // check if winner allie name is exist
+                // check if winner allie name is exist among the participants
                 Set<DecryptManager> allies = battlefields.get(usernameFromSession).getAllies();
                 Optional<DecryptManager> allieMaybe = allies.stream().filter(DecryptManager -> DecryptManager.getAllieName().equals(allieName)).findFirst();
                 if (!allieMaybe.isPresent()) {
@@ -64,6 +64,7 @@ public class WinnerFoundServlet extends HttpServlet {
                 // now take care of all the collectors and producers of all dms participating
                 DTOstatus stopStatus = engine.stopBruteForceProcess(usernameFromSession);
                 DTOstatus winnerStatus = engine.setAllieWinnerInfo(usernameFromSession, allieName);
+                //set uboat ready to false
 
                 if (!stopStatus.isSucceed()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -72,6 +73,9 @@ public class WinnerFoundServlet extends HttpServlet {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     resp.getWriter().println(gson.toJson(winnerStatus));
                 } else {
+                    // since status is ok this lines cant fail.
+                    engine.setUboatReady(usernameFromSession, false);
+                    engine.resetOldContestJobStatus(usernameFromSession);
                     resp.setStatus(HttpServletResponse.SC_OK);
                     // since both status succeeded we can send one arbitrarily
                     resp.getWriter().println(gson.toJson(winnerStatus));

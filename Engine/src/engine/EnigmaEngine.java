@@ -1496,6 +1496,14 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
+    public void resetOldContestJobStatus(String uboatName) {
+        Battlefield battlefield = uboatName2battleField.get(uboatName);
+        Set<DecryptManager> allies = battlefield.getAllies();
+        allies.forEach(DecryptManager::resetJobStatusInfo);
+    }
+
+
+    @Override
     public String toString() {
         return "engine.EnigmaEngine{" +
                 "machine=" + uboatName2battleField +

@@ -519,7 +519,6 @@ public class MainController {
             setStatusMessage("please cipher some text", MessageTone.ERROR);
             return;
         }
-        isClientReady.set(Boolean.TRUE);
 
         String body = "";
 
@@ -546,6 +545,7 @@ public class MainController {
 
                 } else {
                     Platform.runLater(() -> {
+                        isClientReady.set(Boolean.TRUE);
                         fetchContestStatusTimer = new Timer();
                         fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, client);
                         fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
