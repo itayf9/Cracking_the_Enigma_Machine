@@ -1339,7 +1339,9 @@ public class EnigmaEngine implements Engine {
         if (!allieMaybe.isPresent()) {
             return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
         }
-
+        if (allieMaybe.get().isDMapprovedFinishGame()) {
+            battlefield.getAllies().remove(allieMaybe.get());
+        }
         return new DTOactive(true, Problem.NO_PROBLEM, allieMaybe.get().isDMapprovedFinishGame());
     }
 
@@ -1354,16 +1356,7 @@ public class EnigmaEngine implements Engine {
         if (!allieMaybe.isPresent()) {
             return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
         }
-        System.out.println("######################");
-        System.out.println(battlefield.getAllies().size());
-        System.out.println("######################");
-
         allieMaybe.get().setDMapprovedFinishGame(isApprove);
-        battlefield.getAllies().remove(allieMaybe.get());
-
-        System.out.println("######################");
-        System.out.println(battlefield.getAllies().size());
-        System.out.println("######################");
 
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }

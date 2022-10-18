@@ -61,6 +61,7 @@ public class FetchCandidatesTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("fetching candidates timer resp");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
@@ -103,8 +104,6 @@ public class FetchCandidatesTimer extends TimerTask {
                 }
                 Platform.runLater(() -> mainController.createCandidateTile(candidate, currentAllieName, currentAgentName));
 
-                System.out.println("candidate: " + candidate);
-                System.out.println("original: " + inUseRotorsIDsProperty + " " + originalWindowsPositionsProperty + " " + inUseReflectorSymbolProperty + " " + originalText);
                 // checks for a winner
                 if (candidate.getRotorsIDs().equals(inUseRotorsIDsProperty.getValue())
                         && candidate.getWindowChars().equals(originalWindowsPositionsProperty.get())

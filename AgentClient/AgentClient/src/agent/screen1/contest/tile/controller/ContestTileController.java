@@ -40,7 +40,6 @@ public class ContestTileController {
     public void clearOldResult() {
         battlefieldNameLabel.setText("-");
         uboatNameLabel.setText("-");
-        isActiveStatusLabel.setText("-");
         difficultyLevelLabel.setText("-");
         alliesSubscribedRequiredLabel.setText("- / -");
     }

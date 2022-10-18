@@ -40,6 +40,7 @@ public class FetchContestStatusTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("fetching contest status resp");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();

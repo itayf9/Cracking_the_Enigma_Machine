@@ -170,6 +170,8 @@ public class MainController {
                 contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // allie has unsubscribed, when the contest is finished
+                this.subscribeTimer = new Timer();
+                this.fetchSubscribeTimer = new FetchSubscriptionStatusTimer(isSubscribed, allieName, client);
                 subscribeTimer.schedule(fetchSubscribeTimer, REFRESH_RATE, REFRESH_RATE);
             }
         });

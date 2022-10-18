@@ -48,7 +48,7 @@ public class WaitForAllieApproveFinishGameTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch candidates task response");
+                System.out.println("wait for approval timer response");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
