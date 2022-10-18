@@ -24,9 +24,10 @@ public class FetchStaticContestInfoTimer extends TimerTask {
     private OkHttpClient client;
     private final StringProperty allieName;
 
-    public FetchStaticContestInfoTimer(MainController mainController, StringProperty allieName) {
+    public FetchStaticContestInfoTimer(MainController mainController, StringProperty allieName, OkHttpClient client) {
         this.mainController = mainController;
         this.allieName = allieName;
+        this.client = client;
     }
 
     public void setClient(OkHttpClient client) {

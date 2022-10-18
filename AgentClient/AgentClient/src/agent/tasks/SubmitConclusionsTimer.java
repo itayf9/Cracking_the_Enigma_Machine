@@ -26,7 +26,7 @@ public class SubmitConclusionsTimer extends TimerTask {
     private final StringProperty allieName;
     private final Gson gson = new Gson();
 
-    public SubmitConclusionsTimer(MainController mainController, StringProperty allieName, StringProperty uboatName) {
+    public SubmitConclusionsTimer(MainController mainController, StringProperty allieName, StringProperty uboatName, OkHttpClient client) {
         this.mainController = mainController;
         this.allieName = allieName;
         this.uboatName = uboatName;

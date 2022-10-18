@@ -108,19 +108,19 @@ public class MainController {
     private StringProperty uboatName;
     private int numOfThreads;
     private int numOfTasksToPull;
-    private Timer contestStatusTimer;
-    private FetchContestStatusTimer fetchContestStatusTimer;
+    private Timer fetchContestStatusTimer;
+    private FetchContestStatusTimer fetchContestStatusTimerTask;
     private Timer submitConclusionsTimer;
-    private SubmitConclusionsTimer submitAllConclusionsTimer;
+    private SubmitConclusionsTimer submitConclusionsTimerTask;
     private FetchTasksThread fetchTasksThread;
-    private Timer subscribeTimer;
-    private FetchSubscriptionStatusTimer fetchSubscribeTimer;
+    private Timer fetchSubscribeTimer;
+    private FetchSubscriptionStatusTimer fetchSubscribeTimerTask;
     private Timer waitForAllieApproveTimer;
-    private WaitForAllieApproveFinishGameTimer waitForAllieApprovalTimer;
+    private WaitForAllieApproveFinishGameTimer waitForAllieApproveTimerTask;
 
     private Timer fetchStaticInfoContestTimer;
 
-    private FetchStaticContestInfoTimer staticInfoContestTimer;
+    private FetchStaticContestInfoTimer fetchStaticInfoContestTimerTask;
 
     private BooleanProperty isSubscribed;
 
@@ -147,32 +147,28 @@ public class MainController {
         this.usernameProperty = new SimpleStringProperty("");
 
         // Timers
-        this.contestStatusTimer = new Timer();
-        this.submitConclusionsTimer = new Timer();
-        this.subscribeTimer = new Timer();
-        this.waitForAllieApproveTimer = new Timer();
-        this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive, allieName);
-        this.submitAllConclusionsTimer = new SubmitConclusionsTimer(this, allieName, uboatName);
         this.fetchTasksThread = new FetchTasksThread(this, allieName, uboatName, cdl);
-        this.fetchStaticInfoContestTimer = new Timer();
-        this.staticInfoContestTimer = new FetchStaticContestInfoTimer(this, allieName);
-        this.waitForAllieApprovalTimer = new WaitForAllieApproveFinishGameTimer(this, allieName, uboatName);
-        this.fetchSubscribeTimer = new FetchSubscriptionStatusTimer(isSubscribed, allieName);
 
 
         isSubscribed.addListener((o, oldVal, newVal) -> {
             if (newVal) {
-                subscribeTimer.cancel();
                 fetchSubscribeTimer.cancel();
+                fetchSubscribeTimerTask.cancel();
                 // allie just subscribed
                 setStatusMessage("Allie has subscribed to a Contest", MessageTone.INFO);
-                fetchStaticInfoContestTimer.schedule(staticInfoContestTimer, REFRESH_RATE, REFRESH_RATE);
-                contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
+                this.fetchStaticInfoContestTimer = new Timer();
+                this.fetchStaticInfoContestTimerTask = new FetchStaticContestInfoTimer(this, allieName, client);
+                fetchStaticInfoContestTimer.schedule(fetchStaticInfoContestTimerTask, REFRESH_RATE, REFRESH_RATE);
+                this.fetchContestStatusTimer = new Timer();
+                this.fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, allieName, client);
+                fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // allie has unsubscribed, when the contest is finished
-                this.subscribeTimer = new Timer();
-                this.fetchSubscribeTimer = new FetchSubscriptionStatusTimer(isSubscribed, allieName, client);
-                subscribeTimer.schedule(fetchSubscribeTimer, REFRESH_RATE, REFRESH_RATE);
+                waitForAllieApproveTimer.cancel();
+                waitForAllieApproveTimerTask.cancel();
+                this.fetchSubscribeTimer = new Timer();
+                this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, allieName, client);
+                fetchSubscribeTimer.schedule(fetchSubscribeTimerTask, REFRESH_RATE, REFRESH_RATE);
             }
         });
 
@@ -184,19 +180,23 @@ public class MainController {
                 // contest == active
                 // stop allies & status timers
                 setStatusMessage("Contest has started", MessageTone.INFO);
-                staticInfoContestTimer.run();
+                fetchStaticInfoContestTimerTask.run();
                 fetchStaticInfoContestTimer.cancel();
-                staticInfoContestTimer.cancel();
+                fetchStaticInfoContestTimerTask.cancel();
                 // schedule fetch candidates timer & fetch active teams
-                submitConclusionsTimer.schedule(submitAllConclusionsTimer, REFRESH_RATE, REFRESH_RATE);
+                this.submitConclusionsTimer = new Timer();
+                this.submitConclusionsTimerTask = new SubmitConclusionsTimer(this, allieName, uboatName, client);
+                submitConclusionsTimer.schedule(submitConclusionsTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // contest == not active => winner found
                 fetchWinnerMessage();
                 setStatusMessage("Winner Found", MessageTone.INFO);
                 threadPool.shutdownNow();
                 submitConclusionsTimer.cancel();
-                submitAllConclusionsTimer.cancel();
-                waitForAllieApproveTimer.schedule(waitForAllieApprovalTimer, REFRESH_RATE, REFRESH_RATE);
+                submitConclusionsTimerTask.cancel();
+                this.waitForAllieApproveTimer = new Timer();
+                this.waitForAllieApproveTimerTask = new WaitForAllieApproveFinishGameTimer(this, allieName, uboatName, client);
+                waitForAllieApproveTimer.schedule(waitForAllieApproveTimerTask, REFRESH_RATE, REFRESH_RATE);
             }
         });
 
@@ -340,12 +340,7 @@ public class MainController {
      */
     public void setOkHttpClient(OkHttpClient okHttpClient) {
         this.client = okHttpClient;
-        this.fetchContestStatusTimer.setClient(client);
-        this.fetchSubscribeTimer.setClient(client);
         this.fetchTasksThread.setClient(client);
-        this.submitAllConclusionsTimer.setClient(client);
-        this.staticInfoContestTimer.setClient(client);
-        this.waitForAllieApprovalTimer.setClient(client);
     }
 
     /**
@@ -464,8 +459,9 @@ public class MainController {
 
         // initializes the thread pool
         this.threadPool = Executors.newFixedThreadPool(numOfThreads);
-
-        subscribeTimer.schedule(fetchSubscribeTimer, REFRESH_RATE, REFRESH_RATE);
+        this.fetchSubscribeTimer = new Timer();
+        this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client);
+        fetchSubscribeTimer.schedule(fetchSubscribeTimerTask, REFRESH_RATE, REFRESH_RATE);
     }
 
     /**

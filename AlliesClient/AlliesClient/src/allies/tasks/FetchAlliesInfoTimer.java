@@ -26,9 +26,10 @@ public class FetchAlliesInfoTimer extends TimerTask {
     private StringProperty uboatName;
 
 
-    public FetchAlliesInfoTimer(MainController mainController, StringProperty uboatName) {
+    public FetchAlliesInfoTimer(MainController mainController, StringProperty uboatName, OkHttpClient client) {
         this.mainController = mainController;
         this.uboatName = uboatName;
+        this.client = client;
     }
 
     public void setClient(OkHttpClient client) {

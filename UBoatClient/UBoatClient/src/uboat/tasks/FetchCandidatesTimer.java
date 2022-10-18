@@ -37,12 +37,14 @@ public class FetchCandidatesTimer extends TimerTask {
                                 ListProperty<Integer> inUseRotorsIDsProperty,
                                 StringProperty originalWindowsPositionsProperty,
                                 StringProperty inUseReflectorSymbolProperty,
-                                StringProperty originalText) {
+                                StringProperty originalText,
+                                OkHttpClient client) {
         this.mainController = mainController;
         this.inUseRotorsIDsProperty = inUseRotorsIDsProperty;
         this.originalWindowsPositionsProperty = originalWindowsPositionsProperty;
         this.inUseReflectorSymbolProperty = inUseReflectorSymbolProperty;
         this.originalText = originalText;
+        this.client = client;
     }
 
     public void setClient(OkHttpClient client) {

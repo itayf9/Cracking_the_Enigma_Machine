@@ -83,18 +83,16 @@ public class MainController {
     public final static int REFRESH_RATE = 2000;
     private BooleanProperty isContestActive;
     private StringProperty uboatName;
-    private Timer contestStatusTimer;
-    private FetchContestStatusTimer fetchContestStatusTimer;
-    private Timer alliesInfoTimer;
-    private FetchAlliesInfoTimer fetchAlliesInfoTimer;
-    private Timer loggedAgentsTimer;
-    private FetchLoggedAgentsInfoTimer fetchLoggedAgentsInfoTimer;
-    private Timer dynamicContestInfoTimer;
-    private FetchDynamicContestInfoTimer fetchDynamicContestInfoTimer;
-    private Timer contestsInfoTimer;
-    private FetchContestsInfoTimer fetchContestsInfoTimer;
-    private Timer candidatesTimer;
-    private FetchCandidatesTimer fetchCandidatesTimer;
+    private Timer fetchContestStatusTimer;
+    private FetchContestStatusTimer fetchContestStatusTimerTask;
+    private Timer fetchAlliesInfoTimer;
+    private FetchAlliesInfoTimer fetchAlliesInfoTimerTask;
+    private Timer fetchLoggedAgentsTimer;
+    private FetchLoggedAgentsInfoTimer fetchLoggedAgentsInfoTimerTask;
+    private Timer fetchDynamicContestInfoTimer;
+    private FetchDynamicContestInfoTimer fetchDynamicContestInfoTimerTask;
+    private Timer fetchContestsInfoTimer;
+    private FetchContestsInfoTimer fetchContestsInfoTimerTask;
     private BooleanProperty isReady;
 
     @FXML
@@ -111,18 +109,6 @@ public class MainController {
         this.uboatName = new SimpleStringProperty();
 
         // Timers
-        this.contestStatusTimer = new Timer();
-        this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive, uboatName);
-        this.alliesInfoTimer = new Timer();
-        this.fetchAlliesInfoTimer = new FetchAlliesInfoTimer(this, uboatName);
-        this.loggedAgentsTimer = new Timer();
-        this.fetchLoggedAgentsInfoTimer = new FetchLoggedAgentsInfoTimer(this);
-        this.dynamicContestInfoTimer = new Timer();
-        this.fetchDynamicContestInfoTimer = new FetchDynamicContestInfoTimer(this, uboatName);
-        this.contestsInfoTimer = new Timer();
-        this.fetchContestsInfoTimer = new FetchContestsInfoTimer(this);
-        this.candidatesTimer = new Timer();
-        this.fetchCandidatesTimer = new FetchCandidatesTimer(this, uboatName);
         this.isReady = new SimpleBooleanProperty(false);
         this.usernameProperty = new SimpleStringProperty("");
 
@@ -135,21 +121,22 @@ public class MainController {
                 fetchStaticInfoContest();
 
                 // schedule fetch candidates timer & fetch active teams
-                alliesInfoTimer.schedule(fetchAlliesInfoTimer, REFRESH_RATE, REFRESH_RATE);
-                dynamicContestInfoTimer.schedule(fetchDynamicContestInfoTimer, REFRESH_RATE, REFRESH_RATE);
-                candidatesTimer.schedule(fetchCandidatesTimer, REFRESH_RATE, REFRESH_RATE);
+                this.fetchAlliesInfoTimer = new Timer();
+                this.fetchAlliesInfoTimerTask = new FetchAlliesInfoTimer(this, uboatName, client);
+                fetchAlliesInfoTimer.schedule(fetchAlliesInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
+                this.fetchDynamicContestInfoTimer = new Timer();
+                this.fetchDynamicContestInfoTimerTask = new FetchDynamicContestInfoTimer(this, uboatName, client);
+                fetchDynamicContestInfoTimer.schedule(fetchDynamicContestInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
 
                 // contest == not active => winner found
 
+                fetchAlliesInfoTimerTask.cancel();
                 fetchAlliesInfoTimer.cancel();
-                alliesInfoTimer.cancel();
-                dynamicContestInfoTimer.cancel();
                 fetchDynamicContestInfoTimer.cancel();
-                candidatesTimer.cancel();
-                fetchCandidatesTimer.cancel();
-                contestStatusTimer.cancel();
+                fetchDynamicContestInfoTimerTask.cancel();
                 fetchContestStatusTimer.cancel();
+                fetchContestStatusTimerTask.cancel();
                 fetchWinnerMessage();
 
                 isReady.set(false);
@@ -167,8 +154,13 @@ public class MainController {
         statusBackShape.setStrokeWidth(0);
         statusBackShape.setOpacity(0);
 
-        loggedAgentsTimer.schedule(fetchLoggedAgentsInfoTimer, REFRESH_RATE, REFRESH_RATE);
-        contestsInfoTimer.schedule(fetchContestsInfoTimer, REFRESH_RATE, REFRESH_RATE);
+
+        this.fetchLoggedAgentsTimer = new Timer();
+        this.fetchLoggedAgentsInfoTimerTask = new FetchLoggedAgentsInfoTimer(this, client);
+        fetchLoggedAgentsTimer.schedule(fetchLoggedAgentsInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
+        this.fetchContestsInfoTimer = new Timer();
+        this.fetchContestsInfoTimerTask = new FetchContestsInfoTimer(this, client);
+        fetchContestsInfoTimer.schedule(fetchContestsInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
 
         headerController.bindComponents(usernameProperty);
     }
@@ -487,12 +479,6 @@ public class MainController {
      */
     public void setOkHttpClient(OkHttpClient okHttpClient) {
         this.client = okHttpClient;
-        this.fetchLoggedAgentsInfoTimer.setClient(client);
-        this.fetchContestStatusTimer.setClient(client);
-        this.fetchAlliesInfoTimer.setClient(client);
-        this.fetchDynamicContestInfoTimer.setClient(client);
-        this.fetchContestsInfoTimer.setClient(client);
-        this.fetchCandidatesTimer.setClient(client);
     }
 
     /**
@@ -648,5 +634,9 @@ public class MainController {
 
     public void clearOldCandidates() {
         bodyController.clearOldCandidates();
+    }
+
+    public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus) {
+        bodyController.displayDynamicContestInfo(agentsInfo, jobStatus);
     }
 }

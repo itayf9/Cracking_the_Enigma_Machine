@@ -79,16 +79,16 @@ public class EnigmaEngine implements Engine {
     public void updateConfiguration(List<Integer> rotorsIDs, String windowsChars, int reflectorID, String plugs, String userName) {
 
         // build windowOffsets
-        List<Integer> windowOfssets = new ArrayList<>();
+        List<Integer> windowOffsets = new ArrayList<>();
 
         for (int i = 0; i < windowsChars.length(); i++) {
             Rotor nextRotor = uboatName2battleField.get(userName).getMachine().getRotorByID(rotorsIDs.get(i));
             int offset = nextRotor.translateChar2Offset(windowsChars.charAt(i));
-            windowOfssets.add(offset);
+            windowOffsets.add(offset);
         }
 
         // sets the new configuration into the machine.
-        uboatName2battleField.get(userName).getMachine().setMachineConfiguration(rotorsIDs, windowOfssets, reflectorID, plugs);
+        uboatName2battleField.get(userName).getMachine().setMachineConfiguration(rotorsIDs, windowOffsets, reflectorID, plugs);
     }
 
     /**

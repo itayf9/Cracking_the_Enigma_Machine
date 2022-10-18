@@ -30,10 +30,6 @@ public class WaitForAllieApproveFinishGameTimer extends TimerTask {
         this.uboatName = uboatName;
     }
 
-    public void setClient(OkHttpClient client) {
-        this.client = client;
-    }
-
     @Override
     public void run() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_APPROVAL_STATUS_SRC).newBuilder();

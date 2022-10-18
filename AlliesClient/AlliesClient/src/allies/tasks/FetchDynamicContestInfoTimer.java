@@ -2,14 +2,20 @@ package allies.tasks;
 
 import allies.app.MessageTone;
 import allies.app.MainController;
+import candidate.AgentConclusion;
+import candidate.Candidate;
 import com.google.gson.Gson;
 import dto.DTOdynamicContestInfo;
 import dto.DTOstatus;
+import info.agent.AgentInfo;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
+import jobprogress.JobProgressInfo;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 import java.util.TimerTask;
 
 import static http.url.QueryParameter.*;
@@ -69,6 +75,30 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
                 System.out.println("Oops... something went wrong..." + e.getMessage());
             }
         });
+    }
+
+    /**
+     * disaply all dynamic info like agents & progress of the contest
+     *
+     * @param agentsInfo    agent info
+     * @param jobStatus     progress
+     * @param allCandidates cnadidates found
+     */
+    public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus, List<AgentConclusion> allCandidates) {
+        Platform.runLater(() -> mainController.displayDynamicContestInfo(agentsInfo, jobStatus));
+
+        for (AgentConclusion agentConclusion : allCandidates) {
+            String allieName = agentConclusion.getAllieName();
+            String agentName = agentConclusion.getAgentName();
+            for (Candidate candidate : agentConclusion.getCandidates()) {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Platform.runLater(() -> mainController.createCandidateTile(candidate, allieName, agentName));
+            }
+        }
     }
 
 }

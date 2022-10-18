@@ -120,12 +120,12 @@ public class MainController {
      */
     public final static int REFRESH_RATE = 2000;
     private BooleanProperty isContestActive;
-    private Timer contestStatusTimer;
-    private FetchContestStatusTimer fetchContestStatusTimer;
-    private Timer alliesInfoTimer;
-    private FetchAlliesInfoTimer fetchAlliesInfoTimer;
-    private Timer candidatesTimer;
-    private FetchCandidatesTimer fetchCandidatesTimer;
+    private Timer fetchContestStatusTimer;
+    private FetchContestStatusTimer fetchContestStatusTimerTask;
+    private Timer fetchAlliesInfoTimer;
+    private FetchAlliesInfoTimer fetchAlliesInfoTimerTask;
+    private Timer fetchCandidatesTimer;
+    private FetchCandidatesTimer fetchCandidatesTimerTask;
     private StringProperty originalText;
 
 
@@ -163,38 +163,31 @@ public class MainController {
         this.originalText = new SimpleStringProperty();
         this.usernameProperty = new SimpleStringProperty("");
 
-        // timers initialize
-        this.contestStatusTimer = new Timer();
-        this.fetchContestStatusTimer = new FetchContestStatusTimer(isContestActive);
-        this.alliesInfoTimer = new Timer();
-        this.fetchAlliesInfoTimer = new FetchAlliesInfoTimer(this);
-        this.candidatesTimer = new Timer();
-        this.fetchCandidatesTimer = new FetchCandidatesTimer(this, inUseRotorsIDsProperty, originalWindowsPositionsProperty, inUseReflectorSymbolProperty, originalText);
-
-
         // isContestActive event listener
         isContestActive.addListener((o, oldVal, newVal) -> {
             if (newVal) {
                 // contest == active
                 // stop allies & status timers
                 setStatusMessage("Contest has started", MessageTone.INFO);
-                fetchAlliesInfoTimer.run();
+                fetchAlliesInfoTimerTask.run();
 
+                fetchContestStatusTimerTask.cancel();
                 fetchContestStatusTimer.cancel();
-                contestStatusTimer.cancel();
-                alliesInfoTimer.cancel();
+                fetchAlliesInfoTimer.cancel();
 
                 // schedule fetch candidates timer
-                candidatesTimer.schedule(fetchCandidatesTimer, REFRESH_RATE, REFRESH_RATE);
+                this.fetchCandidatesTimer = new Timer();
+                this.fetchCandidatesTimerTask = new FetchCandidatesTimer(this, inUseRotorsIDsProperty, originalWindowsPositionsProperty, inUseReflectorSymbolProperty, originalText, client);
+                fetchCandidatesTimer.schedule(fetchCandidatesTimerTask, REFRESH_RATE, REFRESH_RATE);
 
                 cleanOldResults();
             } else {
                 // contest == not active => winner found
+                fetchCandidatesTimerTask.cancel();
                 fetchCandidatesTimer.cancel();
-                candidatesTimer.cancel();
-                alliesInfoTimer = new Timer();
-                fetchAlliesInfoTimer = new FetchAlliesInfoTimer(client, this);
-                alliesInfoTimer.schedule(fetchAlliesInfoTimer, REFRESH_RATE, REFRESH_RATE);
+                fetchAlliesInfoTimer = new Timer();
+                fetchAlliesInfoTimerTask = new FetchAlliesInfoTimer(client, this);
+                fetchAlliesInfoTimer.schedule(fetchAlliesInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
             }
         });
 
@@ -307,7 +300,9 @@ public class MainController {
                             dictionaryExcludeCharsProperty.setValue(loadStatus.getDictionaryExcludeCharacters());
                             bodyController.setCodeCalibration(loadStatus.getInUseRotorsCount(), loadStatus.getAvailableRotorsCount(), loadStatus.getMachineAlphabet(),
                                     loadStatus.getAvailableReflectorsCount());
-                            alliesInfoTimer.schedule(fetchAlliesInfoTimer, REFRESH_RATE, REFRESH_RATE);
+                            fetchAlliesInfoTimer = new Timer();
+                            fetchAlliesInfoTimerTask = new FetchAlliesInfoTimer(client, getMainController());
+                            fetchAlliesInfoTimer.schedule(fetchAlliesInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
                             setStatusMessage("Machine Loaded Successfully!", MessageTone.SUCCESS);
                         });
                     }
@@ -571,7 +566,9 @@ public class MainController {
 
                 } else {
                     Platform.runLater(() -> {
-                        contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
+                        fetchContestStatusTimer = new Timer();
+                        fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, client);
+                        fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
                         cleanOldResults();
                         setStatusMessage("uboat is ready", MessageTone.SUCCESS);
                     });
@@ -690,9 +687,6 @@ public class MainController {
      */
     public void setOkHttpClient(OkHttpClient okHttpClient) {
         this.client = okHttpClient;
-        fetchContestStatusTimer.setClient(client);
-        fetchCandidatesTimer.setClient(client);
-        fetchAlliesInfoTimer.setClient(client);
     }
 
     /**
@@ -786,7 +780,7 @@ public class MainController {
     }
 
     public void logoutUBoat(MouseEvent event) {
-        alliesInfoTimer.cancel();
+        fetchAlliesInfoTimer.cancel();
 
         String body = "";
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGOUT_SRC).newBuilder();
