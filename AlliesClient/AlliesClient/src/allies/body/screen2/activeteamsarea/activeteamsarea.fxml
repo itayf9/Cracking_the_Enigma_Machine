@@ -10,24 +10,22 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="315.0"
-          styleClass="component-with-background" xmlns="http://javafx.com/javafx/8.0.171"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="allies.body.screen2.activeteamsarea.ActiveTeamsController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="315.0" styleClass="component-with-background" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="allies.body.screen2.activeteamsarea.ActiveTeamsController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Label styleClass="component-title" text="Active Teams"/>
+        <Label styleClass="component-title" text="Active Teams" />
         <ScrollPane fitToHeight="true" fitToWidth="true" GridPane.rowIndex="1">
             <content>
-                <TableView fx:id="teamsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="300.0" prefHeight="150.0" prefWidth="200.0">
+                <TableView fx:id="teamsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="150.0" prefHeight="150.0" prefWidth="200.0">
                     <columns>
-                        <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
-                        <TableColumn fx:id="numberOfAgentsColumn" prefWidth="129.66665649414062" text="Number Of Agents" />
+                        <TableColumn fx:id="nameColumn" prefWidth="48.6666259765625" text="Name" />
+                        <TableColumn fx:id="numberOfAgentsColumn" prefWidth="152.3333740234375" text="Number Of Agents" />
                         <TableColumn fx:id="taskSizeColumn" prefWidth="81.6666259765625" text="Task Size" />
                     </columns>
                     <columnResizePolicy>

@@ -296,12 +296,13 @@ public class MainController {
     /**
      * #3 let the server know we are ready for contest to start
      */
-    public void setReady(int taskSize) {
+    public void setReady(int taskSize, int numOfAgents) {
         String body = "";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + CLIENT_IS_READY_SRC).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName.get());
         urlBuilder.addQueryParameter(QueryParameter.TASK_SIZE, String.valueOf(taskSize));
+        urlBuilder.addQueryParameter(QueryParameter.AGENTS_AMOUNT, String.valueOf(numOfAgents));
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

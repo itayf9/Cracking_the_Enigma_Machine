@@ -1,53 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.*?>
-<?import java.net.URL?>
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="400.0"
-          prefHeight="160.0" prefWidth="450.0" styleClass="component-with-background"
-          xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="allies.body.screen2.candidate.area.CandidatesAreaController">
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="200.0" prefHeight="160.0" prefWidth="450.0" styleClass="component-with-background" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="allies.body.screen2.candidate.area.CandidatesAreaController">
     <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="100.0"/>
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="330.66668701171875" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="109.0" prefWidth="109.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints/>
-        <RowConstraints/>
-        <RowConstraints maxHeight="194.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
-        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="340.00001525878906"
-                        vgrow="SOMETIMES"/>
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints maxHeight="194.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="340.00001525878906" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="sub-component-with-background"
-                    GridPane.rowIndex="3" GridPane.rowSpan="6">
+        <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="sub-component-with-background" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="6">
             <content>
-                <FlowPane fx:id="candidatesFlowPane" hgap="1.0" maxHeight="1.7976931348623157E308"
-                          maxWidth="1.7976931348623157E308" prefHeight="108.0" prefWidth="503.0"
-                          styleClass="candidates-flow-pane" vgap="1.0">
+                <FlowPane fx:id="candidatesFlowPane" hgap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="108.0" prefWidth="503.0" styleClass="candidates-flow-pane" vgap="1.0">
                     <padding>
-                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                     </padding>
                 </FlowPane>
             </content>
         </ScrollPane>
-        <Label styleClass="component-title" text="Candidates" GridPane.rowIndex="2"/>
-        <Label fx:id="numberOfDistinctCandidatesLabel" text="200003" GridPane.halignment="RIGHT" GridPane.rowIndex="2"
-               GridPane.valignment="BOTTOM"/>
-        <Label styleClass="sub-title" text="Candidates Found:" GridPane.halignment="RIGHT" GridPane.rowIndex="2"
-               GridPane.valignment="TOP"/>
+        <Label styleClass="component-title" text="Candidates" GridPane.rowIndex="2" />
+        <Label fx:id="numberOfDistinctCandidatesLabel" text="200003" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+        <Label styleClass="sub-title" text="Candidates Found:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
     </children>
     <padding>
-        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
     </padding>
     <stylesheets>
-        <URL value="@../../../../app/app-default.css"/>
-        <URL value="@candidatesArea-default.css"/>
+        <URL value="@../../../../app/app-default.css" />
+        <URL value="@candidatesArea-default.css" />
     </stylesheets>
 </GridPane>

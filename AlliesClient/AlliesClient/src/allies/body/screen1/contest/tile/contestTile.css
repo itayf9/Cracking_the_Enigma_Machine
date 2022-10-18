@@ -1,3 +1,5 @@
 .tile {
     -fx-background-radius: 10;
+    -fx-border-color: grey;
+    -fx-border-radius: 10;
 }

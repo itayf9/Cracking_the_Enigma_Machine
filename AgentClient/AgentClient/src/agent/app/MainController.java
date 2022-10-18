@@ -412,7 +412,7 @@ public class MainController {
             case PLUGS_MISSING_VALUES:
                 return "Please complete the plug selection.";
             default:
-                return "";
+                return problem.name();
         }
     }
 
@@ -486,7 +486,10 @@ public class MainController {
             task.setNumOfCompletedTasksProperty(numOfTotalCompletedTasks);
             task.setCdl(cdl);
 
-            threadPool.execute(task);
+            // checks that the contests is still active and the thread pool is not shut down
+            if (isContestActive.get()) {
+                threadPool.execute(task);
+            }
         }
     }
 

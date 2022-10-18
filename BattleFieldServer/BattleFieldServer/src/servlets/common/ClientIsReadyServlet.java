@@ -60,12 +60,28 @@ public class ClientIsReadyServlet extends HttpServlet {
                         taskSize = Integer.parseInt(req.getParameter(QueryParameter.TASK_SIZE));
                     } catch (NumberFormatException e) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_TASK_SIZE)));
                         return;
                     }
-                    engine.setAllieReady(userNameFromSession, uboatName, true, taskSize);
+
+                    int numOfAgents;
+                    try {
+                        numOfAgents = Integer.parseInt(req.getParameter(QueryParameter.AGENTS_AMOUNT));
+                    } catch (NumberFormatException e) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_AGENTS_AMOUNT)));
+                        return;
+                    }
+                    DTOstatus allieReadyStatus = engine.setAllieReady(userNameFromSession, uboatName, true, taskSize, numOfAgents);
+                    if (!allieReadyStatus.isSucceed()) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println(gson.toJson(allieReadyStatus));
+                        return;
+                    }
                     break;
             }
+
+            // checks if all clients are ready yet
             if (engine.allClientsReady(uboatName)) {
                 engine.startBruteForceProcess(uboatName);
             }

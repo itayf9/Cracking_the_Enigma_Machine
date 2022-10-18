@@ -45,7 +45,7 @@ public class AllieSettingController {
 
     @FXML
     void setReady(MouseEvent ignored) {
-        parentController.setReady(taskSizeSpinner.getValue());
+        parentController.setReady(taskSizeSpinner.getValue(), numberOfAgentsSpinner.getValue());
     }
 
     public void setParentController(BodyController bodyController) {
