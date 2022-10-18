@@ -18,16 +18,17 @@ import static http.url.URLconst.*;
 
 public class WaitForAllieApproveFinishGameTimer extends TimerTask {
 
-    private OkHttpClient client;
+    private final OkHttpClient client;
     private final MainController mainController;
 
     private final StringProperty uboatName;
     private final StringProperty allieName;
 
-    public WaitForAllieApproveFinishGameTimer(MainController mainController, StringProperty allieName, StringProperty uboatName) {
+    public WaitForAllieApproveFinishGameTimer(MainController mainController, StringProperty allieName, StringProperty uboatName, OkHttpClient client) {
         this.mainController = mainController;
         this.allieName = allieName;
         this.uboatName = uboatName;
+        this.client = client;
     }
 
     @Override

@@ -46,11 +46,7 @@ public class FetchCandidatesTimer extends TimerTask {
         this.originalText = originalText;
         this.client = client;
     }
-
-    public void setClient(OkHttpClient client) {
-        this.client = client;
-    }
-
+    
     @Override
     public void run() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CANDIDATES_SRC).newBuilder();

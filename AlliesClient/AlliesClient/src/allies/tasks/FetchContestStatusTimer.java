@@ -24,15 +24,12 @@ public class FetchContestStatusTimer extends TimerTask {
     private BooleanProperty isContestActive;
     private StringProperty uboatName;
 
-    public FetchContestStatusTimer(BooleanProperty isContestActive, StringProperty uboatName) {
+    public FetchContestStatusTimer(BooleanProperty isContestActive, StringProperty uboatName, OkHttpClient client) {
         this.isContestActive = isContestActive;
         this.uboatName = uboatName;
-    }
-
-    public void setClient(OkHttpClient client) {
         this.client = client;
     }
-
+    
     @Override
     public void run() {
 

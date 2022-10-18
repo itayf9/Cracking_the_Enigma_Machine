@@ -31,11 +31,7 @@ public class FetchAlliesInfoTimer extends TimerTask {
         this.uboatName = uboatName;
         this.client = client;
     }
-
-    public void setClient(OkHttpClient client) {
-        this.client = client;
-    }
-
+    
     @Override
     public void run() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_ALLIES_INFO_SRC).newBuilder();

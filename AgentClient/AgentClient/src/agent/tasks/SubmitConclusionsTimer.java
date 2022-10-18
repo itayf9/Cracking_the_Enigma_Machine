@@ -30,9 +30,6 @@ public class SubmitConclusionsTimer extends TimerTask {
         this.mainController = mainController;
         this.allieName = allieName;
         this.uboatName = uboatName;
-    }
-
-    public void setClient(OkHttpClient client) {
         this.client = client;
     }
 

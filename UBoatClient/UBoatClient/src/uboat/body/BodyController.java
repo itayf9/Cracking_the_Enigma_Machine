@@ -167,28 +167,18 @@ public class BodyController {
      * @param currentNotchDistances                currentNotchDistances
      * @param cipherCounterProperty                cipherCounterProperty
      * @param totalDistinctCandidates              totalDistinctCandidates
-     * @param totalProcessedConfigurations         totalProcessedConfigurations
-     * @param totalPossibleConfigurations          totalPossibleConfigurations
-     * @param bruteForceProgressBar                bruteForceProgressBar
-     * @param bruteForceProgressBarPercentageLabel bruteForceProgressBarPercentageLabel
-     * @param bruteForceStatusMessage              bruteForceStatusMessage
-     * @param isBruteForceTaskActive               isBruteForceTaskActive
-     * @param totalTimeDecryptProperty             totalTimeDecryptProperty
      */
     public void bindComponents(BooleanProperty isMachineConfiguredProperty, ListProperty<Integer> inUseRotorsIDsProperty,
                                StringProperty currentWindowsCharactersProperty, StringProperty inUseReflectorSymbolProperty,
                                StringProperty inUsePlugs, ListProperty<Integer> currentNotchDistances, IntegerProperty cipherCounterProperty,
-                               IntegerProperty totalDistinctCandidates, IntegerProperty totalProcessedConfigurations,
-                               LongProperty totalPossibleConfigurations, DoubleProperty bruteForceProgressBar,
-                               StringProperty bruteForceProgressBarPercentageLabel, StringProperty bruteForceStatusMessage,
-                               BooleanProperty isBruteForceTaskActive, DoubleProperty averageTasksProcessTimeProperty, LongProperty totalTimeDecryptProperty, BooleanProperty isClientReady) {
+                               IntegerProperty totalDistinctCandidates, BooleanProperty isClientReady) {
 
 
         // binds the components that need the isConfigured Boolean property.
         codeCalibration.disableProperty().bind(isClientReady);
-        encryptDecrypt.disableProperty().bind(isMachineConfiguredProperty.not().or(isBruteForceTaskActive).or(isClientReady));
+        encryptDecrypt.disableProperty().bind(isMachineConfiguredProperty.not().or(isClientReady));
         candidatesArea.disableProperty().bind(isMachineConfiguredProperty.not());
-        dictionary.disableProperty().bind(isMachineConfiguredProperty.not().or(isBruteForceTaskActive).or(isClientReady));
+        dictionary.disableProperty().bind(isMachineConfiguredProperty.not().or(isClientReady));
 
         // config bindings
         currentConfigController.bindConfigComponents(inUseRotorsIDsProperty, currentWindowsCharactersProperty, inUseReflectorSymbolProperty, inUsePlugs, currentNotchDistances, isMachineConfiguredProperty);
@@ -197,8 +187,7 @@ public class BodyController {
         machineDetailsController.bindCipherCounterProperty(cipherCounterProperty);
 
         // brute force dashboard labels bind
-        candidatesAreaController.bindInitPropertiesToLabels(isBruteForceTaskActive, totalDistinctCandidates, totalProcessedConfigurations, totalPossibleConfigurations,
-                bruteForceProgressBar, bruteForceProgressBarPercentageLabel, bruteForceStatusMessage, averageTasksProcessTimeProperty, totalTimeDecryptProperty);
+        candidatesAreaController.bindInitPropertiesToLabels(totalDistinctCandidates);
 
     }
 

@@ -30,10 +30,6 @@ public class FetchStaticContestInfoTimer extends TimerTask {
         this.client = client;
     }
 
-    public void setClient(OkHttpClient client) {
-        this.client = client;
-    }
-
     @Override
     public void run() {
 

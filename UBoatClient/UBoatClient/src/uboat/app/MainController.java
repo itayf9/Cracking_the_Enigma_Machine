@@ -104,15 +104,7 @@ public class MainController {
      * bruteforce stuff
      */
     private IntegerProperty totalDistinctCandidates;
-    private IntegerProperty totalProcessedConfigurations;
-    private LongProperty totalPossibleConfigurations;
-    private DoubleProperty bruteForceProgress;
-    private StringProperty bruteForceProgressBarPercentageProperty;
-    private StringProperty bruteForceStatusMessage;
-    private BooleanProperty isBruteForceTaskActive;
     private LongProperty totalPossibleWindowsPositions;
-    private DoubleProperty averageTasksProcessTimeProperty;
-    private LongProperty totalTimeDecryptProperty;
     private StringProperty dictionaryExcludeCharsProperty;
 
     /**
@@ -147,16 +139,8 @@ public class MainController {
         this.currentNotchDistances = new SimpleListProperty<>();
         this.cipherCounterProperty = new SimpleIntegerProperty(0);
         this.totalDistinctCandidates = new SimpleIntegerProperty();
-        this.totalProcessedConfigurations = new SimpleIntegerProperty();
-        this.totalPossibleConfigurations = new SimpleLongProperty();
-        this.isBruteForceTaskActive = new SimpleBooleanProperty(false);
-        this.averageTasksProcessTimeProperty = new SimpleDoubleProperty();
         this.dictionaryExcludeCharsProperty = new SimpleStringProperty();
-        this.bruteForceProgress = new SimpleDoubleProperty();
-        this.bruteForceStatusMessage = new SimpleStringProperty("");
-        this.bruteForceProgressBarPercentageProperty = new SimpleStringProperty("0%");
         this.totalPossibleWindowsPositions = new SimpleLongProperty();
-        this.totalTimeDecryptProperty = new SimpleLongProperty();
         this.isClientReady = new SimpleBooleanProperty(false);
         this.textHasBeenCiphered = new SimpleBooleanProperty(false);
         this.isContestActive = new SimpleBooleanProperty(false);
@@ -195,10 +179,7 @@ public class MainController {
         // binding initialize
         bodyController.bindComponents(isMachineConfiguredProperty, inUseRotorsIDsProperty,
                 currentWindowsCharactersProperty, inUseReflectorSymbolProperty, inUsePlugsProperty,
-                currentNotchDistances, cipherCounterProperty, totalDistinctCandidates,
-                totalProcessedConfigurations, totalPossibleConfigurations, bruteForceProgress,
-                bruteForceProgressBarPercentageProperty, bruteForceStatusMessage, isBruteForceTaskActive,
-                averageTasksProcessTimeProperty, totalTimeDecryptProperty, isClientReady);
+                currentNotchDistances, cipherCounterProperty, totalDistinctCandidates, isClientReady);
 
         // general setting to initialize sub components
         body.visibleProperty().bind(isMachineLoadedProperty);
@@ -215,7 +196,6 @@ public class MainController {
         headerController.setProperties(isMachineLoadedProperty);
         headerController.bindComponents(isMachineLoadedProperty, usernameProperty, isContestActive);
         isMachineConfiguredProperty.addListener((observable, oldValue, newValue) -> clearOldComponents());
-        bruteForceStatusMessage.addListener((observable, oldValue, newValue) -> setStatusMessage("Decrypt Manager: " + newValue, MessageTone.INFO));
     }
 
     /**
@@ -827,5 +807,9 @@ public class MainController {
                 System.out.println("Oops... something went wrong..." + e.getMessage());
             }
         });
+    }
+
+    public MainController getMainController() {
+        return this;
     }
 }

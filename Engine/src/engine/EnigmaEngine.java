@@ -476,7 +476,7 @@ public class EnigmaEngine implements Engine {
     /**
      * fetches the current machine specifications.
      *
-     * @return DTOspecs object that represents the specs.
+     * @return DTSpecs object that represents the specs.
      */
     @Override
     public DTOspecs displayMachineSpecifications(String username) {
@@ -578,7 +578,7 @@ public class EnigmaEngine implements Engine {
      * randomizes a new configuration.
      * then updates the machine configuration.
      *
-     * @return DTOsecretConfig object representing the new configuration
+     * @return DTSecretConfig object representing the new configuration
      */
     @Override
     public DTOsecretConfig selectConfigurationAuto(String userName) {
@@ -659,7 +659,7 @@ public class EnigmaEngine implements Engine {
      * validates the input text from the user and calls method "cipherText" to cipher the text.
      *
      * @param inputText string of the input text
-     * @return DTOciphertext object which has the ciphered text
+     * @return DTCiphertext object which has the ciphered text
      */
     @Override
     public DTOciphertext cipherInputText(String inputText, String userName) {
@@ -720,7 +720,7 @@ public class EnigmaEngine implements Engine {
     /**
      * resetting the offset of each rotor in configuration of machine to its original values.
      *
-     * @return DTOresetConfig representing the status of the operation
+     * @return DTResetConfig representing the status of the operation
      */
     @Override
     public DTOresetConfig resetConfiguration(String userName) {
@@ -924,7 +924,7 @@ public class EnigmaEngine implements Engine {
     /**
      * gets all the history and statistics of the current machine
      *
-     * @return DTOstatistics including the statistics of the machine
+     * @return DTO statistics including the statistics of the machine
      */
     public DTOstatistics getHistoryAndStatistics() {
         boolean isSucceeded = true;
@@ -1335,14 +1335,12 @@ public class EnigmaEngine implements Engine {
             return new DTOactive(false, Problem.UBOAT_NAME_DOESNT_EXIST, false);
         }
 
-        Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter((decryptManager) -> decryptManager.getAllieName().equals(allieName)).findFirst();
-        if (!allieMaybe.isPresent()) {
+        Boolean isSubscribe = loggedAllieName2isSubscribed.get(allieName);
+        if (isSubscribe == null) {
             return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
         }
-        if (allieMaybe.get().isDMapprovedFinishGame()) {
-            battlefield.getAllies().remove(allieMaybe.get());
-        }
-        return new DTOactive(true, Problem.NO_PROBLEM, allieMaybe.get().isDMapprovedFinishGame());
+
+        return new DTOactive(true, Problem.NO_PROBLEM, !isSubscribe);
     }
 
     @Override
@@ -1356,7 +1354,8 @@ public class EnigmaEngine implements Engine {
         if (!allieMaybe.isPresent()) {
             return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
         }
-        allieMaybe.get().setDMapprovedFinishGame(isApprove);
+        battlefield.getAllies().remove(allieMaybe.get());
+        loggedAllieName2isSubscribed.put(allieName, false);
 
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }

@@ -20,17 +20,9 @@ public class FetchAlliesInfoTimer extends TimerTask {
     OkHttpClient client;
     MainController mainController;
 
-    public FetchAlliesInfoTimer(MainController mainController) {
-        this.mainController = mainController;
-    }
-
     public FetchAlliesInfoTimer(OkHttpClient client, MainController mainController) {
         this.client = client;
         this.mainController = mainController;
-    }
-
-    public void setClient(OkHttpClient client) {
-        this.client = client;
     }
 
     @Override

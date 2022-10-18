@@ -29,15 +29,12 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
     private final MainController mainController;
     private StringProperty uboatName;
 
-    public FetchDynamicContestInfoTimer(MainController mainController, StringProperty uboatName) {
+    public FetchDynamicContestInfoTimer(MainController mainController, StringProperty uboatName, OkHttpClient client) {
         this.mainController = mainController;
         this.uboatName = uboatName;
-    }
-
-    public void setClient(OkHttpClient client) {
         this.client = client;
     }
-
+    
     @Override
     public void run() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_DYNAMIC_CONTEST_INFO_SRC).newBuilder();
@@ -65,9 +62,7 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
                 } else {
                     // start scanning candidates
                     DTOdynamicContestInfo contestInfoStatus = gson.fromJson(dtoAsStr, DTOdynamicContestInfo.class);
-                    Platform.runLater(() -> {
-                        mainController.displayDynamicContestInfo(contestInfoStatus.getAgentsInfo(), contestInfoStatus.getJobStatus(), contestInfoStatus.getAllCandidates());
-                    });
+                    displayDynamicContestInfo(contestInfoStatus.getAgentsInfo(), contestInfoStatus.getJobStatus(), contestInfoStatus.getAllCandidates());
                 }
             }
 

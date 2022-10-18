@@ -4,7 +4,6 @@ import allies.body.BodyController;
 import allies.body.screen1.contest.tile.ContestTileController;
 import allies.body.screen2.candidate.tile.CandidateTileController;
 import allies.tasks.*;
-import candidate.AgentConclusion;
 import candidate.Candidate;
 import com.google.gson.Gson;
 import dto.*;
@@ -323,7 +322,9 @@ public class MainController {
 
                 } else {
                     Platform.runLater(() -> {
-                        contestStatusTimer.schedule(fetchContestStatusTimer, REFRESH_RATE, REFRESH_RATE);
+                        fetchContestStatusTimer = new Timer();
+                        fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, uboatName, client);
+                        fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
                         setStatusMessage("Allie is Ready", MessageTone.INFO);
                         isReady.set(true);
                     });
@@ -561,29 +562,6 @@ public class MainController {
      */
     public void updateLoggedAgentsInfo(Set<AgentInfo> loggedAgents) {
         bodyController.updateLoggedAgentsInfo(loggedAgents);
-    }
-
-    /**
-     * disaply all dynamic info like agents & progress of the contest
-     *
-     * @param agentsInfo    agent info
-     * @param jobStatus     progress
-     * @param allCandidates cnadidates found
-     */
-    public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus, List<AgentConclusion> allCandidates) {
-        bodyController.displayDynamicContestInfo(agentsInfo, jobStatus);
-        for (AgentConclusion agentConclusion : allCandidates) {
-            String allieName = agentConclusion.getAllieName();
-            String agentName = agentConclusion.getAgentName();
-            for (Candidate candidate : agentConclusion.getCandidates()) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                createCandidateTile(candidate, allieName, agentName);
-            }
-        }
     }
 
     /**
