@@ -19,11 +19,19 @@ public class FetchLoggedAgentsInfoTimer extends TimerTask {
     private OkHttpClient client;
     private MainController mainController;
 
+    public FetchLoggedAgentsInfoTimer(MainController mainController) {
+        this.mainController = mainController;
+    }
+
     public FetchLoggedAgentsInfoTimer(MainController mainController, OkHttpClient client) {
         this.mainController = mainController;
         this.client = client;
     }
-    
+
+    public void setClient(OkHttpClient client) {
+        this.client = client;
+    }
+
     @Override
     public void run() {
 

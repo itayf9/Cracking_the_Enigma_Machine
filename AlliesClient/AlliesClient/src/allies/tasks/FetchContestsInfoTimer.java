@@ -23,11 +23,19 @@ public class FetchContestsInfoTimer extends TimerTask {
     private String uboatName;
 
 
+    public FetchContestsInfoTimer(MainController mainController) {
+        this.mainController = mainController;
+    }
+
     public FetchContestsInfoTimer(MainController mainController, OkHttpClient client) {
         this.mainController = mainController;
         this.client = client;
     }
-    
+
+    public void setClient(OkHttpClient client) {
+        this.client = client;
+    }
+
     @Override
     public void run() {
 

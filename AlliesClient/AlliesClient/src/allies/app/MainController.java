@@ -155,10 +155,10 @@ public class MainController {
 
 
         this.fetchLoggedAgentsTimer = new Timer();
-        this.fetchLoggedAgentsInfoTimerTask = new FetchLoggedAgentsInfoTimer(this, client);
+        this.fetchLoggedAgentsInfoTimerTask = new FetchLoggedAgentsInfoTimer(this);
         fetchLoggedAgentsTimer.schedule(fetchLoggedAgentsInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
         this.fetchContestsInfoTimer = new Timer();
-        this.fetchContestsInfoTimerTask = new FetchContestsInfoTimer(this, client);
+        this.fetchContestsInfoTimerTask = new FetchContestsInfoTimer(this);
         fetchContestsInfoTimer.schedule(fetchContestsInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
 
         headerController.bindComponents(usernameProperty);
@@ -480,6 +480,8 @@ public class MainController {
      */
     public void setOkHttpClient(OkHttpClient okHttpClient) {
         this.client = okHttpClient;
+        this.fetchLoggedAgentsInfoTimerTask.setClient(okHttpClient);
+        this.fetchContestsInfoTimerTask.setClient(okHttpClient);
     }
 
     /**
