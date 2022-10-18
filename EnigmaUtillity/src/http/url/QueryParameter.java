@@ -17,6 +17,8 @@ public class QueryParameter {
 
     // for allie is ready servlet
     public static final String TASK_SIZE = "task-size";
+    public static final String AGENTS_AMOUNT = "agents-amount";
+
 
     // for agent login servlet
     public static final String NUM_OF_THREADS = "threads";

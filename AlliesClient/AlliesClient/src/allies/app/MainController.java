@@ -317,9 +317,7 @@ public class MainController {
 
                 if (response.code() != 200) {
                     DTOstatus readyStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-                    Platform.runLater(() -> {
-                        setStatusMessage(convertProblemToMessage(readyStatus.getDetails()), MessageTone.ERROR);
-                    });
+                    Platform.runLater(() -> setStatusMessage(convertProblemToMessage(readyStatus.getDetails()), MessageTone.ERROR));
 
                 } else {
                     Platform.runLater(() -> {
@@ -554,7 +552,7 @@ public class MainController {
             case PLUGS_MISSING_VALUES:
                 return "Please complete the plug selection.";
             default:
-                return "";
+                return problem.name();
         }
     }
 

@@ -1070,18 +1070,23 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
-    public DTOstatus setAllieReady(String allieUserName, String uboatUserName, boolean isReady, int taskSize) {
-        Set<DecryptManager> allies = uboatName2battleField.get(uboatUserName).getAllies();
-        Optional<DecryptManager> myAllie = allies.stream().filter((allie) -> allie.getAllieName().equals(allieUserName)).findFirst();
-
-        if (myAllie.isPresent()) {
-            DecryptManager allie = myAllie.get();
-            allie.setTaskSize(taskSize);
-            allie.setDMReady(isReady);
-            return new DTOstatus(true, Problem.NO_PROBLEM);
-        } else {
-            return new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS);
+    public DTOstatus setAllieReady(String allieUserName, String uboatUserName, boolean isReady, int taskSize, int numOfAgents) {
+        // fetches the set of the logged agents
+        Set<AgentInfo> myAgents = loggedAllieName2loggedAgents.get(allieUserName);
+        if (myAgents == null) {
+            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND);
         }
+
+        // checks if there are enough logged agents
+        if (myAgents.size() < numOfAgents) {
+            return new DTOstatus(false, Problem.NOT_ENOUGH_LOGGED_AGENTS);
+        }
+
+        // sets the settings of the matching decryptManager
+        DecryptManager allie = allieName2decryptManager.get(allieUserName);
+        allie.setTaskSize(taskSize);
+        allie.setDMReady(isReady);
+        return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
     @Override

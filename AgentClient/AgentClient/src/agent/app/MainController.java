@@ -117,11 +117,8 @@ public class MainController {
     private FetchSubscriptionStatusTimer fetchSubscribeTimerTask;
     private Timer waitForAllieApproveTimer;
     private WaitForAllieApproveFinishGameTimer waitForAllieApproveTimerTask;
-
     private Timer fetchStaticInfoContestTimer;
-
     private FetchStaticContestInfoTimer fetchStaticInfoContestTimerTask;
-
     private BooleanProperty isSubscribed;
 
 
