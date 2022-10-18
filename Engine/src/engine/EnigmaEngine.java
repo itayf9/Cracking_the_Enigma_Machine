@@ -1218,7 +1218,9 @@ public class EnigmaEngine implements Engine {
 
     @Override
     public DTOstaticContestInfo getStaticContestInfo(String uboatName) {
+
         DTObattlefields battlefields = getBattleFieldsInfo(uboatName, true);
+
         DTOallies allies = getAlliesInfo(uboatName);
 
         List<AllieInfo> alliesList = new ArrayList<>();

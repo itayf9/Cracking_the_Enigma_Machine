@@ -5,7 +5,6 @@ import allies.app.MainController;
 import com.google.gson.Gson;
 import dto.DTObattlefields;
 import dto.DTOstatus;
-import http.url.QueryParameter;
 import javafx.application.Platform;
 import okhttp3.*;
 
@@ -20,7 +19,6 @@ public class FetchContestsInfoTimer extends TimerTask {
 
     private OkHttpClient client;
     private MainController mainController;
-    private String uboatName;
 
 
     public FetchContestsInfoTimer(MainController mainController) {
@@ -40,7 +38,6 @@ public class FetchContestsInfoTimer extends TimerTask {
     public void run() {
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_BATTLEFIELDS_INFO_SRC).newBuilder();
-        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName);
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")

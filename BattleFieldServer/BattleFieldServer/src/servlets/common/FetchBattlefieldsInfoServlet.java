@@ -28,7 +28,7 @@ public class FetchBattlefieldsInfoServlet extends HttpServlet {
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
         Client typeOfClient = SessionUtils.getTypeOfClient(req);
         if (isValidSession) {
-            if (!typeOfClient.equals(Client.AGENT) && !typeOfClient.equals(Client.ALLIE)) {
+            if (!typeOfClient.equals(Client.ALLIE)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
                 return;
