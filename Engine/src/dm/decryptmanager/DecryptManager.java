@@ -39,7 +39,7 @@ public class DecryptManager {
     private final BlockingQueue<AgentConclusion> uboatCandidateQueue;
     private final Map<String, AgentInfo> agentName2agentInfo;
     private final StringProperty textToDecipher;
-    private BooleanProperty isContestActive;
+    private final BooleanProperty isContestActive;
     private final String uboatName;
 
     public DecryptManager(String allieName, Battlefield battlefield, Map<String, AgentInfo> agentName2agentInfo) {
