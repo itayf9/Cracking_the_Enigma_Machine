@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Set;
 
 public class DTOdynamicContestInfo extends DTOstatus {
-    private Set<AgentInfo> agentsInfo;
-    private List<AgentConclusion> allCandidates;
-    private JobProgressInfo jobProgressInfo;
+    private final Set<AgentInfo> agentsInfo;
+    private final List<AgentConclusion> allCandidates;
+    private final JobProgressInfo jobProgressInfo;
 
     public DTOdynamicContestInfo(boolean isSucceed, Problem details, Set<AgentInfo> agentsInfo, List<AgentConclusion> allCandidates, JobProgressInfo jobProgressInfo) {
         super(isSucceed, details);

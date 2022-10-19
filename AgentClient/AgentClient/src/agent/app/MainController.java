@@ -149,8 +149,6 @@ public class MainController {
 
         isSubscribed.addListener((o, oldVal, newVal) -> {
             if (newVal) {
-                fetchSubscribeTimer.cancel();
-                fetchSubscribeTimerTask.cancel();
                 // allie just subscribed
                 setStatusMessage("Allie has subscribed to a Contest", MessageTone.INFO);
                 this.fetchStaticInfoContestTimer = new Timer();
@@ -161,11 +159,10 @@ public class MainController {
                 fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // allie has unsubscribed, when the contest is finished
-                waitForAllieApproveTimer.cancel();
-                waitForAllieApproveTimerTask.cancel();
-                this.fetchSubscribeTimer = new Timer();
-                this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, allieName, client);
-                fetchSubscribeTimer.schedule(fetchSubscribeTimerTask, REFRESH_RATE, REFRESH_RATE);
+                setStatusMessage("Team has unsubscribed from the game", MessageTone.INFO);
+                cleanOldResults();
+                // waitForAllieApproveTimer.cancel();
+                // waitForAllieApproveTimerTask.cancel();
             }
         });
 
@@ -192,9 +189,9 @@ public class MainController {
                 threadPool.shutdownNow();
                 submitConclusionsTimer.cancel();
                 submitConclusionsTimerTask.cancel();
-                this.waitForAllieApproveTimer = new Timer();
-                this.waitForAllieApproveTimerTask = new WaitForAllieApproveFinishGameTimer(this, allieName, uboatName, client);
-                waitForAllieApproveTimer.schedule(waitForAllieApproveTimerTask, REFRESH_RATE, REFRESH_RATE);
+                //this.waitForAllieApproveTimer = new Timer();
+                //this.waitForAllieApproveTimerTask = new WaitForAllieApproveFinishGameTimer(this, allieName, uboatName, client);
+                // waitForAllieApproveTimer.schedule(waitForAllieApproveTimerTask, REFRESH_RATE, REFRESH_RATE);
             }
         });
 

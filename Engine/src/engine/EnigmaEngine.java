@@ -1137,7 +1137,7 @@ public class EnigmaEngine implements Engine {
 
         if (myAllie.isPresent()) {
             DecryptManager allie = myAllie.get();
-            return new DTOagentConclusions(true, Problem.NO_PROBLEM, allie.getDecipherCandidates());
+            return new DTOagentConclusions(true, Problem.NO_PROBLEM, allie.getAllConclusions());
         } else {
             return new DTOagentConclusions(false, Problem.UNAUTHORIZED_CLIENT_ACCESS, null);
         }
@@ -1369,11 +1369,16 @@ public class EnigmaEngine implements Engine {
 
     @Override
     public DTOstatus removeBattlefield(String uboatName) {
-        Battlefield removedBattlefield = uboatName2battleField.remove(uboatName);
-        if (removedBattlefield == null) {
+
+        Battlefield battlefieldToRemove = uboatName2battleField.get(uboatName);
+        if (battlefieldToRemove == null) {
             return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
         }
-
+        Set<DecryptManager> allies = battlefieldToRemove.getAllies();
+        for (DecryptManager allie : allies) {
+            loggedAllieName2isSubscribed.put(allie.getAllieName(), false);
+        }
+        uboatName2battleField.remove(uboatName);
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
@@ -1496,12 +1501,16 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
-    public void resetOldContestJobStatus(String uboatName) {
+    public void resetOldContestDynamicInfo(String uboatName) {
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         Set<DecryptManager> allies = battlefield.getAllies();
-        allies.forEach(DecryptManager::resetJobStatusInfo);
-    }
+//        allies.forEach(DecryptManager::resetJobStatusInfo);
 
+       for(DecryptManager allie : allies) {
+         Set<AgentInfo> agents = loggedAllieName2loggedAgents.get( allie.getAllieName());
+           agents.forEach(AgentInfo::resetDynamicInfo);
+       }
+    }
 
     @Override
     public String toString() {

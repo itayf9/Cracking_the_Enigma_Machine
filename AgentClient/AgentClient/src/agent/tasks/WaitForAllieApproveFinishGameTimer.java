@@ -48,8 +48,8 @@ public class WaitForAllieApproveFinishGameTimer extends TimerTask {
                 System.out.println("wait for approval timer response");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
+                System.out.println(dtoAsStr);
                 Gson gson = new Gson();
-
 
                 if (response.code() != 200) {
                     DTOstatus tasksStatus = gson.fromJson(dtoAsStr, DTOstatus.class);

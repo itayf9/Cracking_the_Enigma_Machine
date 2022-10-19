@@ -3,8 +3,8 @@ package info.agent;
 public class AgentInfo {
 
     private String agentName;
-    private int numOfThreads;
-    private int numOfTasksPerPull;
+    private final int numOfThreads;
+    private final int numOfTasksPerPull;
     private int numOfReceivedTasks;
     private int numOfFoundCandidates;
 
@@ -45,4 +45,8 @@ public class AgentInfo {
         numOfReceivedTasks += newReceivedTasks;
     }
 
+    public void resetDynamicInfo() {
+        numOfReceivedTasks = 0;
+        numOfFoundCandidates = 0;
+    }
 }

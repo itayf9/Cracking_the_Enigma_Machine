@@ -759,8 +759,9 @@ public class MainController {
     }
 
     public void logoutUBoat(MouseEvent event) {
-        fetchAlliesInfoTimer.cancel();
-
+        if(isMachineLoadedProperty.get()){
+            fetchAlliesInfoTimer.cancel();
+        }
         String body = "";
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGOUT_SRC).newBuilder();
         Request request = new Request.Builder()

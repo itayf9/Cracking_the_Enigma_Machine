@@ -122,10 +122,6 @@ public class DecryptManager {
         }
     }
 
-    public List<AgentConclusion> getDecipherCandidates() {
-        return allConclusions;
-    }
-
     public Machine getEnigmaMachine() {
         return enigmaMachine;
     }

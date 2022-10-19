@@ -28,19 +28,28 @@ public class FetchSubscriptionStatusServlet extends HttpServlet {
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
         Client typeOfClient = SessionUtils.getTypeOfClient(req);
         if (isValidSession) {
-            if (!typeOfClient.equals(Client.AGENT)) {
+            if (!typeOfClient.equals(Client.AGENT) && !typeOfClient.equals(Client.ALLIE)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
                 return;
             }
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
-            String allieName;
+            String allieName = "";
 
-            allieName = req.getParameter(QueryParameter.ALLIE_NAME);
-            if (allieName == null) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_ALLIE_NAME)));
-            } else {
+            switch(typeOfClient) {
+                case AGENT:
+                    allieName = req.getParameter(QueryParameter.ALLIE_NAME);
+                    if (allieName == null) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_ALLIE_NAME)));
+                        return;
+                    }
+                    break;
+                case ALLIE:
+                    allieName = usernameFromSession;
+                    break;
+            }
+
                 DTOactive activeStatus = engine.checkIfAllieIsSubscribedToContest(allieName);
                 if (!activeStatus.isSucceed()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -48,7 +57,6 @@ public class FetchSubscriptionStatusServlet extends HttpServlet {
                     resp.setStatus(HttpServletResponse.SC_OK);
                 }
                 resp.getWriter().println(gson.toJson(activeStatus));
-            }
         }
     }
 }

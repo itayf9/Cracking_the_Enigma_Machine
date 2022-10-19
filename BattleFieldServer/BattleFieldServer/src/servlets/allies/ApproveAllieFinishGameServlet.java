@@ -43,6 +43,7 @@ public class ApproveAllieFinishGameServlet extends HttpServlet {
                 if (!approvalStatus.isSucceed()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 } else {
+                    engine.resetOldContestDynamicInfo(uboatName);
                     resp.setStatus(HttpServletResponse.SC_OK);
                 }
                 resp.getWriter().println(gson.toJson(approvalStatus));

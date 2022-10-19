@@ -75,7 +75,6 @@ public class WinnerFoundServlet extends HttpServlet {
                 } else {
                     // since status is ok this lines cant fail.
                     engine.setUboatReady(usernameFromSession, false);
-                    engine.resetOldContestJobStatus(usernameFromSession);
                     resp.setStatus(HttpServletResponse.SC_OK);
                     // since both status succeeded we can send one arbitrarily
                     resp.getWriter().println(gson.toJson(winnerStatus));

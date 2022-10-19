@@ -92,6 +92,10 @@ public class MainController {
     private FetchDynamicContestInfoTimer fetchDynamicContestInfoTimerTask;
     private Timer fetchContestsInfoTimer;
     private FetchContestsInfoTimer fetchContestsInfoTimerTask;
+
+    private Timer fetchIsSubscribedToContestTimer;
+    private FetchIsSubscribedToContestTimer fetchIsSubscribedToContestTimerTask;
+
     private BooleanProperty isReady;
 
     @FXML
@@ -110,6 +114,15 @@ public class MainController {
         // Timers
         this.isReady = new SimpleBooleanProperty(false);
         this.usernameProperty = new SimpleStringProperty("");
+
+        isSubscribedToContest.addListener((o, oldVal, newVal) ->{
+            if (newVal) { // subscribed to contest == true
+                fetchIsSubscribedToContestTimer = new Timer();
+                fetchIsSubscribedToContestTimerTask = new FetchIsSubscribedToContestTimer(isSubscribedToContest, uboatName, client, getMainController());
+                fetchIsSubscribedToContestTimer.schedule(fetchIsSubscribedToContestTimerTask, REFRESH_RATE, REFRESH_RATE);
+            } else {// when contest is over
+            }
+        });
 
         // isContestActive event listener
         isContestActive.addListener((o, oldVal, newVal) -> {
@@ -152,7 +165,6 @@ public class MainController {
         statusBackShape.widthProperty().bind(statusLabel.widthProperty());
         statusBackShape.setStrokeWidth(0);
         statusBackShape.setOpacity(0);
-
 
         this.fetchLoggedAgentsTimer = new Timer();
         this.fetchLoggedAgentsInfoTimerTask = new FetchLoggedAgentsInfoTimer(this);
@@ -617,5 +629,9 @@ public class MainController {
 
     public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus) {
         bodyController.displayDynamicContestInfo(agentsInfo, jobStatus);
+    }
+
+    public MainController getMainController(){
+        return this;
     }
 }

@@ -219,5 +219,5 @@ public interface Engine {
 
     String getUboatNameFromAllieName(String allieName);
 
-    void resetOldContestJobStatus(String uboatName);
+    void resetOldContestDynamicInfo(String uboatName);
 }

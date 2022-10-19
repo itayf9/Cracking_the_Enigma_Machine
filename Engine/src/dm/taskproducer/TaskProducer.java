@@ -33,7 +33,6 @@ public class TaskProducer implements Runnable {
         this.taskSize = dm.getTaskSize();
         this.difficulty = dm.getDifficultyLevel();
         this.textToDecipher = dm.getTextToDecipherProperty();
-        System.out.println("textToDecipher = " + textToDecipher.get() + " ## end of textToDecipher");
         this.candidatesQueue = dm.getCandidatesQueue();
         this.taskCounter = 0;
     }

@@ -112,9 +112,7 @@ public class Battlefield {
     }
 
     public void addDecryptManager(DecryptManager allie) {
-        System.out.println(allies);
         allies.add(allie);
-        System.out.println(allies);
     }
 
     public BooleanProperty isActive() {
