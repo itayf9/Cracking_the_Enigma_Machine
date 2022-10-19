@@ -162,6 +162,7 @@ public class AgentTask implements Runnable {
         try {
             candidatesQueue.put(new AgentConclusion(candidates, numOfConfigScanned, agentName, allieName));
             cdl.countDown();
+            Thread.sleep(25);
             Platform.runLater(() -> numOfCompletedTasksProperty.set(numOfCompletedTasksProperty.get() + 1));
         } catch (InterruptedException ignored) {
 

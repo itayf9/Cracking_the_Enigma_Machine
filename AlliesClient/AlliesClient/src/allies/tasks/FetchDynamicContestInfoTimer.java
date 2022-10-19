@@ -87,7 +87,7 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
             String agentName = agentConclusion.getAgentName();
             for (Candidate candidate : agentConclusion.getCandidates()) {
                 try {
-                    Thread.sleep(20);
+                    Thread.sleep(25);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

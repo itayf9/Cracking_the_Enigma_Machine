@@ -13,6 +13,7 @@ import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import static http.url.QueryParameter.*;
@@ -32,10 +33,6 @@ public class FetchTasksThread implements Runnable {
         this.mainController = mainController;
         this.allieName = allieName;
         this.uboatName = uboatName;
-    }
-
-    public void setCountDownLatch(CountDownLatch cdl) {
-        this.cdl = cdl;
     }
 
     public void setClient(OkHttpClient client) {
@@ -78,15 +75,15 @@ public class FetchTasksThread implements Runnable {
 
                 if (response.code() != 200) {
                     DTOstatus tasksStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-                    Platform.runLater(() -> {
-                        mainController.setStatusMessage(mainController.convertProblemToMessage(tasksStatus.getDetails()), MessageTone.ERROR);
-                    });
+                    Platform.runLater(() -> mainController.setStatusMessage(mainController.convertProblemToMessage(tasksStatus.getDetails()), MessageTone.ERROR));
 
                 } else {
                     DTOtasks tasksStatus = gson.fromJson(dtoAsStr, DTOtasks.class);
-                    Platform.runLater(() -> {
-                        mainController.executeTasks(tasksStatus.getTaskList());
-                    });
+                    try {
+                        Thread.sleep(25);
+                    } catch (InterruptedException ignored) {
+                    }
+                    Platform.runLater(() -> mainController.executeTasks(tasksStatus.getTaskList()));
                 }
             }
 

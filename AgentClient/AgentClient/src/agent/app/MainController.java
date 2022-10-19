@@ -461,12 +461,27 @@ public class MainController {
         fetchSubscribeTimer.schedule(fetchSubscribeTimerTask, REFRESH_RATE, REFRESH_RATE);
     }
 
+    public CountDownLatch getCountDownLatch() {
+        return cdl;
+    }
+
+    public void updateStaticContestInfo(DTOstaticContestInfo staticInfoStatus) {
+        uboatName.set(staticInfoStatus.getBattlefieldInfo().getUboatName());
+        contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo(), allieName.get());
+        dictionary = staticInfoStatus.getBattlefieldInfo().getDictionary();
+    }
+
+    public void setUserName(String username) {
+        this.usernameProperty.set(username);
+    }
+
     /**
      * given some AgentTask, injects some information to the AgentTask and sents in to the thread pool to execute
      *
      * @param taskList a list of the AgentTask to execute
      */
     public void executeTasks(List<AgentTask> taskList) {
+
         numOfTotalPulledTasks.setValue(numOfTotalPulledTasks.get() + taskList.size());
         numOfTasksInQueue.setValue(numOfTasksInQueue.get() + taskList.size());
         if (isContestActive.get()) {
@@ -488,20 +503,6 @@ public class MainController {
                 threadPool.execute(task);
             }
         }
-    }
-
-    public CountDownLatch getCountDownLatch() {
-        return cdl;
-    }
-
-    public void updateStaticContestInfo(DTOstaticContestInfo staticInfoStatus) {
-        uboatName.set(staticInfoStatus.getBattlefieldInfo().getUboatName());
-        contestAndTeamAreaController.displayStaticContestInfo(staticInfoStatus.getBattlefieldInfo(), allieName.get());
-        dictionary = staticInfoStatus.getBattlefieldInfo().getDictionary();
-    }
-
-    public void setUserName(String username) {
-        this.usernameProperty.set(username);
     }
 }
 

@@ -22,7 +22,6 @@ public class CandidatesAreaController {
     }
 
     public void bindInitPropertiesToLabels(IntegerProperty totalDistinctCandidates) {
-
         numberOfDistinctCandidatesLabel.textProperty().bind(totalDistinctCandidates.asString());
     }
 

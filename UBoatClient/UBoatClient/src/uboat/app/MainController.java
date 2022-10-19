@@ -567,7 +567,6 @@ public class MainController {
      */
     private void cleanOldResults() {
         bodyController.clearOldResultsOfBruteForce();
-        totalDistinctCandidates.setValue(0);
     }
 
     /**
