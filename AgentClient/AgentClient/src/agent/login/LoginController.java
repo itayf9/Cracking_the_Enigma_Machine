@@ -8,6 +8,7 @@ import http.cookie.SimpleCookieManager;
 import http.url.Constants;
 import http.url.QueryParameter;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -49,11 +50,16 @@ public class LoginController {
     private Slider threadsSlider;
 
     @FXML
+    private Label numOfThreadsLabel;
+
+    @FXML
     private Spinner<Integer> tasksPerPullSpinner;
 
     @FXML
     public void initialize() {
         errorLabel.setVisible(false); // hide error label
+
+        numOfThreadsLabel.textProperty().bind(Bindings.concat("Threads: ", Bindings.format("%.0f", threadsSlider.valueProperty())));
 
         // get all allies
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();

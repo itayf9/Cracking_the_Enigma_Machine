@@ -15,7 +15,7 @@
             <content>
                 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="tab-scrollpane">
                     <content>
-                        <GridPane minHeight="460.0" minWidth="670.0" prefHeight="440.0" prefWidth="900.0" styleClass="tab-gridpane">
+                        <GridPane minHeight="460.0" minWidth="674.0" prefHeight="440.0" prefWidth="900.0" styleClass="tab-gridpane">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="100.0" />
                                 <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="5.0" prefWidth="5.0" />
