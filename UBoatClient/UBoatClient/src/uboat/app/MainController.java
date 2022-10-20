@@ -120,6 +120,8 @@ public class MainController {
     private FetchCandidatesTimer fetchCandidatesTimerTask;
     private StringProperty originalText;
 
+    private BooleanProperty isProcessedText;
+
 
     @FXML
     public void initialize() {
@@ -146,6 +148,7 @@ public class MainController {
         this.isContestActive = new SimpleBooleanProperty(false);
         this.originalText = new SimpleStringProperty();
         this.usernameProperty = new SimpleStringProperty("");
+        this.isProcessedText = new SimpleBooleanProperty(false);
 
         // isContestActive event listener
         isContestActive.addListener((o, oldVal, newVal) -> {
@@ -179,7 +182,7 @@ public class MainController {
         // binding initialize
         bodyController.bindComponents(isMachineConfiguredProperty, inUseRotorsIDsProperty,
                 currentWindowsCharactersProperty, inUseReflectorSymbolProperty, inUsePlugsProperty,
-                currentNotchDistances, cipherCounterProperty, totalDistinctCandidates, isClientReady);
+                currentNotchDistances, cipherCounterProperty, totalDistinctCandidates, isClientReady, isProcessedText);
 
         // general setting to initialize sub components
         body.visibleProperty().bind(isMachineLoadedProperty);
@@ -458,6 +461,7 @@ public class MainController {
                         cipherCounterProperty.setValue(cipherStatus.getCipherCounter());
                         bodyController.setCipherOutput(cipherStatus.getDetails(), cipherStatus.getCipheredText());
                         textHasBeenCiphered.set(Boolean.TRUE);
+                        isProcessedText.set(Boolean.TRUE);
                     });
                 }
             }
@@ -501,6 +505,7 @@ public class MainController {
                         currentWindowsCharactersProperty.setValue(resetStatus.getCurrentWindowsCharacters()); // current should be the same here
                         ObservableList<Integer> notchDistanceObservableList = FXCollections.observableArrayList(resetStatus.getCurrentNotchDistances()); // current should be the same here
                         currentNotchDistances.setValue(notchDistanceObservableList);
+                        isProcessedText.set(Boolean.FALSE);
                         setStatusMessage("Reset Successfully", MessageTone.SUCCESS);
                     });
                 }
@@ -617,12 +622,6 @@ public class MainController {
      * stops & cancel the engine Brute-Force process
      */
     public void announceTheWinnerOfTheContest(String allieWinnerName) {
-        Platform.runLater(() -> {
-            setStatusMessage("A Winner Was Found. The Winner Team Is: " + allieWinnerName, MessageTone.INFO);
-            isContestActive.set(false);
-            isClientReady.set(false);
-        });
-
         String body = "";
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + WINNER_FOUND_SRC).newBuilder();
         urlBuilder.addQueryParameter(ALLIE_NAME, allieWinnerName);
@@ -648,7 +647,9 @@ public class MainController {
 
                 } else {
                     Platform.runLater(() -> {
-
+                        setStatusMessage("A Winner Was Found. The Winner Team Is: " + allieWinnerName, MessageTone.INFO);
+                        isContestActive.set(false);
+                        isClientReady.set(false);
                     });
                 }
             }

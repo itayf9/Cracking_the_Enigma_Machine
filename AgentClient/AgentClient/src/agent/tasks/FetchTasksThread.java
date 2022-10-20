@@ -4,17 +4,23 @@ import agent.AgentTask;
 import agent.AgentTaskDeserializer;
 import agent.app.MainController;
 import agent.app.MessageTone;
+import candidate.AgentConclusion;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dto.DTOstatus;
 import dto.DTOtasks;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
+import dictionary.Dictionary;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 
 import static http.url.QueryParameter.*;
 import static http.url.URLconst.*;
@@ -29,7 +35,8 @@ public class FetchTasksThread implements Runnable {
     private final StringProperty uboatName;
     private CountDownLatch cdl;
 
-    public FetchTasksThread(MainController mainController, StringProperty allieName, StringProperty uboatName, CountDownLatch cdl) {
+
+    public FetchTasksThread(MainController mainController, StringProperty allieName, StringProperty uboatName) {
         this.mainController = mainController;
         this.allieName = allieName;
         this.uboatName = uboatName;
@@ -38,6 +45,8 @@ public class FetchTasksThread implements Runnable {
     public void setClient(OkHttpClient client) {
         this.client = client;
     }
+
+
 
     @Override
     public void run() {
@@ -67,11 +76,9 @@ public class FetchTasksThread implements Runnable {
                 System.out.println("fetch agentTasks task response");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                //Gson gson = new Gson();
                 Gson gson = new GsonBuilder()
                         .registerTypeAdapter(AgentTask.class, new AgentTaskDeserializer())
                         .create();
-
 
                 if (response.code() != 200) {
                     DTOstatus tasksStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
@@ -83,7 +90,7 @@ public class FetchTasksThread implements Runnable {
                         Thread.sleep(25);
                     } catch (InterruptedException ignored) {
                     }
-                    Platform.runLater(() -> mainController.executeTasks(tasksStatus.getTaskList()));
+                    Platform.runLater(()->mainController.executeTasks(tasksStatus.getTaskList()));
                 }
             }
 

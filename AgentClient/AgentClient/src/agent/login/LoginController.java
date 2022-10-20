@@ -1,6 +1,7 @@
 package agent.login;
 
 import agent.app.MainController;
+import agent.tasks.FetchLoggedAlliesInfoTimer;
 import com.google.gson.Gson;
 import dto.DTOloggedAllies;
 import dto.DTOstatus;
@@ -9,6 +10,8 @@ import http.url.Constants;
 import http.url.QueryParameter;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,6 +24,7 @@ import okhttp3.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Timer;
 
 import static http.url.Client.AGENT;
 import static http.url.URLconst.*;
@@ -55,10 +59,14 @@ public class LoginController {
     @FXML
     private Spinner<Integer> tasksPerPullSpinner;
 
+    private Timer fetchLoggedAlliesInfoTimer;
+    private FetchLoggedAlliesInfoTimer fetchLoggedAlliesInfoTimerTask;
+    private StringProperty chosenAllie;
+
     @FXML
     public void initialize() {
         errorLabel.setVisible(false); // hide error label
-
+        this.chosenAllie = new SimpleStringProperty("");
         numOfThreadsLabel.textProperty().bind(Bindings.concat("Threads: ", Bindings.format("%.0f", threadsSlider.valueProperty())));
 
         // get all allies
@@ -91,6 +99,7 @@ public class LoginController {
                 DTOloggedAllies alliesStatus = gson.fromJson(dtoAsStr, DTOloggedAllies.class);
 
                 Platform.runLater(() -> {
+                    teamComboBox.getItems().clear();
                     for (String allieName : alliesStatus.getLoggedAllies()) {
                         teamComboBox.getItems().add(allieName);
                     }
@@ -101,6 +110,9 @@ public class LoginController {
                 System.out.println("Oops... something went wrong..." + e.getMessage());
             }
         });
+//        fetchLoggedAlliesInfoTimer = new Timer();
+//        fetchLoggedAlliesInfoTimerTask = new FetchLoggedAlliesInfoTimer(errorLabel, teamComboBox);
+//        fetchLoggedAlliesInfoTimer.schedule(fetchLoggedAlliesInfoTimerTask, 2000,2000);
 
         tasksPerPullSpinner.valueFactoryProperty().set(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE));
 
@@ -119,7 +131,6 @@ public class LoginController {
                 tasksPerPullSpinner.getEditor().setText(oldValue);
             }
         });
-
     }
 
 
@@ -130,7 +141,7 @@ public class LoginController {
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGIN_SRC).newBuilder();
         urlBuilder.addQueryParameter(Constants.USERNAME, userNameTextField.getText());
-        urlBuilder.addQueryParameter(QueryParameter.ALLIE_NAME, teamComboBox.getValue());
+        urlBuilder.addQueryParameter(QueryParameter.ALLIE_NAME, chosenAllie.get());
         urlBuilder.addQueryParameter(QueryParameter.NUM_OF_THREADS, String.valueOf((int) threadsSlider.getValue()));
         urlBuilder.addQueryParameter(QueryParameter.MISSION_COUNT, tasksPerPullSpinner.getEditor().getText());
         urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, AGENT.getClientTypeAsString());
@@ -174,6 +185,8 @@ public class LoginController {
                     }
                     Scene appScene = new Scene(app, 900, 625);
                     Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//                    fetchLoggedAlliesInfoTimer.cancel();
+//                    fetchLoggedAlliesInfoTimerTask.cancel();
                     primaryStage.setScene(appScene);
                     primaryStage.show();
                 });

@@ -171,7 +171,7 @@ public class BodyController {
     public void bindComponents(BooleanProperty isMachineConfiguredProperty, ListProperty<Integer> inUseRotorsIDsProperty,
                                StringProperty currentWindowsCharactersProperty, StringProperty inUseReflectorSymbolProperty,
                                StringProperty inUsePlugs, ListProperty<Integer> currentNotchDistances, IntegerProperty cipherCounterProperty,
-                               IntegerProperty totalDistinctCandidates, BooleanProperty isClientReady) {
+                               IntegerProperty totalDistinctCandidates, BooleanProperty isClientReady, BooleanProperty isProcessedText) {
 
 
         // binds the components that need the isConfigured Boolean property.
@@ -179,6 +179,7 @@ public class BodyController {
         encryptDecrypt.disableProperty().bind(isMachineConfiguredProperty.not().or(isClientReady));
         candidatesArea.disableProperty().bind(isMachineConfiguredProperty.not());
         dictionary.disableProperty().bind(isMachineConfiguredProperty.not().or(isClientReady));
+        encryptDecryptController.bindProcessButton(isProcessedText);
 
         // config bindings
         currentConfigController.bindConfigComponents(inUseRotorsIDsProperty, currentWindowsCharactersProperty, inUseReflectorSymbolProperty, inUsePlugs, currentNotchDistances, isMachineConfiguredProperty);

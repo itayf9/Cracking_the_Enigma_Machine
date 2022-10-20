@@ -144,7 +144,7 @@ public class MainController {
         this.usernameProperty = new SimpleStringProperty("");
 
         // Timers
-        this.fetchTasksThread = new FetchTasksThread(this, allieName, uboatName, cdl);
+        this.fetchTasksThread = new FetchTasksThread(this, allieName, uboatName);
 
 
         isSubscribed.addListener((o, oldVal, newVal) -> {
@@ -161,8 +161,6 @@ public class MainController {
                 // allie has unsubscribed, when the contest is finished
                 setStatusMessage("Team has unsubscribed from the game", MessageTone.INFO);
                 cleanOldResults();
-                // waitForAllieApproveTimer.cancel();
-                // waitForAllieApproveTimerTask.cancel();
             }
         });
 
@@ -189,9 +187,6 @@ public class MainController {
                 threadPool.shutdownNow();
                 submitConclusionsTimer.cancel();
                 submitConclusionsTimerTask.cancel();
-                //this.waitForAllieApproveTimer = new Timer();
-                //this.waitForAllieApproveTimerTask = new WaitForAllieApproveFinishGameTimer(this, allieName, uboatName, client);
-                // waitForAllieApproveTimer.schedule(waitForAllieApproveTimerTask, REFRESH_RATE, REFRESH_RATE);
             }
         });
 
@@ -472,8 +467,12 @@ public class MainController {
         this.usernameProperty.set(username);
     }
 
+    public void updateTaskProperty(List<AgentTask> taskList) {
+
+    }
+
     /**
-     * given some AgentTask, injects some information to the AgentTask and sents in to the thread pool to execute
+     * given some AgentTask, injects some information to the AgentTask and sends in to the thread pool to execute
      *
      * @param taskList a list of the AgentTask to execute
      */
@@ -481,6 +480,7 @@ public class MainController {
 
         numOfTotalPulledTasks.setValue(numOfTotalPulledTasks.get() + taskList.size());
         numOfTasksInQueue.setValue(numOfTasksInQueue.get() + taskList.size());
+
         if (isContestActive.get()) {
             this.cdl = new CountDownLatch(numOfTasksInQueue.get());
             new Thread(this.fetchTasksThread).start();
@@ -500,6 +500,14 @@ public class MainController {
                 threadPool.execute(task);
             }
         }
+    }
+
+    public ExecutorService getThreadPool() {
+        return threadPool;
+    }
+
+    public Dictionary getDictionary() {
+        return dictionary;
     }
 }
 

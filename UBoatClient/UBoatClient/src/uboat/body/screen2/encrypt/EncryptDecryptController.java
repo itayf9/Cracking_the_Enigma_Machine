@@ -167,4 +167,8 @@ public class EncryptDecryptController {
             outputLabel.setText(cipherText);
         }
     }
+
+    public void bindProcessButton(BooleanProperty isProcessedText) {
+        processButton.disableProperty().bind(isProcessedText);
+    }
 }

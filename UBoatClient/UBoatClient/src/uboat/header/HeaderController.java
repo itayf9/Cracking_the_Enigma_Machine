@@ -14,7 +14,7 @@ import java.io.File;
 
 public class HeaderController {
 
-    private FileChooser fileChooser = new FileChooser();
+    private final FileChooser fileChooser = new FileChooser();
 
     private String selectedMachineFile;
 
@@ -73,5 +73,4 @@ public class HeaderController {
         usernameLabel.textProperty().bind(usernameProperty);
         logoutButton.disableProperty().bind(isContestActive);
     }
-
 }

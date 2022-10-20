@@ -78,16 +78,15 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
      *
      * @param agentsInfo    agent info
      * @param jobStatus     progress
-     * @param allCandidates cnadidates found
+     * @param allCandidates candidates found
      */
     public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus, List<AgentConclusion> allCandidates) {
         Platform.runLater(() -> mainController.displayDynamicContestInfo(agentsInfo, jobStatus));
-        int candidateCounter = 0;
+
         for (AgentConclusion agentConclusion : allCandidates) {
             String allieName = agentConclusion.getAllieName();
             String agentName = agentConclusion.getAgentName();
             for (Candidate candidate : agentConclusion.getCandidates()) {
-                candidateCounter++;
                 try {
                     Thread.sleep(25);
                 } catch (InterruptedException e) {
@@ -96,7 +95,6 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
                 Platform.runLater(() -> mainController.createCandidateTile(candidate, allieName, agentName));
             }
         }
-        System.out.println("total amount of candidates is " + candidateCounter);
     }
 
 }
