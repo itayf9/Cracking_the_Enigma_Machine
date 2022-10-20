@@ -1361,6 +1361,8 @@ public class EnigmaEngine implements Engine {
         if (!allieMaybe.isPresent()) {
             return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
         }
+        Set<AgentInfo> agents = loggedAllieName2loggedAgents.get(allieName);
+        agents.forEach(AgentInfo::resetDynamicInfo);
         battlefield.getAllies().remove(allieMaybe.get());
         loggedAllieName2isSubscribed.put(allieName, false);
 
@@ -1504,7 +1506,6 @@ public class EnigmaEngine implements Engine {
     public void resetOldContestDynamicInfo(String uboatName) {
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         Set<DecryptManager> allies = battlefield.getAllies();
-//        allies.forEach(DecryptManager::resetJobStatusInfo);
 
        for(DecryptManager allie : allies) {
          Set<AgentInfo> agents = loggedAllieName2loggedAgents.get( allie.getAllieName());

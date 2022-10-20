@@ -19,7 +19,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Battlefield {
 
     // updated stuff
-    private String uboatName;
+    private final String uboatName;
 
     private Machine machine;
     private Set<DecryptManager> allies;
@@ -27,12 +27,12 @@ public class Battlefield {
     private String battlefieldName;
     private int numOfRequiredAllies;
     private DifficultyLevel difficultyLevel;
-    private BlockingQueue<AgentConclusion> uboatCandidatesQueue;
+    private final BlockingQueue<AgentConclusion> uboatCandidatesQueue;
     private boolean isUboatReady;
-    private BooleanProperty isActive;
+    private final BooleanProperty isActive;
 
     private AllieInfo winnerAllieInfo;
-    private StringProperty textToDecipher;
+    private final StringProperty textToDecipher;
     private boolean isBattlefieldConfigured;
 
     public Battlefield(String uboatName) {

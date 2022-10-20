@@ -53,9 +53,9 @@ public class MainController {
     private GridPane appGridPane;
 
     @FXML
-    private TabPane body;
+    private TabPane tabPaneBody;
     @FXML
-    private BodyController bodyController;
+    private BodyController tabPaneBodyController;
 
     @FXML
     private HBox statusBar;
@@ -103,7 +103,7 @@ public class MainController {
 
         // controller initialize
         headerController.setMainController(this);
-        bodyController.setMainController(this);
+        tabPaneBodyController.setMainController(this);
 
         // property initialize
         this.totalDistinctCandidates = new SimpleIntegerProperty();
@@ -156,7 +156,7 @@ public class MainController {
         });
 
         // binding initialize
-        bodyController.bindComponents(totalDistinctCandidates, isSubscribedToContest, isReady, isContestActive);
+        tabPaneBodyController.bindComponents(totalDistinctCandidates, isSubscribedToContest, isReady, isContestActive);
 
         // general setting to initialize sub components
         messageLabel.textProperty().bind(statusLabel.textProperty());
@@ -293,7 +293,7 @@ public class MainController {
                     Platform.runLater(() -> {
                         uboatName.set(uboatNameToRegister);
                         isSubscribedToContest.set(true);
-                        bodyController.setTaskSizeSpinner(subscribeStatus.getTotalPossibleWindowsPositions());
+                        tabPaneBodyController.setTaskSizeSpinner(subscribeStatus.getTotalPossibleWindowsPositions());
                         setStatusMessage("Subscribed Successfully", MessageTone.SUCCESS);
                     });
                 }
@@ -338,6 +338,7 @@ public class MainController {
                         fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
                         setStatusMessage("Allie is Ready", MessageTone.INFO);
                         isReady.set(true);
+                        tabPaneBody.getSelectionModel().selectNext();
                     });
                 }
             }
@@ -378,7 +379,7 @@ public class MainController {
                 } else {
                     DTOstaticContestInfo staticInfoStatus = gson.fromJson(dtoAsStr, DTOstaticContestInfo.class);
                     Platform.runLater(() -> {
-                        bodyController.displayStaticContestInfo(staticInfoStatus.getAlliesInfo(), staticInfoStatus.getBattlefieldInfo());
+                        tabPaneBodyController.displayStaticContestInfo(staticInfoStatus.getAlliesInfo(), staticInfoStatus.getBattlefieldInfo());
                     });
                 }
             }
@@ -395,7 +396,7 @@ public class MainController {
      * @param alliesInfoList
      */
     public void updateActiveTeamsInfo(List<AllieInfo> alliesInfoList) {
-        bodyController.updateActiveTeamsInfo(alliesInfoList);
+        tabPaneBodyController.updateActiveTeamsInfo(alliesInfoList);
     }
 
 
@@ -430,6 +431,7 @@ public class MainController {
                         setStatusMessage("Contest is Approved", MessageTone.INFO);
                         cleanOldResults();
                         isSubscribedToContest.set(false);
+                        tabPaneBody.getSelectionModel().selectPrevious();
                     });
                 }
             }
@@ -444,7 +446,7 @@ public class MainController {
      * clear all findings of last process and labels progress
      */
     private void cleanOldResults() {
-        bodyController.clearOldResults();
+        tabPaneBodyController.clearOldResults();
         totalDistinctCandidates.set(0);
     }
 
@@ -453,7 +455,7 @@ public class MainController {
      *
      * @param candidate the candidate to create a tile from
      */
-    public void createCandidateTile(Candidate candidate, String allieName, String agentName) {
+    synchronized public void createCandidateTile(Candidate candidate, String allieName, String agentName) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/allies/body/screen2/candidate/tile/candidateTile.fxml"));
@@ -467,7 +469,8 @@ public class MainController {
             candidateTileController.setProcessedByAllieName(allieName);
             candidateTileController.setProcessedByAgentName(agentName);
             totalDistinctCandidates.set(totalDistinctCandidates.get() + 1);
-            bodyController.insertCandidateToFlowPane(singleCandidateTile);
+            System.out.println(totalDistinctCandidates.get());
+            tabPaneBodyController.insertCandidateToFlowPane(singleCandidateTile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -574,7 +577,7 @@ public class MainController {
      * @param loggedAgents
      */
     public void updateLoggedAgentsInfo(Set<AgentInfo> loggedAgents) {
-        bodyController.updateLoggedAgentsInfo(loggedAgents);
+        tabPaneBodyController.updateLoggedAgentsInfo(loggedAgents);
     }
 
     /**
@@ -583,7 +586,7 @@ public class MainController {
      * @param allBattlefields all contests
      */
     public void displayContestsInfo(List<BattlefieldInfo> allBattlefields) {
-        bodyController.clearContests();
+        tabPaneBodyController.clearContests();
 
         for (BattlefieldInfo battlefieldInfo : allBattlefields) {
             createContestTile(battlefieldInfo);
@@ -612,8 +615,8 @@ public class MainController {
             contestTileController.setDifficultyLevel(battlefieldInfo.getDifficultyLevel().name());
             contestTileController.setAlliesSubscribedRequired(String.valueOf(battlefieldInfo.getNumOfLoggedAllies()), String.valueOf(battlefieldInfo.getNumOfRequiredAllies()));
             contestTileController.bindSubscriptionButton(isSubscribedToContest);
-            contestTileController.setParentController(bodyController);
-            bodyController.insertContestToFlowPane(singleContestTile);
+            contestTileController.setParentController(tabPaneBodyController);
+            tabPaneBodyController.insertContestToFlowPane(singleContestTile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -624,11 +627,15 @@ public class MainController {
     }
 
     public void clearOldCandidates() {
-        bodyController.clearOldCandidates();
+        tabPaneBodyController.clearOldCandidates();
     }
 
     public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus) {
-        bodyController.displayDynamicContestInfo(agentsInfo, jobStatus);
+        tabPaneBodyController.displayDynamicContestInfo(agentsInfo, jobStatus);
+
+        // clear old candidates from flow-pane
+        clearOldCandidates();
+        totalDistinctCandidates.set(0);
     }
 
     public MainController getMainController(){

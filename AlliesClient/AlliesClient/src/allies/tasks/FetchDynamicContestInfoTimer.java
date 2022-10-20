@@ -48,7 +48,7 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch dynamic info task response");
+                System.out.println("fetch dynamic info timer response");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
@@ -62,6 +62,7 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
                 } else {
                     // start scanning candidates
                     DTOdynamicContestInfo contestInfoStatus = gson.fromJson(dtoAsStr, DTOdynamicContestInfo.class);
+                    System.out.println("num of conclusions found " + contestInfoStatus.getAllCandidates().size());
                     displayDynamicContestInfo(contestInfoStatus.getAgentsInfo(), contestInfoStatus.getJobStatus(), contestInfoStatus.getAllCandidates());
                 }
             }
@@ -81,11 +82,12 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
      */
     public void displayDynamicContestInfo(Set<AgentInfo> agentsInfo, JobProgressInfo jobStatus, List<AgentConclusion> allCandidates) {
         Platform.runLater(() -> mainController.displayDynamicContestInfo(agentsInfo, jobStatus));
-
+        int candidateCounter = 0;
         for (AgentConclusion agentConclusion : allCandidates) {
             String allieName = agentConclusion.getAllieName();
             String agentName = agentConclusion.getAgentName();
             for (Candidate candidate : agentConclusion.getCandidates()) {
+                candidateCounter++;
                 try {
                     Thread.sleep(25);
                 } catch (InterruptedException e) {
@@ -94,6 +96,7 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
                 Platform.runLater(() -> mainController.createCandidateTile(candidate, allieName, agentName));
             }
         }
+        System.out.println("total amount of candidates is " + candidateCounter);
     }
 
 }

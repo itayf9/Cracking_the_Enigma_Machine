@@ -203,6 +203,7 @@ public class MainController {
      */
     private void clearOldComponents() {
         bodyController.clearOldComponents();
+        totalDistinctCandidates.set(0);
     }
 
     /**
