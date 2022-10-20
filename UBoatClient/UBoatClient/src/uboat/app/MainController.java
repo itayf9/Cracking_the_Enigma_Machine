@@ -618,7 +618,7 @@ public class MainController {
      */
     public void announceTheWinnerOfTheContest(String allieWinnerName) {
         Platform.runLater(() -> {
-            setStatusMessage("A Winner Was Found. " + allieWinnerName, MessageTone.INFO);
+            setStatusMessage("A Winner Was Found. The Winner Team Is: " + allieWinnerName, MessageTone.INFO);
             isContestActive.set(false);
             isClientReady.set(false);
         });

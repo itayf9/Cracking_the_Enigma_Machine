@@ -1074,7 +1074,7 @@ public class EnigmaEngine implements Engine {
         // fetches the set of the logged agents
         Set<AgentInfo> myAgents = loggedAllieName2loggedAgents.get(allieUserName);
         if (myAgents == null) {
-            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND);
+            return new DTOstatus(false, Problem.ALLIE_NAME_DOESNT_EXIST);
         }
 
         // checks if there are enough logged agents
@@ -1210,7 +1210,7 @@ public class EnigmaEngine implements Engine {
     public DTOstatus assignAgentToAllie(String agentName, String allieNameToJoin, int numOfThreads, int numOfMissionsToPull) {
         Set<AgentInfo> agentsOfAllie = loggedAllieName2loggedAgents.get(allieNameToJoin);
         if (agentsOfAllie == null) {
-            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND);
+            return new DTOstatus(false, Problem.ALLIE_NAME_DOESNT_EXIST);
         }
 
         AgentInfo agentInfoToInsert = new AgentInfo(agentName, numOfThreads, numOfMissionsToPull);
@@ -1262,7 +1262,7 @@ public class EnigmaEngine implements Engine {
                 .filter(decryptManager -> decryptManager.getAllieName().equals(allieName)).findFirst();
 
         if (!allieMaybe.isPresent()) {
-            return new DTOdynamicContestInfo(false, Problem.ALLIE_NAME_NOT_FOUND, agentsInfo, allConclusions, jobProgressInfo);
+            return new DTOdynamicContestInfo(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD, agentsInfo, allConclusions, jobProgressInfo);
         }
 
         DecryptManager allie = allieMaybe.get();
@@ -1309,7 +1309,7 @@ public class EnigmaEngine implements Engine {
 
         Optional<DecryptManager> allieMaybe = allies.stream().filter(decryptManager -> decryptManager.getAllieName().equals(allieName)).findFirst();
         if (!allieMaybe.isPresent()) {
-            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND);
+            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD);
         }
 
         DecryptManager allie = allieMaybe.get();
@@ -1344,7 +1344,7 @@ public class EnigmaEngine implements Engine {
 
         Boolean isSubscribe = loggedAllieName2isSubscribed.get(allieName);
         if (isSubscribe == null) {
-            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
+            return new DTOactive(false, Problem.ALLIE_NAME_DOESNT_EXIST, false);
         }
 
         return new DTOactive(true, Problem.NO_PROBLEM, !isSubscribe);
@@ -1359,7 +1359,7 @@ public class EnigmaEngine implements Engine {
 
         Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter((decryptManager) -> decryptManager.getAllieName().equals(allieName)).findFirst();
         if (!allieMaybe.isPresent()) {
-            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
+            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD, false);
         }
         Set<AgentInfo> agents = loggedAllieName2loggedAgents.get(allieName);
         agents.forEach(AgentInfo::resetDynamicInfo);
@@ -1396,7 +1396,7 @@ public class EnigmaEngine implements Engine {
 
         Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter(decryptManager -> decryptManager.getAllieName().equals(allieName)).findFirst();
         if (!allieMaybe.isPresent()) {
-            return new DTOtasks(false, Problem.ALLIE_NAME_NOT_FOUND, new ArrayList<>());
+            return new DTOtasks(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD, new ArrayList<>());
         }
 
         AgentInfo agentInfo = agentName2agentInfo.get(agentName);
@@ -1431,7 +1431,7 @@ public class EnigmaEngine implements Engine {
 
         Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter((decryptManager) -> decryptManager.getAllieName().equals(allieName)).findFirst();
         if (!allieMaybe.isPresent()) {
-            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND);
+            return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD);
         }
 
         BlockingQueue<AgentConclusion> conclusionQueue = allieMaybe.get().getCandidatesQueue();
@@ -1458,7 +1458,7 @@ public class EnigmaEngine implements Engine {
     public DTOactive checkIfAllieIsSubscribedToContest(String allieName) {
         Boolean isSubscribed = loggedAllieName2isSubscribed.get(allieName);
         if (isSubscribed == null) {
-            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
+            return new DTOactive(false, Problem.ALLIE_NAME_DOESNT_EXIST, false);
         }
 
         return new DTOactive(true, Problem.NO_PROBLEM, isSubscribed);
@@ -1468,7 +1468,7 @@ public class EnigmaEngine implements Engine {
     public DTOactive checkIfAllieIsSubscribedToContestHasStarted(String allieName) {
         Boolean isSubscribed = loggedAllieName2isSubscribed.get(allieName);
         if (isSubscribed == null) {
-            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
+            return new DTOactive(false, Problem.ALLIE_NAME_DOESNT_EXIST, false);
         }
 
         if (!isSubscribed) {
@@ -1477,7 +1477,7 @@ public class EnigmaEngine implements Engine {
 
         DecryptManager allie = allieName2decryptManager.get(allieName);
         if (allie == null) {
-            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND, false);
+            return new DTOactive(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD, false);
         }
         return new DTOactive(true, Problem.NO_PROBLEM, allie.getIsContestActive().get());
     }

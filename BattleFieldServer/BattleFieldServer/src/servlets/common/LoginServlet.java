@@ -81,12 +81,16 @@ public class LoginServlet extends HttpServlet {
                     case AGENT:
                         String agentName = request.getParameter(Constants.USERNAME);
                         String allieNameToJoin = request.getParameter(QueryParameter.ALLIE_NAME);
+                        if (allieNameToJoin == null) {
+                            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                            response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_ALLIE_NAME)));
+                        }
                         int numOfThreads;
                         try {
                             numOfThreads = Integer.parseInt(request.getParameter(QueryParameter.NUM_OF_THREADS));
                         } catch (NullPointerException | NumberFormatException e) {
                             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                            response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
+                            response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_NUM_OF_THREADS)));
                             return;
                         }
                         int numOfMissionsToPull;
@@ -94,7 +98,7 @@ public class LoginServlet extends HttpServlet {
                             numOfMissionsToPull = Integer.parseInt(request.getParameter(QueryParameter.MISSION_COUNT));
                         } catch (NullPointerException | NumberFormatException e) {
                             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                            response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
+                            response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_MISSION_COUNT)));
                             return;
                         }
 

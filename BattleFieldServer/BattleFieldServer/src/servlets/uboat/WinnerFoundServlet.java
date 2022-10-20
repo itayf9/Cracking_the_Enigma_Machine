@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static utils.ServletUtils.validateAuthorization;
 
@@ -45,7 +44,7 @@ public class WinnerFoundServlet extends HttpServlet {
             String allieName = req.getParameter(QueryParameter.ALLIE_NAME);
             if (allieName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_ALLIE_NAME)));
             }
             // check if battlefield isActive
             Map<String, Battlefield> battlefields = ServletUtils.getUboatName2battleField(getServletContext());
@@ -57,7 +56,7 @@ public class WinnerFoundServlet extends HttpServlet {
                 Optional<DecryptManager> allieMaybe = allies.stream().filter(DecryptManager -> DecryptManager.getAllieName().equals(allieName)).findFirst();
                 if (!allieMaybe.isPresent()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND)));
+                    resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD)));
                     return;
                 }
 

@@ -510,6 +510,12 @@ public class MainController {
                 return "Please enter some text.";
             case CIPHER_INPUT_NOT_IN_ALPHABET:
                 return "The text should contain only letters from the machine's alphabet.";
+            case NOT_ENOUGH_LOGGED_AGENTS:
+                return "Not enough agents are logged to your team.";
+            case MISSING_TASK_SIZE:
+                return "Please enter a task size before pressing \"ready\".";
+            case MISSING_AGENTS_AMOUNT:
+                return "Please enter a number of agents before pressing \"ready\".";
             case FILE_NOT_ENOUGH_ROTORS:
                 return "There are not enough rotors.";
             case FILE_NUM_OF_REFLECTS_IS_NOT_HALF_OF_ABC:

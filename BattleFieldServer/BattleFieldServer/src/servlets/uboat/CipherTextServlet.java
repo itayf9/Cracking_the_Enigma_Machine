@@ -43,7 +43,7 @@ public class CipherTextServlet extends HttpServlet {
             String textToCipher = req.getParameter(QueryParameter.TEXT_TO_CIPHER);
             if (textToCipher == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_PARAMETER)));
+                resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_TEXT_TO_CIPHER)));
                 return;
             }
 
