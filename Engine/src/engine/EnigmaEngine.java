@@ -1070,16 +1070,11 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
-    public DTOstatus setAllieReady(String allieUserName, String uboatUserName, boolean isReady, int taskSize, int numOfAgents) {
+    public DTOstatus setAllieReady(String allieUserName, String uboatUserName, boolean isReady, int taskSize) {
         // fetches the set of the logged agents
         Set<AgentInfo> myAgents = loggedAllieName2loggedAgents.get(allieUserName);
         if (myAgents == null) {
             return new DTOstatus(false, Problem.ALLIE_NAME_DOESNT_EXIST);
-        }
-
-        // checks if there are enough logged agents
-        if (myAgents.size() < numOfAgents) {
-            return new DTOstatus(false, Problem.NOT_ENOUGH_LOGGED_AGENTS);
         }
 
         // sets the settings of the matching decryptManager

@@ -64,15 +64,8 @@ public class ClientIsReadyServlet extends HttpServlet {
                         return;
                     }
 
-                    int numOfAgents;
-                    try {
-                        numOfAgents = Integer.parseInt(req.getParameter(QueryParameter.AGENTS_AMOUNT));
-                    } catch (NumberFormatException e) {
-                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_AGENTS_AMOUNT)));
-                        return;
-                    }
-                    DTOstatus allieReadyStatus = engine.setAllieReady(userNameFromSession, uboatName, true, taskSize, numOfAgents);
+
+                    DTOstatus allieReadyStatus = engine.setAllieReady(userNameFromSession, uboatName, true, taskSize);
                     if (!allieReadyStatus.isSucceed()) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         resp.getWriter().println(gson.toJson(allieReadyStatus));

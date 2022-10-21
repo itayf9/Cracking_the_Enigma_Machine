@@ -19,33 +19,10 @@ public class AllieSettingController {
     @FXML
     private Button isReadyButton;
 
-    @FXML
-    private Spinner<Integer> numberOfAgentsSpinner;
-
-    @FXML
-    public void initialize() {
-        numberOfAgentsSpinner.valueFactoryProperty().set(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE));
-
-
-        numberOfAgentsSpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                int newValueAsInt = Integer.parseInt(newValue);
-                if (newValueAsInt > 0) {
-                    numberOfAgentsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, newValueAsInt));
-                } else {
-                    numberOfAgentsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, Integer.parseInt(oldValue)));
-                    numberOfAgentsSpinner.getEditor().setText(oldValue);
-                }
-            } catch (NumberFormatException e) {
-                numberOfAgentsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, Integer.parseInt(oldValue)));
-                numberOfAgentsSpinner.getEditor().setText(oldValue);
-            }
-        });
-    }
 
     @FXML
     void setReady(MouseEvent ignored) {
-        parentController.setReady(taskSizeSpinner.getValue(), numberOfAgentsSpinner.getValue());
+        parentController.setReady(taskSizeSpinner.getValue());
     }
 
     public void setParentController(BodyController bodyController) {
@@ -75,7 +52,6 @@ public class AllieSettingController {
     public void bindComponents(BooleanProperty isSubscribedToContest, BooleanProperty isReady) {
         isReadyButton.disableProperty().bind(isSubscribedToContest.not().or(isReady));
         taskSizeSpinner.disableProperty().bind(isSubscribedToContest.not().or(isReady));
-        numberOfAgentsSpinner.disableProperty().bind(isSubscribedToContest.not().or(isReady));
 
     }
 }

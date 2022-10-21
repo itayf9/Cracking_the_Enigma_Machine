@@ -165,7 +165,7 @@ public interface Engine {
 
     void setUboatReady(String userNameFromSession, boolean b);
 
-    DTOstatus setAllieReady(String userNameFromSession, String uboatName, boolean b, int taskSize, int numOfAgents);
+    DTOstatus setAllieReady(String userNameFromSession, String uboatName, boolean b, int taskSize);
 
     boolean allClientsReady(String uboatName);
 

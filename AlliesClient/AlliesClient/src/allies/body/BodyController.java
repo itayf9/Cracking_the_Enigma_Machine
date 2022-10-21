@@ -151,8 +151,8 @@ public class BodyController {
         contestsAreaController.clearContests();
     }
 
-    public void setReady(int taskSize, int numOfAgents) {
-        mainController.setReady(taskSize, numOfAgents);
+    public void setReady(int taskSize) {
+        mainController.setReady(taskSize);
     }
 
     public void setTaskSizeSpinner(long totalPossibleWindowsPositions) {
