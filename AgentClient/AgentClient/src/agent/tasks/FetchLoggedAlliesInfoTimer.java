@@ -60,9 +60,16 @@ public class FetchLoggedAlliesInfoTimer extends TimerTask {
                 DTOloggedAllies alliesStatus = gson.fromJson(dtoAsStr, DTOloggedAllies.class);
 
                 Platform.runLater(() -> {
+                    String currentTeamComboBoxValue = teamComboBox.getValue();
                     teamComboBox.getItems().clear();
                     for (String allieName : alliesStatus.getLoggedAllies()) {
                         teamComboBox.getItems().add(allieName);
+                    }
+                    Optional<String> maybeAllieName = teamComboBox.getItems().stream().filter(team -> team.equals(currentTeamComboBoxValue)).findFirst();
+                    if (maybeAllieName.isPresent()) {
+                        teamComboBox.setValue(currentTeamComboBoxValue);
+                    } else {
+                        errorLabel.setText("The selected team has logged out");
                     }
                 });
             }

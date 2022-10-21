@@ -74,7 +74,7 @@ public class LoginController {
 
                     Platform.runLater(() -> {
                         errorLabel.setVisible(true);
-                        errorLabel.setText(loginStatus.getDetails().name());
+                        errorLabel.setText(loginStatus.getDetails().problemToGeneralMessage());
                     });
                     return;
                 }
