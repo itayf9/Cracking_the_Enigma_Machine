@@ -121,6 +121,7 @@ public class MainController {
                 fetchIsSubscribedToContestTimerTask = new FetchIsSubscribedToContestTimer(isSubscribedToContest, uboatName, client, getMainController());
                 fetchIsSubscribedToContestTimer.schedule(fetchIsSubscribedToContestTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {// when contest is over
+                isReady.set(false);
             }
         });
 
@@ -140,7 +141,6 @@ public class MainController {
                 this.fetchDynamicContestInfoTimerTask = new FetchDynamicContestInfoTimer(this, uboatName, client);
                 fetchDynamicContestInfoTimer.schedule(fetchDynamicContestInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
-
                 // contest == not active => winner found
 
                 fetchAlliesInfoTimerTask.cancel();

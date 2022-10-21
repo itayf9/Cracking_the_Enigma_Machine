@@ -6,12 +6,14 @@ import dto.DTOstatus;
 import http.cookie.SimpleCookieManager;
 import http.url.Constants;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.TimerTask;
 
 import static http.url.Client.AGENT;
@@ -20,10 +22,11 @@ import static http.url.URLconst.BASE_URL;
 import static http.url.URLconst.FETCH_LOGGED_ALLIES_SRC;
 
 public class FetchLoggedAlliesInfoTimer extends TimerTask {
-    private Label errorLabel;
-    private ComboBox<String> teamComboBox;
+    private final Label errorLabel;
+    private final ComboBox<String> teamComboBox;
+    private StringProperty chosenAllie;
 
-    public FetchLoggedAlliesInfoTimer(Label errorLabel, ComboBox<String> teamComboBox){
+    public FetchLoggedAlliesInfoTimer(Label errorLabel, ComboBox<String> teamComboBox) {
         this.errorLabel = errorLabel;
         this.teamComboBox = teamComboBox;
     }
