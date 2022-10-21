@@ -14,4 +14,7 @@ public class LoseWinAreaController {
         this.parentController = bodyController;
     }
 
+    public void setWinnerLabel(String allieWinnerName) {
+        winnerTeamLabel.setText(allieWinnerName);
+    }
 }

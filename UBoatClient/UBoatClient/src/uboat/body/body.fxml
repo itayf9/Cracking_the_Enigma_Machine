@@ -9,36 +9,26 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="900.0"
-         styleClass="enigma-tabpane" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171"
-         xmlns:fx="http://javafx.com/fxml/1" fx:controller="uboat.body.BodyController">
+<TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="900.0" styleClass="enigma-tabpane" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uboat.body.BodyController">
     <tabs>
         <Tab styleClass="enigma-tab" text="Machine">
             <content>
-                <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308"
-                            maxWidth="1.7976931348623157E308" styleClass="tab-scrollpane">
+                <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="tab-scrollpane">
                     <content>
-                        <GridPane minHeight="460.0" minWidth="700.0" prefHeight="440.0" prefWidth="900.0"
-                                  styleClass="tab-gridpane">
+                        <GridPane minHeight="460.0" minWidth="700.0" prefHeight="440.0" prefWidth="900.0" styleClass="tab-gridpane">
                             <columnConstraints>
-                                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="100.0"/>
-                                <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="5.0"
-                                                   prefWidth="5.0"/>
-                                <ColumnConstraints hgrow="ALWAYS" maxWidth="500.0" minWidth="60.0"/>
+                                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="100.0" />
+                                <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="5.0" prefWidth="5.0" />
+                                <ColumnConstraints hgrow="ALWAYS" maxWidth="500.0" minWidth="60.0" />
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="292.33331298828125"
-                                                vgrow="SOMETIMES"/>
-                                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0"
-                                                prefHeight="18.66668701171875" vgrow="ALWAYS"/>
-                                <RowConstraints maxHeight="294.0" prefHeight="250.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="1.7976931348623157E308" prefHeight="292.33331298828125" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="5.0" prefHeight="18.66668701171875" vgrow="ALWAYS" />
+                                <RowConstraints maxHeight="294.0" prefHeight="250.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <fx:include fx:id="machineDetails" source="screen1/machinedetails/machinedetails.fxml"
-                                            GridPane.columnSpan="2147483647"/>
-                                <fx:include fx:id="codeCalibration"
-                                            source="screen1/codecallibration/codeCalibration.fxml"
-                                            GridPane.rowIndex="2"/>
+                                <fx:include fx:id="machineDetails" source="screen1/machinedetails/machinedetails.fxml" GridPane.columnSpan="2147483647" />
+                                <fx:include fx:id="codeCalibration" source="screen1/codecallibration/codeCalibration.fxml" GridPane.rowIndex="2" />
                             </children>
                     </GridPane>
                 </content>
@@ -66,7 +56,6 @@
                              <RowConstraints maxHeight="1.7976931348623157E308" minHeight="150.0" prefHeight="257.6666717529297" vgrow="ALWAYS" />
                          </rowConstraints>
                      <children>
-                         <fx:include fx:id="loseWinArea" source="/uboat/winner/loseWinArea.fxml"/>
                         <fx:include fx:id="encryptDecrypt" source="screen2/encrypt/encrypt-decrypt.fxml" GridPane.columnIndex="2" GridPane.columnSpan="2" />
                         <fx:include fx:id="dictionary" source="screen2/dictionary/dictionary.fxml" GridPane.columnIndex="5" />
                         <fx:include fx:id="candidatesArea" source="screen2/candidate/area/candidatesArea.fxml" GridPane.columnSpan="3" GridPane.rowIndex="2" />
@@ -81,8 +70,8 @@
             </ScrollPane>
          </content></Tab>
   </tabs>
-    <stylesheets>
-        <URL value="@/uboat/app/app-default.css"/>
-        <URL value="@/uboat/body/body-default.css"/>
-    </stylesheets>
+   <stylesheets>
+      <URL value="@../app/app-default.css" />
+      <URL value="@body-default.css" />
+   </stylesheets>
 </TabPane>

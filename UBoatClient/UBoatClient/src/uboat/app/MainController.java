@@ -572,6 +572,7 @@ public class MainController {
      * clear all findings of last process and labels progress
      */
     private void cleanOldResults() {
+        headerController.clearOldResults();
         bodyController.clearOldResultsOfBruteForce();
     }
 
@@ -648,6 +649,7 @@ public class MainController {
                 } else {
                     Platform.runLater(() -> {
                         setStatusMessage("A Winner Was Found. The Winner Team Is: " + allieWinnerName, MessageTone.INFO);
+                        headerController.announceWinner(allieWinnerName);
                         isContestActive.set(false);
                         isClientReady.set(false);
                     });

@@ -46,12 +46,6 @@ public class BodyController {
      */
 
     @FXML
-    private GridPane loseWinArea;
-
-    @FXML
-    private LoseWinAreaController loseWinAreaController;
-
-    @FXML
     private GridPane currentConfig;
 
     @FXML
@@ -93,7 +87,6 @@ public class BodyController {
         machineDetailsController.setParentController(this);
 
         //screen 2
-        loseWinAreaController.setParentController(this);
         currentConfigController.setParentController(this);
         encryptDecryptController.setParentController(this);
         candidatesAreaController.setParentController(this);

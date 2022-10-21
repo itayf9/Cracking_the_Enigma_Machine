@@ -1,5 +1,7 @@
 package uboat.header;
 
+import javafx.beans.binding.Bindings;
+import javafx.scene.layout.GridPane;
 import uboat.app.MainController;
 
 import javafx.beans.property.BooleanProperty;
@@ -9,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import uboat.winner.LoseWinAreaController;
 
 import java.io.File;
 
@@ -29,6 +32,12 @@ public class HeaderController {
     private Button loadFileButton;
 
     @FXML
+    private GridPane loseWinArea;
+
+    @FXML
+    private LoseWinAreaController loseWinAreaController;
+
+    @FXML
     private Label usernameLabel;
 
     @FXML
@@ -37,6 +46,7 @@ public class HeaderController {
     @FXML
     public void initialize() {
         filePathLoadMachineLabel.setText("");
+        loseWinArea.setVisible(false);
     }
 
     @FXML
@@ -72,5 +82,14 @@ public class HeaderController {
         loadFileButton.disableProperty().bind(isMachineLoadedProperty);
         usernameLabel.textProperty().bind(usernameProperty);
         logoutButton.disableProperty().bind(isContestActive);
+    }
+
+    public void announceWinner(String allieWinnerName) {
+        loseWinAreaController.setWinnerLabel(allieWinnerName);
+        loseWinArea.setVisible(true);
+    }
+
+    public void clearOldResults() {
+        loseWinArea.setVisible(false);
     }
 }
