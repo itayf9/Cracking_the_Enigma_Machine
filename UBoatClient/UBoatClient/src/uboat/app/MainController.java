@@ -119,13 +119,12 @@ public class MainController {
     private Timer fetchCandidatesTimer;
     private FetchCandidatesTimer fetchCandidatesTimerTask;
     private StringProperty originalText;
-
     private BooleanProperty isProcessedText;
 
 
     @FXML
     public void initialize() {
-
+        System.out.println("in initialize of uboat !!");
         // controller initialize
         headerController.setMainController(this);
         bodyController.setMainController(this);
@@ -156,10 +155,9 @@ public class MainController {
                 // contest == active
                 // stop allies & status timers
                 setStatusMessage("Contest has started", MessageTone.INFO);
-                fetchAlliesInfoTimerTask.run();
-
                 fetchContestStatusTimerTask.cancel();
                 fetchContestStatusTimer.cancel();
+                fetchAlliesInfoTimerTask.run();
                 fetchAlliesInfoTimer.cancel();
 
                 // schedule fetch candidates timer
@@ -250,6 +248,7 @@ public class MainController {
 
             client.newCall(request).enqueue(new Callback() {
                 public void onResponse(Call call, Response response) throws IOException {
+                    System.out.println("load machine status resp");
                     System.out.println("Code: " + response.code());
 
                     String dtoAsStr = response.body().string();
@@ -538,6 +537,7 @@ public class MainController {
 
 
             public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("setReady status resp");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
@@ -635,6 +635,7 @@ public class MainController {
 
 
             public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("announceTheWinnerOfTheContest resp");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
@@ -765,6 +766,19 @@ public class MainController {
     public void logoutUBoat(MouseEvent event) {
         if(isMachineLoadedProperty.get()){
             fetchAlliesInfoTimer.cancel();
+            fetchAlliesInfoTimerTask.cancel();
+        }
+        if (isClientReady.get()){
+            if (fetchContestStatusTimer != null){
+                fetchContestStatusTimer.cancel();
+                fetchContestStatusTimerTask.cancel();
+            }
+        }
+        if (isContestActive.get()){
+            if (fetchCandidatesTimer != null) {
+                fetchCandidatesTimer.cancel();
+                fetchCandidatesTimerTask.cancel();
+            }
         }
         String body = "";
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGOUT_SRC).newBuilder();
@@ -777,6 +791,7 @@ public class MainController {
 
 
             public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("logged out resp");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
@@ -788,7 +803,7 @@ public class MainController {
                     });
                 } else {
                     Platform.runLater(() -> {
-                        setStatusMessage("Uboat Logged out Successfully", MessageTone.SUCCESS);
+                        isContestActive.set(false);
                         FXMLLoader loader = null;
                         try {
                             loader = new FXMLLoader();

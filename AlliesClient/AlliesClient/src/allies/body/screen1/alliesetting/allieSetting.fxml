@@ -23,6 +23,7 @@
         <Label styleClass="sub-title" text="Task Size:" GridPane.valignment="BOTTOM" />
       <Spinner fx:id="taskSizeSpinner" editable="true" prefHeight="27.0" prefWidth="99.0" styleClass="task-size-spinner" GridPane.rowIndex="1" />
       <Button fx:id="isReadyButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#setReady" prefHeight="27.0" prefWidth="86.0" styleClass="action-btn" text="Ready" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+      <Button fx:id="createAgentButton" mnemonicParsing="false" onMouseClicked="#createAnAgentProcess" styleClass="action-btn" text="Create an Agent +" GridPane.columnIndex="1" GridPane.rowIndex="1" />
    </children>
    <stylesheets>
       <URL value="@../../../app/app-default.css" />

@@ -220,4 +220,10 @@ public interface Engine {
     String getUboatNameFromAllieName(String allieName);
 
     void resetOldContestDynamicInfo(String uboatName);
+
+    Set<String> getLoggedOutClients();
+
+    DTOstatus removeAllie(String usernameFromSession);
+
+    DTOstatus removeAgent(String usernameFromSession);
 }

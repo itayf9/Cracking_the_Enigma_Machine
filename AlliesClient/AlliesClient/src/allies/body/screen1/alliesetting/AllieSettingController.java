@@ -9,6 +9,8 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.MouseEvent;
 
+import java.io.IOException;
+
 public class AllieSettingController {
 
     private BodyController parentController;
@@ -18,6 +20,9 @@ public class AllieSettingController {
 
     @FXML
     private Button isReadyButton;
+
+    @FXML
+    private Button createAgentButton;
 
 
     @FXML
@@ -52,6 +57,12 @@ public class AllieSettingController {
     public void bindComponents(BooleanProperty isSubscribedToContest, BooleanProperty isReady) {
         isReadyButton.disableProperty().bind(isSubscribedToContest.not().or(isReady));
         taskSizeSpinner.disableProperty().bind(isSubscribedToContest.not().or(isReady));
+        createAgentButton.disableProperty().bind(isSubscribedToContest.not().or(isReady));
+    }
 
+    @FXML
+    public void createAnAgentProcess(MouseEvent ignored) throws IOException {
+        ProcessBuilder pb = new ProcessBuilder("java", "-jar", "/Users/king/IdeaProjects/Cracking_the_Enigma_Machine/AgentClient.jar");
+        Process agent = pb.start();
     }
 }

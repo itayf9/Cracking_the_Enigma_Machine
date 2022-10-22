@@ -81,7 +81,6 @@ public class HeaderController {
     public void bindComponents(BooleanProperty isMachineLoadedProperty, StringProperty usernameProperty, BooleanProperty isContestActive) {
         loadFileButton.disableProperty().bind(isMachineLoadedProperty);
         usernameLabel.textProperty().bind(usernameProperty);
-        logoutButton.disableProperty().bind(isContestActive);
     }
 
     public void announceWinner(String allieWinnerName) {

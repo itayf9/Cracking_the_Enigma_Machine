@@ -120,8 +120,9 @@ public class MainController {
                 fetchIsSubscribedToContestTimer = new Timer();
                 fetchIsSubscribedToContestTimerTask = new FetchIsSubscribedToContestTimer(isSubscribedToContest, uboatName, client, getMainController());
                 fetchIsSubscribedToContestTimer.schedule(fetchIsSubscribedToContestTimerTask, REFRESH_RATE, REFRESH_RATE);
-            } else {// when contest is over
+            } else {// when contest is over // or when uboat logged out before contest has begun
                 isReady.set(false);
+                tabPaneBody.getSelectionModel().selectFirst();
             }
         });
 

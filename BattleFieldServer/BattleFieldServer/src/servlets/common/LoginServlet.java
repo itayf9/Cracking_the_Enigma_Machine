@@ -43,9 +43,11 @@ public class LoginServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_QUERY_USERNAME)));
             } else {
+                Set<String> loggedOutClients = ServletUtils.getLoggedOutClients(getServletContext());
                 switch (typeOfClient) {
                     case UBOAT:
                         Map<String, Battlefield> uboatName2battleField = ServletUtils.getUboatName2battleField(getServletContext());
+
 
                         //normalize the username value
                         usernameFromParameter = usernameFromParameter.trim();
@@ -59,6 +61,7 @@ public class LoginServlet extends HttpServlet {
 
                             //add the new user to the users list
                             uboatName2battleField.put(usernameFromParameter, new Battlefield(usernameFromParameter));
+                            loggedOutClients.remove(usernameFromParameter);
                         }
                         break;
                     case ALLIE: //
@@ -76,6 +79,7 @@ public class LoginServlet extends HttpServlet {
                             //add the new user to the allies list
                             loggedAlliesNames.put(usernameFromParameter, new HashSet<>());
                             loggedAlliesMap.put(usernameFromParameter, false);
+                            loggedOutClients.remove(usernameFromParameter);
                         }
                         break;
                     case AGENT:
@@ -118,6 +122,7 @@ public class LoginServlet extends HttpServlet {
                                     response.getWriter().println(gson.toJson(assignStatus));
                                     return;
                                 }
+                                loggedOutClients.remove(usernameFromParameter);
                             }
 
                         }

@@ -99,4 +99,14 @@ public class ServletUtils {
         Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
         return engine.checkNameValidity(usernameFromSession);
     }
+
+    public static Set<String> getLoggedOutClients(ServletContext servletContext) {
+        synchronized (engineLock) {
+            if (servletContext.getAttribute(Constants.ENGINE) == null) {
+                servletContext.setAttribute(Constants.ENGINE, new EnigmaEngine());
+            }
+        }
+        Engine engine = (Engine) servletContext.getAttribute(Constants.ENGINE);
+        return engine.getLoggedOutClients();
+    }
 }

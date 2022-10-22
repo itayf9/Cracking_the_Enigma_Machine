@@ -41,6 +41,7 @@ public class EnigmaEngine implements Engine {
     private final Map<String, AgentInfo> agentName2agentInfo;
     private final Map<String, DecryptManager> allieName2decryptManager;
     private final Map<String, Boolean> loggedAllieName2isSubscribed;
+    private final Set<String> loggedOutClients;
 
 
     private final Object waitingTasksQueueLock;
@@ -57,6 +58,7 @@ public class EnigmaEngine implements Engine {
         this.loggedAllieName2isSubscribed = new HashMap<>();
         this.waitingTasksQueueLock = new Object();
         this.conclusionQueueLock = new Object();
+        this. loggedOutClients = new HashSet<>();
     }
 
     /**
@@ -1378,6 +1380,7 @@ public class EnigmaEngine implements Engine {
             loggedAllieName2isSubscribed.put(allie.getAllieName(), false);
         }
         uboatName2battleField.remove(uboatName);
+        loggedOutClients.add(uboatName);
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
@@ -1508,6 +1511,21 @@ public class EnigmaEngine implements Engine {
          Set<AgentInfo> agents = loggedAllieName2loggedAgents.get( allie.getAllieName());
            agents.forEach(AgentInfo::resetDynamicInfo);
        }
+    }
+
+    @Override
+    public Set<String> getLoggedOutClients(){
+        return loggedOutClients;
+    }
+
+    @Override
+    public DTOstatus removeAllie(String usernameFromSession){
+        return new DTOstatus(true, Problem.NO_PROBLEM);
+    }
+
+    @Override
+    public DTOstatus removeAgent(String usernameFromSession){
+        return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
     @Override
