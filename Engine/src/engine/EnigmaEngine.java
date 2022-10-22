@@ -1546,14 +1546,39 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
-    public DTOstatus removeAllie(String allieName) {
+    public DTOstatus removeAllie(String uboatName, String allieName) {
+        Battlefield battlefield = uboatName2battleField.get(uboatName);
+        if (battlefield != null) {
+            Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter(decryptManager -> decryptManager.getAllieName().equals(allieName)).findFirst();
+            if (!allieMaybe.isPresent()) {
+                return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD);
+            }
 
+            // if the contest is active, stops the dm threads before removing
+            if (battlefield.isActive().get()) {
+                allieMaybe.get().stopDecrypt();
+            }
+
+            // removes the dm that matches the allie
+            battlefield.getAllies().remove(allieMaybe.get());
+        }
+
+
+        // removes the dm from allieName2decryptManager map
+        allieName2decryptManager.remove(allieName);
+        // removes the allie from loggedAllieName2loggedAgents map
+        loggedAllieName2loggedAgents.remove(allieName);
+        // removes the allie from loggedAllieName2isSubscribed map
+        loggedAllieName2isSubscribed.remove(allieName);
+
+        // moves the allie to the unsubscribed clients set
+        loggedOutClients.add(allieName);
 
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
     @Override
-    public DTOstatus removeAgent(String usernameFromSession){
+    public DTOstatus removeAgent(String usernameFromSession) {
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 

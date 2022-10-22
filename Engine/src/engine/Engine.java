@@ -223,7 +223,7 @@ public interface Engine {
 
     Set<String> getLoggedOutClients();
 
-    DTOstatus removeAllie(String allieName);
+    DTOstatus removeAllie(String uboatName, String allieName);
 
     DTOstatus removeAgent(String usernameFromSession);
 }

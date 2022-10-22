@@ -5,6 +5,7 @@ import http.url.Client;
 import http.url.Constants;
 import dto.DTOstatus;
 import engine.Engine;
+import http.url.QueryParameter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,7 +45,14 @@ public class LogoutServlet extends HttpServlet {
                     resp.getWriter().println(gson.toJson(uboatRemoveStatus));
                     return;
                 case ALLIE:
-                    DTOstatus allieRemoveStatus = engine.removeAllie(usernameFromSession);
+                    String uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
+                    if (uboatName == null) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST)));
+                        return;
+                    }
+
+                    DTOstatus allieRemoveStatus = engine.removeAllie(uboatName, usernameFromSession);
                     if (!allieRemoveStatus.isSucceed()) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     } else {
