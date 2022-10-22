@@ -56,4 +56,8 @@ public class HeaderController {
     public void bindComponents(StringProperty usernameProperty) {
         usernameLabel.textProperty().bind(usernameProperty);
     }
+
+    public void clearOldResults() {
+        loseWinArea.setVisible(false);
+    }
 }

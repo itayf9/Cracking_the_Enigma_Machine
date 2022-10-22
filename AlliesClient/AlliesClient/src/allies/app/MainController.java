@@ -446,6 +446,7 @@ public class MainController {
      * clear all findings of last process and labels progress
      */
     private void cleanOldResults() {
+        headerController.clearOldResults();
         tabPaneBodyController.clearOldResults();
         totalDistinctCandidates.set(0);
     }
