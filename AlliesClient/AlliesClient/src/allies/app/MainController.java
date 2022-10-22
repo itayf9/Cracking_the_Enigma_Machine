@@ -575,6 +575,9 @@ public class MainController {
                 return "Each plug should have unique inputs and outputs.";
             case PLUGS_MISSING_VALUES:
                 return "Please complete the plug selection.";
+                
+            case UBOAT_LOGGED_OUT:
+                return "The UBoat of the contest has logged out.";
             default:
                 return problem.name();
         }

@@ -246,4 +246,5 @@ public class BodyController {
     public void updateAlliesInfo(List<AllieInfo> alliesInfoList) {
         activeTeamsController.setTeams(alliesInfoList);
     }
+
 }

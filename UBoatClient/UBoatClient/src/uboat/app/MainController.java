@@ -555,7 +555,6 @@ public class MainController {
                         fetchContestStatusTimer = new Timer();
                         fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, client);
                         fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
-                        cleanOldResults();
                         setStatusMessage("uboat is ready", MessageTone.SUCCESS);
                     });
                 }
@@ -830,5 +829,9 @@ public class MainController {
 
     public MainController getMainController() {
         return this;
+    }
+
+    public void approveUboatFinishGame() {
+        cleanOldResults();
     }
 }

@@ -1049,7 +1049,14 @@ public class EnigmaEngine implements Engine {
 
         List<AllieInfo> alliesInfo = new ArrayList<>();
 
-        for (DecryptManager allie : uboatName2battleField.get(uboatUserName).getAllies()) {
+        Battlefield battlefield = uboatName2battleField.get(uboatUserName);
+        if (battlefield == null) {
+            if (loggedOutClients.contains(uboatUserName)) {
+                return new DTOallies(false, Problem.UBOAT_LOGGED_OUT, alliesInfo);
+            }
+            return new DTOallies(false, Problem.UBOAT_NAME_DOESNT_EXIST, alliesInfo);
+        }
+        for (DecryptManager allie : battlefield.getAllies()) {
             String allieName = allie.getAllieName();
             int numOfAgents = loggedAllieName2loggedAgents.get(allieName).size();
             int taskSize = allie.getTaskSize();
@@ -1371,10 +1378,12 @@ public class EnigmaEngine implements Engine {
     @Override
     public DTOstatus removeBattlefield(String uboatName) {
 
+        // checks that the uboat exists
         Battlefield battlefieldToRemove = uboatName2battleField.get(uboatName);
         if (battlefieldToRemove == null) {
             return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
         }
+
         Set<DecryptManager> allies = battlefieldToRemove.getAllies();
         for (DecryptManager allie : allies) {
             loggedAllieName2isSubscribed.put(allie.getAllieName(), false);

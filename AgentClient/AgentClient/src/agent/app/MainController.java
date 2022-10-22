@@ -159,7 +159,7 @@ public class MainController {
                 this.fetchStaticInfoContestTimerTask = new FetchStaticContestInfoTimer(this, allieName, client);
                 fetchStaticInfoContestTimer.schedule(fetchStaticInfoContestTimerTask, REFRESH_RATE, REFRESH_RATE);
                 this.fetchContestStatusTimer = new Timer();
-                this.fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, allieName, client,this);
+                this.fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, allieName, client, this);
                 fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
                 fetchContestStatusTimer.cancel();
@@ -408,6 +408,9 @@ public class MainController {
                 return "Each plug should have unique inputs and outputs.";
             case PLUGS_MISSING_VALUES:
                 return "Please complete the plug selection.";
+
+            case UBOAT_LOGGED_OUT:
+                return "The UBoat of the contest has logged out.";
             default:
                 return problem.name();
         }
