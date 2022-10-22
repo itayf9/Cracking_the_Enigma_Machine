@@ -11,6 +11,7 @@ import static http.url.QueryParameter.*;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
+import problem.Problem;
 
 import java.io.IOException;
 import java.util.TimerTask;
@@ -53,8 +54,12 @@ public class FetchAlliesInfoTimer extends TimerTask {
 
                 if (response.code() != 200) {
                     DTOstatus alliesStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                    
                     Platform.runLater(() -> {
-                        mainController.setStatusMessage("Could not fetch team's information." + mainController.convertProblemToMessage(alliesStatus.getDetails()), MessageTone.ERROR);
+                        if (alliesStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                            mainController.unsubscribeFromCurrentContest();
+                        }
+                        mainController.setStatusMessage(mainController.convertProblemToMessage(alliesStatus.getDetails()), MessageTone.ERROR);
                     });
 
                 } else {

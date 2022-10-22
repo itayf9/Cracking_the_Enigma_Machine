@@ -56,7 +56,7 @@ public class FetchStaticInfoGameServlet extends HttpServlet {
                     uboatName = engine.getUboatNameFromAllieName(allieName);
                     if (uboatName.equals("")){
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD)));
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UBOAT_LOGGED_OUT)));
                         return;
                     }
                     break;

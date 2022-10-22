@@ -47,6 +47,8 @@ public class HeaderController {
     public void initialize() {
         filePathLoadMachineLabel.setText("");
         loseWinArea.setVisible(false);
+        loseWinAreaController.setParentController(this);
+
     }
 
     @FXML
@@ -90,5 +92,9 @@ public class HeaderController {
 
     public void clearOldResults() {
         loseWinArea.setVisible(false);
+    }
+
+    public void approveUboatFinishGame() {
+        mainController.approveUboatFinishGame();
     }
 }

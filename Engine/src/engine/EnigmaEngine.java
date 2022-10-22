@@ -1261,6 +1261,9 @@ public class EnigmaEngine implements Engine {
 
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         if (battlefield == null) {
+            if (loggedOutClients.contains(uboatName)) {
+                return new DTOdynamicContestInfo(false, Problem.UBOAT_LOGGED_OUT, agentsInfo, allConclusions, jobProgressInfo);
+            }
             return new DTOdynamicContestInfo(false, Problem.UBOAT_NAME_DOESNT_EXIST, agentsInfo, allConclusions, jobProgressInfo);
         }
 
@@ -1386,7 +1389,16 @@ public class EnigmaEngine implements Engine {
 
         Set<DecryptManager> allies = battlefieldToRemove.getAllies();
         for (DecryptManager allie : allies) {
+
+            // if contest is active
+            if (battlefieldToRemove.isActive().get()) {
+                allie.stopDecrypt();
+            }
+
+            // marks out that allies of that battlefield are unsubscribed
             loggedAllieName2isSubscribed.put(allie.getAllieName(), false);
+            // removes the dm of this allie
+            allieName2decryptManager.remove(allie.getAllieName());
         }
         uboatName2battleField.remove(uboatName);
         loggedOutClients.add(uboatName);
@@ -1400,6 +1412,9 @@ public class EnigmaEngine implements Engine {
 
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         if (battlefield == null) {
+            if (loggedOutClients.contains(uboatName)) {
+                return new DTOtasks(false, Problem.UBOAT_LOGGED_OUT, new ArrayList<>());
+            }
             return new DTOtasks(false, Problem.UBOAT_NAME_DOESNT_EXIST, new ArrayList<>());
         }
 
@@ -1435,6 +1450,9 @@ public class EnigmaEngine implements Engine {
     public DTOstatus submitConclusions(List<AgentConclusion> conclusions, String allieName, String uboatName) {
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         if (battlefield == null) {
+            if (loggedOutClients.contains(uboatName)) {
+                return new DTOstatus(false, Problem.UBOAT_LOGGED_OUT);
+            }
             return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
         }
 

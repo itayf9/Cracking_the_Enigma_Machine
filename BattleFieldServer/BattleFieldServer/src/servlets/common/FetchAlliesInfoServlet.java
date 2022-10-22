@@ -57,7 +57,7 @@ public class FetchAlliesInfoServlet extends HttpServlet {
             DTOallies alliesInfoStatus = engine.getAlliesInfo(uboatName);
 
             if (!alliesInfoStatus.isSucceed()) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             } else {
                 resp.setStatus(HttpServletResponse.SC_OK);
             }

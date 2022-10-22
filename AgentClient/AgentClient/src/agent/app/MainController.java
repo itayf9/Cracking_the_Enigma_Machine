@@ -124,6 +124,7 @@ public class MainController {
     private Timer fetchStaticInfoContestTimer;
     private FetchStaticContestInfoTimer fetchStaticInfoContestTimerTask;
     private BooleanProperty isSubscribed;
+    private boolean allieUnsubscribed = false;
 
 
     @FXML
@@ -155,6 +156,7 @@ public class MainController {
             if (newVal) {
                 // allie just subscribed
                 setStatusMessage("Allie has subscribed to a Contest", MessageTone.INFO);
+                allieUnsubscribed = false;
                 this.fetchStaticInfoContestTimer = new Timer();
                 this.fetchStaticInfoContestTimerTask = new FetchStaticContestInfoTimer(this, allieName, client);
                 fetchStaticInfoContestTimer.schedule(fetchStaticInfoContestTimerTask, REFRESH_RATE, REFRESH_RATE);
@@ -181,16 +183,17 @@ public class MainController {
                 // stop allies & status timers
                 setStatusMessage("Contest has started", MessageTone.INFO);
                 fetchStaticInfoContestTimerTask.run();
-                fetchStaticInfoContestTimer.cancel();
-                fetchStaticInfoContestTimerTask.cancel();
+                cancelStaticInfoTimer();
                 // schedule fetch candidates timer & fetch active teams
                 this.submitConclusionsTimer = new Timer();
                 this.submitConclusionsTimerTask = new SubmitConclusionsTimer(this, allieName, uboatName, client);
                 submitConclusionsTimer.schedule(submitConclusionsTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
-                // contest == not active => winner found
-                fetchWinnerMessage();
-                setStatusMessage("Winner Found", MessageTone.INFO);
+                // contest == not active =>
+                if (!allieUnsubscribed) {
+                    fetchWinnerMessage();
+                    setStatusMessage("Winner Found", MessageTone.INFO);
+                }
                 threadPool.shutdownNow();
                 submitConclusionsTimer.cancel();
                 submitConclusionsTimerTask.cancel();
@@ -582,6 +585,18 @@ public class MainController {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         primaryStage.setScene(loginScene);
         primaryStage.show();
+    }
+
+    public void cancelStaticInfoTimer() {
+        fetchStaticInfoContestTimer.cancel();
+        fetchStaticInfoContestTimerTask.cancel();
+    }
+
+    public void allieUnsubscribedFromCurrentContest() {
+        allieUnsubscribed = true;
+        isContestActive.set(false);
+        isSubscribed.set(false);
+        cleanOldResults();
     }
 }
 

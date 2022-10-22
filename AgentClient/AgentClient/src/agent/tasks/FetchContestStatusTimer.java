@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
+import problem.Problem;
 
 import java.io.IOException;
 import java.util.TimerTask;
@@ -18,12 +19,13 @@ import static http.url.QueryParameter.*;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
 import static http.url.URLconst.*;
+
 public class FetchContestStatusTimer extends TimerTask {
 
-    private OkHttpClient client;
-    private BooleanProperty isContestActive;
-    private StringProperty allieName;
-    private MainController mainController;
+    private final OkHttpClient client;
+    private final BooleanProperty isContestActive;
+    private final StringProperty allieName;
+    private final MainController mainController;
 
 
     public FetchContestStatusTimer(BooleanProperty isContestActive, StringProperty allieName, OkHttpClient client, MainController mainController) {

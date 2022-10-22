@@ -59,7 +59,10 @@ public class FetchContestStatusTimer extends TimerTask {
                 if (response.code() != 200) {
                     DTOstatus activeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                         Platform.runLater(() -> {
-                            mainController.cancelContestStatusTimer();
+                            if (activeStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                                mainController.unsubscribeFromCurrentContest();
+                                mainController.cancelContestStatusTimer();
+                            }
                             mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);
                         });
                 } else {

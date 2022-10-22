@@ -4,10 +4,11 @@ import javafx.scene.input.MouseEvent;
 import uboat.body.BodyController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import uboat.header.HeaderController;
 
 public class LoseWinAreaController {
 
-    private BodyController parentController;
+    private HeaderController parentController;
     @FXML
     private Label winnerTeamLabel;
 
@@ -17,8 +18,8 @@ public class LoseWinAreaController {
     }
 
 
-    public void setParentController(BodyController bodyController) {
-        this.parentController = bodyController;
+    public void setParentController(HeaderController headerController) {
+        this.parentController = headerController;
     }
 
     public void setWinnerLabel(String allieWinnerName) {

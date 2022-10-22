@@ -402,7 +402,6 @@ public class MainController {
         tabPaneBodyController.updateActiveTeamsInfo(alliesInfoList);
     }
 
-
     /**
      * confirm the contest is over and alert the server
      */
@@ -432,9 +431,7 @@ public class MainController {
                 } else {
                     Platform.runLater(() -> {
                         setStatusMessage("Contest is Approved", MessageTone.INFO);
-                        cleanOldResults();
-                        isSubscribedToContest.set(false);
-                        tabPaneBody.getSelectionModel().selectPrevious();
+                        unsubscribeFromCurrentContest();
                     });
                 }
             }
@@ -728,5 +725,12 @@ public class MainController {
                 System.out.println("Oops... something went wrong..." + e.getMessage());
             }
         });
+    }
+
+    public void unsubscribeFromCurrentContest() {
+        isContestActive.set(false);
+        cleanOldResults();
+        isSubscribedToContest.set(false);
+        tabPaneBody.getSelectionModel().selectFirst();
     }
 }

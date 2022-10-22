@@ -9,6 +9,7 @@ import http.url.QueryParameter;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
+import problem.Problem;
 
 import java.io.IOException;
 import java.util.TimerTask;
@@ -53,14 +54,17 @@ public class FetchStaticContestInfoTimer extends TimerTask {
                 if (response.code() != 200) {
                     DTOstatus staticInfoStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
 
-                    Platform.runLater(() -> mainController.setStatusMessage(mainController.convertProblemToMessage(staticInfoStatus.getDetails()), MessageTone.ERROR));
+                    Platform.runLater(() -> {
+                        if (staticInfoStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                            mainController.cancelStaticInfoTimer();
+                            mainController.allieUnsubscribedFromCurrentContest();
+                        }
+                        mainController.setStatusMessage(mainController.convertProblemToMessage(staticInfoStatus.getDetails()), MessageTone.ERROR);
+                    });
 
                 } else {
                     DTOstaticContestInfo staticInfoStatus = gson.fromJson(dtoAsStr, DTOstaticContestInfo.class);
-                    Platform.runLater(() -> {
-                        mainController.updateStaticContestInfo(staticInfoStatus);
-                    });
-
+                    Platform.runLater(() -> mainController.updateStaticContestInfo(staticInfoStatus));
                 }
             }
 

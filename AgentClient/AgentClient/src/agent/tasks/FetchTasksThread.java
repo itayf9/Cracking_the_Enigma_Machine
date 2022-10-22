@@ -16,7 +16,10 @@ import javafx.beans.property.StringProperty;
 import okhttp3.*;
 
 import java.io.IOException;
+
 import dictionary.Dictionary;
+import problem.Problem;
+
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
@@ -82,7 +85,12 @@ public class FetchTasksThread implements Runnable {
 
                 if (response.code() != 200) {
                     DTOstatus tasksStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-                    Platform.runLater(() -> mainController.setStatusMessage(mainController.convertProblemToMessage(tasksStatus.getDetails()), MessageTone.ERROR));
+
+                    Platform.runLater(() -> {
+                        if (tasksStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                            mainController.allieUnsubscribedFromCurrentContest();
+                        }
+                    });
 
                 } else {
                     DTOtasks tasksStatus = gson.fromJson(dtoAsStr, DTOtasks.class);

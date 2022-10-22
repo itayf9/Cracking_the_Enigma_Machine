@@ -8,6 +8,7 @@ import dto.DTOstatus;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
+import problem.Problem;
 
 import java.io.IOException;
 import java.util.TimerTask;
@@ -59,7 +60,12 @@ public class SubmitConclusionsTimer extends TimerTask {
 
                 if (response.code() != 200) {
                     DTOstatus submitStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-                    Platform.runLater(() -> mainController.setStatusMessage(mainController.convertProblemToMessage(submitStatus.getDetails()), MessageTone.ERROR));
+
+                    Platform.runLater(() -> {
+                        if (submitStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                            mainController.allieUnsubscribedFromCurrentContest();
+                        }
+                    });
 
                 } else {
                     Platform.runLater(() -> {

@@ -18,6 +18,7 @@ import utils.SessionUtils;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 import static utils.ServletUtils.validateAuthorization;
 
@@ -63,14 +64,16 @@ public class FetchContestStatusServlet extends HttpServlet {
             }
 
             Map<String, Battlefield> battlefields = ServletUtils.getUboatName2battleField(getServletContext());
+            Set<String> loggedOutClients = ServletUtils.getLoggedOutClients(getServletContext());
             Battlefield battlefield = battlefields.get(uboatName);
-            // only allie can fail here
-            // 1. for bad uboat Name
-            // 2. for uboat name who logged out
-            if (battlefield == null) {
+
+            if (battlefield == null && loggedOutClients.contains(uboatName)) { // uboat has logged out
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println(gson.toJson(new DTOactive(false, Problem.UBOAT_LOGGED_OUT_OR_NOT_FOUND, false)));
-            } else {
+                resp.getWriter().println(gson.toJson(new DTOactive(false, Problem.UBOAT_LOGGED_OUT, false)));
+            } else if (battlefield == null) { // uboat doesn't exist
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().println(gson.toJson(new DTOactive(false, Problem.UBOAT_NAME_DOESNT_EXIST, false)));
+            } else { // all good
                 resp.setStatus(HttpServletResponse.SC_OK);
                 resp.getWriter().println(gson.toJson(new DTOactive(true, Problem.NO_PROBLEM, battlefield.isActive().get())));
             }

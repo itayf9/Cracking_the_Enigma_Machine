@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import jobprogress.JobProgressInfo;
 import okhttp3.*;
+import problem.Problem;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,6 +57,9 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
                 if (response.code() != 200) {
                     DTOstatus contestInfoStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
+                        if (contestInfoStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                            mainController.unsubscribeFromCurrentContest();
+                        }
                         mainController.setStatusMessage(mainController.convertProblemToMessage(contestInfoStatus.getDetails()), MessageTone.ERROR);
                     });
 
