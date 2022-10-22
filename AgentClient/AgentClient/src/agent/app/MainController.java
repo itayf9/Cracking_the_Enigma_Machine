@@ -19,14 +19,18 @@ import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import okhttp3.*;
 import problem.Problem;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -85,6 +89,8 @@ public class MainController {
 
     @FXML
     private Rectangle statusBackShape;
+
+    private GridPane login;
 
     /**
      * bruteforce stuff
@@ -165,7 +171,6 @@ public class MainController {
                 cleanOldResults();
             }
         });
-
 
         isContestActive.addListener((o, oldVal, newVal) -> {
             if (newVal) {
@@ -510,6 +515,70 @@ public class MainController {
 
     public Dictionary getDictionary() {
         return dictionary;
+    }
+
+    public void logoutAgent(MouseEvent event) {
+        fetchSubscribeTimer.cancel();
+        fetchSubscribeTimerTask.cancel();
+
+        if (isSubscribed.get()) {
+            fetchStaticInfoContestTimer.cancel();
+            fetchStaticInfoContestTimerTask.cancel();
+            fetchContestStatusTimer.cancel();
+            fetchContestStatusTimerTask.cancel();
+        }
+
+        String body = "";
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGOUT_SRC).newBuilder();
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+
+
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("logged out resp");
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                Gson gson = new Gson();
+
+                DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                if (response.code() != 200) {
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR);
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        isContestActive.set(false);
+                        switchToLoginScreen(event);
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
+
+    }
+
+    public void switchToLoginScreen(MouseEvent event) {
+        FXMLLoader loader = null;
+        try {
+            loader = new FXMLLoader();
+            URL loginFxml = getClass().getResource("/agent/login/login.fxml");
+            loader.setLocation(loginFxml);
+            login = loader.load();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene loginScene = new Scene(login, 300, 300);
+        Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        primaryStage.setScene(loginScene);
+        primaryStage.show();
     }
 }
 

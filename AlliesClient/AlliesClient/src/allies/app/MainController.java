@@ -18,17 +18,20 @@ import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import jobprogress.JobProgressInfo;
 import okhttp3.*;
 import problem.Problem;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 import java.util.Timer;
@@ -69,6 +72,8 @@ public class MainController {
 
     @FXML
     private Rectangle statusBackShape;
+
+    private GridPane login;
 
     /**
      * bruteforce stuff
@@ -111,10 +116,9 @@ public class MainController {
         this.isSubscribedToContest = new SimpleBooleanProperty();
         this.isContestActive = new SimpleBooleanProperty(false);
         this.uboatName = new SimpleStringProperty();
-
-        // Timers
         this.isReady = new SimpleBooleanProperty(false);
         this.usernameProperty = new SimpleStringProperty("");
+
 
         isSubscribedToContest.addListener((o, oldVal, newVal) ->{
             if (newVal) { // subscribed to contest == true
@@ -144,7 +148,6 @@ public class MainController {
                 fetchDynamicContestInfoTimer.schedule(fetchDynamicContestInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // contest == not active => winner found
-
                 fetchAlliesInfoTimerTask.cancel();
                 fetchAlliesInfoTimer.cancel();
                 fetchDynamicContestInfoTimer.cancel();
@@ -152,7 +155,6 @@ public class MainController {
                 fetchContestStatusTimer.cancel();
                 fetchContestStatusTimerTask.cancel();
                 fetchWinnerMessage();
-
                 isReady.set(false);
             }
         });
