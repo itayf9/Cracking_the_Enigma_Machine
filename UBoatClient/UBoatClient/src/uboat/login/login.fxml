@@ -9,20 +9,16 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0"
-          prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="uboat.login.LoginController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" styleClass="component-with-background" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uboat.login.LoginController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.33331298828125" minWidth="81.99996948242188"
-                           prefWidth="81.99996948242188"/>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="518.0000305175781" prefWidth="518.0000305175781"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.33331298828125" minWidth="81.99996948242188" prefWidth="81.99996948242188" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="518.0000305175781" prefWidth="518.0000305175781" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
-        <RowConstraints maxHeight="126.0" minHeight="30.0" prefHeight="126.0" vgrow="NEVER"/>
-        <RowConstraints maxHeight="133.33334350585938" minHeight="10.0" prefHeight="51.333343505859375" vgrow="NEVER"/>
-        <RowConstraints maxHeight="186.99998474121094" minHeight="1.33331298828125" prefHeight="23.33331298828125"
-                        vgrow="NEVER"/>
+        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="126.0" minHeight="30.0" prefHeight="126.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="133.33334350585938" minHeight="10.0" prefHeight="51.333343505859375" vgrow="NEVER" />
+        <RowConstraints maxHeight="186.99998474121094" minHeight="1.33331298828125" prefHeight="23.33331298828125" vgrow="NEVER" />
     </rowConstraints>
    <children>
       <Label styleClass="component-title" text="UBoat" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="TOP" />
