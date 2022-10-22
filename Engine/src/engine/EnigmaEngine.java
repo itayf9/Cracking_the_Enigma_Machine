@@ -1583,6 +1583,19 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
+    public DTOactive checkIfAllieIsReady(String allieName) {
+        DecryptManager allie = allieName2decryptManager.get(allieName);
+        if (allie == null) {
+            if (loggedOutClients.contains(allieName)) {
+                return new DTOactive(false, Problem.ALLIE_LOGGED_OUT, false);
+            }
+            return new DTOactive(false, Problem.ALLIE_NAME_DOESNT_EXIST, false);
+        } else {
+            return new DTOactive(true, Problem.NO_PROBLEM, allie.getDMReady());
+        }
+    }
+
+    @Override
     public String toString() {
         return "engine.EnigmaEngine{" +
                 "machine=" + uboatName2battleField +

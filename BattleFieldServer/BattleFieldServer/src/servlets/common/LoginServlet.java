@@ -1,5 +1,6 @@
 package servlets.common;
 
+import dto.DTOactive;
 import http.url.QueryParameter;
 import info.agent.AgentInfo;
 import battlefield.Battlefield;
@@ -35,6 +36,8 @@ public class LoginServlet extends HttpServlet {
             response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
             return;
         }
+        // for agent
+        DTOactive isAllieReadyStatus = new DTOactive(false, Problem.NO_PROBLEM, false);
 
         if (usernameFromSession == null) { //user is not logged in yet
             String usernameFromParameter = request.getParameter(Constants.USERNAME);
@@ -122,6 +125,7 @@ public class LoginServlet extends HttpServlet {
                                     response.getWriter().println(gson.toJson(assignStatus));
                                     return;
                                 }
+                                isAllieReadyStatus = engine.checkIfAllieIsReady(allieNameToJoin);
                                 loggedOutClients.remove(usernameFromParameter);
                             }
 
@@ -134,8 +138,11 @@ public class LoginServlet extends HttpServlet {
                 request.getSession(true).setAttribute(Constants.CLIENT_TYPE, typeOfClient);
 
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().println(gson.toJson(new DTOstatus(true, Problem.NO_PROBLEM)));
-
+                if (typeOfClient.equals(Client.ALLIE) || typeOfClient.equals(Client.UBOAT)) {
+                    response.getWriter().println(gson.toJson(new DTOstatus(true, Problem.NO_PROBLEM)));
+                } else {
+                    response.getWriter().println(isAllieReadyStatus);
+                }
             }
         } else {
             //user is already logged in

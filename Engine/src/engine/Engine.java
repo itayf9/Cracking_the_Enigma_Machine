@@ -226,4 +226,6 @@ public interface Engine {
     DTOstatus removeAllie(String uboatName, String allieName);
 
     DTOstatus removeAgent(String usernameFromSession);
+
+    DTOactive checkIfAllieIsReady(String allieNameToJoin);
 }

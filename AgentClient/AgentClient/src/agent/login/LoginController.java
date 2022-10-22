@@ -3,6 +3,7 @@ package agent.login;
 import agent.app.MainController;
 import agent.tasks.FetchLoggedAlliesInfoTimer;
 import com.google.gson.Gson;
+import dto.DTOactive;
 import dto.DTOloggedAllies;
 import dto.DTOstatus;
 import http.cookie.SimpleCookieManager;
@@ -68,46 +69,6 @@ public class LoginController {
         numOfThreadsLabel.textProperty().bind(Bindings.concat("Threads: ", Bindings.format("%.0f", threadsSlider.valueProperty())));
 
         // get all allies
-//        OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
-//        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_LOGGED_ALLIES_SRC).newBuilder();
-//        urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, AGENT.getClientTypeAsString());
-//        Request request = new Request.Builder()
-//                .url(urlBuilder.build().toString())
-//                .addHeader(CONTENT_TYPE, "text/plain")
-//                .get()
-//                .build();
-//        client.newCall(request).enqueue(new Callback() {
-//            public void onResponse(Call call, Response response) throws IOException {
-//                System.out.println("Code: " + response.code());
-//
-//                String dtoAsStr = response.body().string();
-//                System.out.println("Body: " + dtoAsStr);
-//                Gson gson = new Gson();
-//                if (response.code() != 200) {
-//
-//                    DTOstatus loginStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-//
-//                    Platform.runLater(() -> {
-//                        errorLabel.setVisible(true);
-//                        errorLabel.setText(loginStatus.getDetails().name());
-//                    });
-//                    return;
-//                }
-//
-//                DTOloggedAllies alliesStatus = gson.fromJson(dtoAsStr, DTOloggedAllies.class);
-//
-//                Platform.runLater(() -> {
-//                    teamComboBox.getItems().clear();
-//                    for (String allieName : alliesStatus.getLoggedAllies()) {
-//                        teamComboBox.getItems().add(allieName);
-//                    }
-//                });
-//            }
-//
-//            public void onFailure(Call call, IOException e) {
-//                System.out.println("Oops... something went wrong..." + e.getMessage());
-//            }
-//        });
         fetchLoggedAlliesInfoTimer = new Timer();
         fetchLoggedAlliesInfoTimerTask = new FetchLoggedAlliesInfoTimer(errorLabel, teamComboBox);
         fetchLoggedAlliesInfoTimer.schedule(fetchLoggedAlliesInfoTimerTask, 2000, 2000);
@@ -131,7 +92,6 @@ public class LoginController {
         });
     }
 
-
     @FXML
     void sendLogIn(MouseEvent event) {
 
@@ -154,9 +114,9 @@ public class LoginController {
 
                 String dtoAsStr = response.body().string();
                 System.out.println("Body: " + dtoAsStr);
+                Gson gson = new Gson();
 
                 if (response.code() != 200) {
-                    Gson gson = new Gson();
                     DTOstatus loginStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
 
                     Platform.runLater(() -> {
@@ -166,6 +126,7 @@ public class LoginController {
                     return;
                 }
 
+                DTOactive loginStatus = gson.fromJson(dtoAsStr, DTOactive.class);
 
                 Platform.runLater(() -> {
                     FXMLLoader loader = null;
@@ -176,7 +137,8 @@ public class LoginController {
                         app = loader.load();
                         appController = loader.getController();
                         appController.setOkHttpClient(client);
-                        appController.setInitialSettings(teamComboBox.getValue(), (int) threadsSlider.getValue(), tasksPerPullSpinner.getValue(), userNameTextField.getText());
+                        appController.setInitialSettings(teamComboBox.getValue(), (int) threadsSlider.getValue(),
+                                tasksPerPullSpinner.getValue(), userNameTextField.getText(), loginStatus.isActive());
 
                     } catch (IOException e) {
                         throw new RuntimeException(e);

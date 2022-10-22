@@ -123,6 +123,8 @@ public class MainController {
     private FetchSubscriptionStatusTimer fetchSubscribeTimerTask;
     private Timer fetchStaticInfoContestTimer;
     private FetchStaticContestInfoTimer fetchStaticInfoContestTimerTask;
+    private Timer fetchIsAgentCanGetOutOfWaitingModeTimer;
+    private FetchIsAgentCanGetOutOfWaitingModeTimer fetchIsAgentCanGetOutOfWaitingModeTimerTask;
     private BooleanProperty isSubscribed;
     private boolean uboatLoggedOut = false;
 
@@ -452,15 +454,18 @@ public class MainController {
      * @param numOfTasksPerPull the number of tasks per pull as mentioned in the login screen
      * @param agentName         the username of the current agent
      */
-    public void setInitialSettings(String allieName, int numOfThreads, int numOfTasksPerPull, String agentName) {
+    public void setInitialSettings(String allieName, int numOfThreads, int numOfTasksPerPull, String agentName, boolean isContestActive) {
         this.allieName.set(allieName);
         this.numOfThreads = numOfThreads;
         this.numOfTasksToPull = numOfTasksPerPull;
         this.agentName = agentName;
-
         setUserName(agentName);
+        if (isContestActive) {
+            this.fetchIsAgentCanGetOutOfWaitingModeTimer = new Timer();
+            this.fetchIsAgentCanGetOutOfWaitingModeTimerTask = new FetchIsAgentCanGetOutOfWaitingModeTimer(allieName, client, this);
+            return;
+        }
 
-        // initializes the thread pool
         this.fetchSubscribeTimer = new Timer();
         this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client);
         fetchSubscribeTimer.schedule(fetchSubscribeTimerTask, REFRESH_RATE, REFRESH_RATE);
@@ -597,6 +602,16 @@ public class MainController {
         isContestActive.set(false);
         isSubscribed.set(false);
         cleanOldResults();
+    }
+
+    public void setAgentIsOutOfWaitingMode() {
+        this.fetchSubscribeTimer = new Timer();
+        this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client);
+        fetchSubscribeTimer.schedule(fetchSubscribeTimerTask, REFRESH_RATE, REFRESH_RATE);
+
+        this.fetchIsAgentCanGetOutOfWaitingModeTimer.cancel();
+        this.fetchIsAgentCanGetOutOfWaitingModeTimerTask.cancel();
+
     }
 }
 
