@@ -1,6 +1,8 @@
 package agent.tasks;
 
 
+import agent.app.MainController;
+import agent.app.MessageTone;
 import com.google.gson.Gson;
 import dto.DTOactive;
 import dto.DTOstatus;
@@ -21,11 +23,14 @@ public class FetchContestStatusTimer extends TimerTask {
     private OkHttpClient client;
     private BooleanProperty isContestActive;
     private StringProperty allieName;
+    private MainController mainController;
 
-    public FetchContestStatusTimer(BooleanProperty isContestActive, StringProperty allieName, OkHttpClient client) {
+
+    public FetchContestStatusTimer(BooleanProperty isContestActive, StringProperty allieName, OkHttpClient client, MainController mainController) {
         this.isContestActive = isContestActive;
         this.allieName = allieName;
         this.client = client;
+        this.mainController = mainController;
     }
 
     @Override
@@ -52,7 +57,7 @@ public class FetchContestStatusTimer extends TimerTask {
                 if (response.code() != 200) {
                     DTOstatus activeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
-
+                        mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);
                     });
 
                 } else {

@@ -44,8 +44,10 @@ public class FetchStaticContestInfoTimer extends TimerTask {
         client.newCall(request).enqueue(new Callback() {
 
             public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("fetch staticContestInfo timer resp");
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
+                System.out.println(dtoAsStr);
                 Gson gson = new Gson();
 
                 if (response.code() != 200) {

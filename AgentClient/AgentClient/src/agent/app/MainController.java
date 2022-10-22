@@ -115,8 +115,6 @@ public class MainController {
     private FetchTasksThread fetchTasksThread;
     private Timer fetchSubscribeTimer;
     private FetchSubscriptionStatusTimer fetchSubscribeTimerTask;
-    private Timer waitForAllieApproveTimer;
-    private WaitForAllieApproveFinishGameTimer waitForAllieApproveTimerTask;
     private Timer fetchStaticInfoContestTimer;
     private FetchStaticContestInfoTimer fetchStaticInfoContestTimerTask;
     private BooleanProperty isSubscribed;
@@ -155,9 +153,13 @@ public class MainController {
                 this.fetchStaticInfoContestTimerTask = new FetchStaticContestInfoTimer(this, allieName, client);
                 fetchStaticInfoContestTimer.schedule(fetchStaticInfoContestTimerTask, REFRESH_RATE, REFRESH_RATE);
                 this.fetchContestStatusTimer = new Timer();
-                this.fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, allieName, client);
+                this.fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, allieName, client,this);
                 fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
+                fetchContestStatusTimer.cancel();
+                fetchContestStatusTimerTask.cancel();
+                fetchStaticInfoContestTimer.cancel();
+                fetchStaticInfoContestTimerTask.cancel();
                 // allie has unsubscribed, when the contest is finished
                 setStatusMessage("Team has unsubscribed from the game", MessageTone.INFO);
                 cleanOldResults();

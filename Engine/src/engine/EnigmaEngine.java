@@ -1150,7 +1150,7 @@ public class EnigmaEngine implements Engine {
         if (onlyMy) { // fetching the info of a specific battlefield
             Battlefield battlefield = uboatName2battleField.get(uboatUserName);
             if (battlefield == null) {
-                return new DTObattlefields(false, Problem.MISSING_QUERY_PARAMETER, allBattlefieldsInfo);
+                return new DTObattlefields(false, Problem.UBOAT_NAME_DOESNT_EXIST, allBattlefieldsInfo);
             } else if (!battlefield.isBattlefieldConfigured()) {
                 return new DTObattlefields(false, Problem.BATTLEFIELD_NOT_CONFIGURED, allBattlefieldsInfo);
             } else {
@@ -1218,13 +1218,15 @@ public class EnigmaEngine implements Engine {
 
     @Override
     public DTOstaticContestInfo getStaticContestInfo(String uboatName) {
-
-        DTObattlefields battlefields = getBattleFieldsInfo(uboatName, true);
-
-        DTOallies allies = getAlliesInfo(uboatName);
-
         List<AllieInfo> alliesList = new ArrayList<>();
         BattlefieldInfo battlefieldInfo = new BattlefieldInfo();
+
+        DTObattlefields battlefields = getBattleFieldsInfo(uboatName, true);
+        if(!battlefields.isSucceed()){
+            return new DTOstaticContestInfo(false, battlefields.getDetails(), alliesList, battlefieldInfo);
+        }
+
+        DTOallies allies = getAlliesInfo(uboatName);
 
         if (!battlefields.isSucceed() || !allies.isSucceed()) {
             // uboat Name probably is trash

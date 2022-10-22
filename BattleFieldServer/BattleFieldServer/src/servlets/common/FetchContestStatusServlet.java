@@ -55,6 +55,7 @@ public class FetchContestStatusServlet extends HttpServlet {
                 }
                 return;
             }
+            // case of uboat & allie
             if (uboatName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
@@ -62,8 +63,17 @@ public class FetchContestStatusServlet extends HttpServlet {
             }
 
             Map<String, Battlefield> battlefields = ServletUtils.getUboatName2battleField(getServletContext());
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().println(gson.toJson(new DTOactive(true, Problem.NO_PROBLEM, battlefields.get(uboatName).isActive().get())));
+            Battlefield battlefield = battlefields.get(uboatName);
+            // only allie can fail here
+            // 1. for bad uboat Name
+            // 2. for uboat name who logged out
+            if (battlefield == null) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().println(gson.toJson(new DTOactive(false, Problem.UBOAT_LOGGED_OUT_OR_NOT_FOUND, false)));
+            } else {
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().println(gson.toJson(new DTOactive(true, Problem.NO_PROBLEM, battlefield.isActive().get())));
+            }
         }
     }
 }

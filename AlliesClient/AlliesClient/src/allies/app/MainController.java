@@ -333,7 +333,7 @@ public class MainController {
                 } else {
                     Platform.runLater(() -> {
                         fetchContestStatusTimer = new Timer();
-                        fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, uboatName, client);
+                        fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, uboatName, client, getMainController());
                         fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
                         setStatusMessage("Allie is Ready", MessageTone.INFO);
                         isReady.set(true);
@@ -645,5 +645,9 @@ public class MainController {
 
     public MainController getMainController(){
         return this;
+    }
+    public void cancelContestStatusTimer(){
+        fetchContestStatusTimer.cancel();
+        fetchContestStatusTimerTask.cancel();
     }
 }
