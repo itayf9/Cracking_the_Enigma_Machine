@@ -50,21 +50,21 @@ public class FetchContestStatusTimer extends TimerTask {
 
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("fetch contest status task response");
-
                 System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
-
                 if (response.code() != 200) {
                     DTOstatus activeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
+                        if (activeStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED)) {
+                            mainController.allieUnsubscribedFromCurrentContest();
+                        }
                         mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);
                     });
 
                 } else {
                     DTOactive activeStatus = gson.fromJson(dtoAsStr, DTOactive.class);
-
                     Platform.runLater(() -> {
                         if (activeStatus.isActive()) {
                             isContestActive.set(Boolean.TRUE);

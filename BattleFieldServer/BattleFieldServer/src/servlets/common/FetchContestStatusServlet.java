@@ -51,7 +51,11 @@ public class FetchContestStatusServlet extends HttpServlet {
                     resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_ALLIE_NAME)));
                 } else {
                     DTOactive activeStatus = engine.checkIfAllieIsSubscribedToContestHasStarted(allieName);
-                    resp.setStatus(HttpServletResponse.SC_OK);
+                    if (!activeStatus.isSucceed()) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    } else {
+                        resp.setStatus(HttpServletResponse.SC_OK);
+                    }
                     resp.getWriter().println(gson.toJson(activeStatus));
                 }
                 return;

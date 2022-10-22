@@ -98,7 +98,6 @@ public class MainController {
     private FetchDynamicContestInfoTimer fetchDynamicContestInfoTimerTask;
     private Timer fetchContestsInfoTimer;
     private FetchContestsInfoTimer fetchContestsInfoTimerTask;
-
     private Timer fetchIsSubscribedToContestTimer;
     private FetchIsSubscribedToContestTimer fetchIsSubscribedToContestTimerTask;
 
