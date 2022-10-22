@@ -124,7 +124,7 @@ public class MainController {
     private Timer fetchStaticInfoContestTimer;
     private FetchStaticContestInfoTimer fetchStaticInfoContestTimerTask;
     private BooleanProperty isSubscribed;
-    private boolean allieUnsubscribed = false;
+    private boolean uboatLoggedOut = false;
 
 
     @FXML
@@ -156,7 +156,7 @@ public class MainController {
             if (newVal) {
                 // allie just subscribed
                 setStatusMessage("Allie has subscribed to a Contest", MessageTone.INFO);
-                allieUnsubscribed = false;
+                uboatLoggedOut = false;
                 this.fetchStaticInfoContestTimer = new Timer();
                 this.fetchStaticInfoContestTimerTask = new FetchStaticContestInfoTimer(this, allieName, client);
                 fetchStaticInfoContestTimer.schedule(fetchStaticInfoContestTimerTask, REFRESH_RATE, REFRESH_RATE);
@@ -190,7 +190,7 @@ public class MainController {
                 submitConclusionsTimer.schedule(submitConclusionsTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // contest == not active =>
-                if (!allieUnsubscribed) {
+                if (!uboatLoggedOut) {
                     fetchWinnerMessage();
                     setStatusMessage("Winner Found", MessageTone.INFO);
                 }
@@ -593,7 +593,7 @@ public class MainController {
     }
 
     public void allieUnsubscribedFromCurrentContest() {
-        allieUnsubscribed = true;
+        uboatLoggedOut = true;
         isContestActive.set(false);
         isSubscribed.set(false);
         cleanOldResults();

@@ -1546,7 +1546,9 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
-    public DTOstatus removeAllie(String usernameFromSession){
+    public DTOstatus removeAllie(String allieName) {
+
+
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
