@@ -206,7 +206,7 @@ public class MainController {
         statusBackShape.setStrokeWidth(0);
         statusBackShape.setOpacity(0);
 
-        headerController.bindComponents(usernameProperty);
+        headerController.bindComponents(isContestActive, usernameProperty);
     }
 
     /**

@@ -3,6 +3,7 @@ package agent.header;
 import agent.app.MainController;
 import agent.winner.LoseWinAreaController;
 import info.allie.AllieInfo;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -42,7 +43,8 @@ public class HeaderController {
         loseWinArea.setVisible(false);
     }
 
-    public void bindComponents(StringProperty usernameProperty) {
+    public void bindComponents(BooleanProperty isContestActive, StringProperty usernameProperty) {
         usernameLabel.textProperty().bind(usernameProperty);
+        logoutButton.disableProperty().bind(isContestActive);
     }
 }

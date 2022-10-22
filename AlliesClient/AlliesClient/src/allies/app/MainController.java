@@ -20,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
@@ -86,7 +87,7 @@ public class MainController {
     private FetchContestStatusTimer fetchContestStatusTimerTask;
     private Timer fetchAlliesInfoTimer;
     private FetchAlliesInfoTimer fetchAlliesInfoTimerTask;
-    private Timer fetchLoggedAgentsTimer;
+    private Timer fetchLoggedAgentsInfoTimer;
     private FetchLoggedAgentsInfoTimer fetchLoggedAgentsInfoTimerTask;
     private Timer fetchDynamicContestInfoTimer;
     private FetchDynamicContestInfoTimer fetchDynamicContestInfoTimerTask;
@@ -167,9 +168,9 @@ public class MainController {
         statusBackShape.setStrokeWidth(0);
         statusBackShape.setOpacity(0);
 
-        this.fetchLoggedAgentsTimer = new Timer();
+        this.fetchLoggedAgentsInfoTimer = new Timer();
         this.fetchLoggedAgentsInfoTimerTask = new FetchLoggedAgentsInfoTimer(this);
-        fetchLoggedAgentsTimer.schedule(fetchLoggedAgentsInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
+        fetchLoggedAgentsInfoTimer.schedule(fetchLoggedAgentsInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
         this.fetchContestsInfoTimer = new Timer();
         this.fetchContestsInfoTimerTask = new FetchContestsInfoTimer(this);
         fetchContestsInfoTimer.schedule(fetchContestsInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
@@ -644,11 +645,83 @@ public class MainController {
         totalDistinctCandidates.set(0);
     }
 
-    public MainController getMainController(){
+    public MainController getMainController() {
         return this;
     }
-    public void cancelContestStatusTimer(){
+
+    public void cancelContestStatusTimer() {
         fetchContestStatusTimer.cancel();
         fetchContestStatusTimerTask.cancel();
+    }
+
+    public void logoutAllie(MouseEvent event) {
+
+        // cancel this initialized timers
+        fetchContestsInfoTimerTask.cancel();
+        fetchContestsInfoTimer.cancel();
+        fetchLoggedAgentsInfoTimerTask.cancel();
+        fetchLoggedAgentsInfoTimer.cancel();
+
+        if (isSubscribedToContest.get()) {
+            fetchIsSubscribedToContestTimer.cancel();
+            fetchIsSubscribedToContestTimerTask.cancel();
+        }
+        if (isReady.get()) {
+            fetchContestStatusTimer.cancel();
+            fetchContestStatusTimerTask.cancel();
+        }
+        if (isContestActive.get()) {
+            fetchDynamicContestInfoTimer.cancel();
+            fetchDynamicContestInfoTimerTask.cancel();
+            fetchAlliesInfoTimer.cancel();
+            fetchAlliesInfoTimerTask.cancel();
+        }
+
+        String body = "";
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGOUT_SRC).newBuilder();
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .addHeader(CONTENT_TYPE, "text/plain")
+                .post(RequestBody.create(body.getBytes()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+
+
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("logged out resp");
+                System.out.println("Code: " + response.code());
+                String dtoAsStr = response.body().string();
+                Gson gson = new Gson();
+
+                DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                if (response.code() != 200) {
+                    Platform.runLater(() -> {
+                        setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR);
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        isContestActive.set(false);
+                        FXMLLoader loader = null;
+                        try {
+                            loader = new FXMLLoader();
+                            URL loginFxml = getClass().getResource("/allie/login/login.fxml");
+                            loader.setLocation(loginFxml);
+                            login = loader.load();
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        Scene loginScene = new Scene(login, 300, 300);
+                        Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        primaryStage.setScene(loginScene);
+                        primaryStage.show();
+                    });
+                }
+            }
+
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Oops... something went wrong..." + e.getMessage());
+            }
+        });
     }
 }

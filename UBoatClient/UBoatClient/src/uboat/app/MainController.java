@@ -49,7 +49,7 @@ public class MainController {
 
     private StringProperty usernameProperty;
 
-    GridPane login;
+    private GridPane login;
 
     /**
      * app private members

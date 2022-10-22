@@ -39,6 +39,22 @@
     -fx-background-color: #e7e7e7;
 }
 
+.logout-btn {
+    -fx-background-color: white;
+    -fx-text-fill: #cc5454;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5;
+    -fx-border-color: #cc5454;
+    -fx-border-width: 2px;
+    -fx-background-radius: 5;
+}
+
+.logout-btn:hover {
+    -fx-background-color: #cc5454;
+    -fx-text-fill: white;
+    -fx-border-color: #9a0000;
+}
+
 .enigma-title {
     -fx-text-fill: #0095ff;
     -fx-font-weight: bold;
