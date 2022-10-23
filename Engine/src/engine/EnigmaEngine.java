@@ -1586,13 +1586,13 @@ public class EnigmaEngine implements Engine {
     public DTOactive checkIfAllieIsReady(String allieName) {
         DecryptManager allie = allieName2decryptManager.get(allieName);
         if (allie == null) {
-            if (loggedOutClients.contains(allieName)) {
+            if (loggedOutClients.contains(allieName)) { // allie has logged out
                 return new DTOactive(false, Problem.ALLIE_LOGGED_OUT, false);
+            } else { // allie is not subscribed
+                return new DTOactive(true, Problem.NO_PROBLEM, false);
             }
-            return new DTOactive(false, Problem.ALLIE_NAME_DOESNT_EXIST, false);
-        } else {
-            return new DTOactive(true, Problem.NO_PROBLEM, allie.getDMReady());
         }
+        return new DTOactive(true, Problem.NO_PROBLEM, allie.getDMReady());
     }
 
     @Override

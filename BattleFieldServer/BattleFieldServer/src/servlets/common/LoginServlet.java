@@ -140,8 +140,8 @@ public class LoginServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_OK);
                 if (typeOfClient.equals(Client.ALLIE) || typeOfClient.equals(Client.UBOAT)) {
                     response.getWriter().println(gson.toJson(new DTOstatus(true, Problem.NO_PROBLEM)));
-                } else {
-                    response.getWriter().println(isAllieReadyStatus);
+                } else { // case of agent
+                    response.getWriter().println(gson.toJson(isAllieReadyStatus));
                 }
             }
         } else {

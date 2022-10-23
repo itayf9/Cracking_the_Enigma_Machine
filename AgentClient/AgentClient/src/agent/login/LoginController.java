@@ -111,14 +111,13 @@ public class LoginController {
         client.newCall(request).enqueue(new Callback() {
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("Code: " + response.code());
-
                 String dtoAsStr = response.body().string();
                 System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
-                if (response.code() != 200) {
-                    DTOstatus loginStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                DTOactive loginStatus = gson.fromJson(dtoAsStr, DTOactive.class);
 
+                if (response.code() != 200) {
                     Platform.runLater(() -> {
                         errorLabel.setVisible(true);
                         errorLabel.setText(loginStatus.getDetails().problemToGeneralMessage());
@@ -126,7 +125,6 @@ public class LoginController {
                     return;
                 }
 
-                DTOactive loginStatus = gson.fromJson(dtoAsStr, DTOactive.class);
 
                 Platform.runLater(() -> {
                     FXMLLoader loader = null;

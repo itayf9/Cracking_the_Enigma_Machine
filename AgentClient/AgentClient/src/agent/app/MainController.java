@@ -463,6 +463,7 @@ public class MainController {
         if (isContestActive) {
             this.fetchIsAgentCanGetOutOfWaitingModeTimer = new Timer();
             this.fetchIsAgentCanGetOutOfWaitingModeTimerTask = new FetchIsAgentCanGetOutOfWaitingModeTimer(allieName, client, this);
+            fetchIsAgentCanGetOutOfWaitingModeTimer.schedule(fetchIsAgentCanGetOutOfWaitingModeTimerTask, REFRESH_RATE, REFRESH_RATE);
             return;
         }
 
