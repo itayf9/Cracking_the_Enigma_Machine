@@ -64,7 +64,6 @@ public class LoginServlet extends HttpServlet {
 
                             //add the new user to the users list
                             uboatName2battleField.put(usernameFromParameter, new Battlefield(usernameFromParameter));
-                            loggedOutClients.remove(usernameFromParameter);
                         }
                         break;
                     case ALLIE: //
@@ -82,7 +81,6 @@ public class LoginServlet extends HttpServlet {
                             //add the new user to the allies list
                             loggedAlliesNames.put(usernameFromParameter, new HashSet<>());
                             loggedAlliesMap.put(usernameFromParameter, false);
-                            loggedOutClients.remove(usernameFromParameter);
                         }
                         break;
                     case AGENT:
@@ -136,7 +134,7 @@ public class LoginServlet extends HttpServlet {
                 // assuming we got here then all ok
                 request.getSession(true).setAttribute(Constants.USERNAME, usernameFromParameter);
                 request.getSession(true).setAttribute(Constants.CLIENT_TYPE, typeOfClient);
-
+                loggedOutClients.remove(usernameFromParameter);
                 response.setStatus(HttpServletResponse.SC_OK);
                 if (typeOfClient.equals(Client.ALLIE) || typeOfClient.equals(Client.UBOAT)) {
                     response.getWriter().println(gson.toJson(new DTOstatus(true, Problem.NO_PROBLEM)));

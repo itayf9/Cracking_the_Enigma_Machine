@@ -3,28 +3,17 @@ package agent.tasks;
 import agent.AgentTask;
 import agent.AgentTaskDeserializer;
 import agent.app.MainController;
-import agent.app.MessageTone;
-import candidate.AgentConclusion;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dto.DTOstatus;
 import dto.DTOtasks;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
-
 import java.io.IOException;
-
-import dictionary.Dictionary;
 import problem.Problem;
-
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-
 import static http.url.QueryParameter.*;
 import static http.url.URLconst.*;
 import static http.url.URLconst.BASE_URL;
@@ -36,13 +25,15 @@ public class FetchTasksThread implements Runnable {
     private final MainController mainController;
     private final StringProperty allieName;
     private final StringProperty uboatName;
+    private final BooleanProperty agentLoggedOut;
     private CountDownLatch cdl;
 
 
-    public FetchTasksThread(MainController mainController, StringProperty allieName, StringProperty uboatName) {
+    public FetchTasksThread(MainController mainController, StringProperty allieName, StringProperty uboatName, BooleanProperty agentLoggedOut) {
         this.mainController = mainController;
         this.allieName = allieName;
         this.uboatName = uboatName;
+        this.agentLoggedOut = agentLoggedOut;
     }
 
     public void setClient(OkHttpClient client) {
@@ -85,7 +76,9 @@ public class FetchTasksThread implements Runnable {
                     DTOstatus tasksStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
 
                     Platform.runLater(() -> {
-                        if (tasksStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                        if ((tasksStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED) || tasksStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) && !agentLoggedOut.get()) {
+                            mainController.allieUnsubscribedFromCurrentContest();
+                        } else if (tasksStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED) && !agentLoggedOut.get()) {
                             mainController.allieUnsubscribedFromCurrentContest();
                         }
                     });

@@ -1,11 +1,11 @@
 package agent.tasks;
 
 import agent.app.MainController;
-import agent.app.MessageTone;
 import com.google.gson.Gson;
 import dto.DTOagentConclusions;
 import dto.DTOstatus;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
 import problem.Problem;
@@ -21,17 +21,19 @@ import static http.url.Constants.CONTENT_TYPE;
 
 public class SubmitConclusionsTimer extends TimerTask {
 
-    private OkHttpClient client;
+    private final OkHttpClient client;
     private final MainController mainController;
     private final StringProperty uboatName;
     private final StringProperty allieName;
+    private final BooleanProperty agentLoggedOut;
     private final Gson gson = new Gson();
 
-    public SubmitConclusionsTimer(MainController mainController, StringProperty allieName, StringProperty uboatName, OkHttpClient client) {
+    public SubmitConclusionsTimer(MainController mainController, StringProperty allieName, StringProperty uboatName, OkHttpClient client, BooleanProperty agentLoggedOut) {
         this.mainController = mainController;
         this.allieName = allieName;
         this.uboatName = uboatName;
         this.client = client;
+        this.agentLoggedOut = agentLoggedOut;
     }
 
     @Override
@@ -59,15 +61,12 @@ public class SubmitConclusionsTimer extends TimerTask {
 
                 if (response.code() != 200) {
                     DTOstatus submitStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-
                     Platform.runLater(() -> {
-                        if (submitStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                        if ((submitStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED) || submitStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) && !agentLoggedOut.get()) {
                             mainController.allieUnsubscribedFromCurrentContest();
+                        } else if (submitStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT) && !agentLoggedOut.get()) {
+                            mainController.logoutAgent();
                         }
-                    });
-
-                } else {
-                    Platform.runLater(() -> {
                     });
                 }
             }

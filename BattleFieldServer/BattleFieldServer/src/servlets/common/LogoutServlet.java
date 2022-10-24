@@ -62,7 +62,8 @@ public class LogoutServlet extends HttpServlet {
                     resp.getWriter().println(gson.toJson(allieRemoveStatus));
                     return;
                 case AGENT:
-                    DTOstatus agentRemoveStatus = engine.removeAgent(usernameFromSession);
+                    String allieName = req.getParameter(QueryParameter.ALLIE_NAME);
+                    DTOstatus agentRemoveStatus = engine.removeAgent(usernameFromSession, allieName);
                     if (!agentRemoveStatus.isSucceed()) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     } else {

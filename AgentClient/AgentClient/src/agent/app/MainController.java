@@ -152,7 +152,7 @@ public class MainController {
         this.agentLoggedOut = new SimpleBooleanProperty(false);
 
         // Timers
-        this.fetchTasksThread = new FetchTasksThread(this, allieName, uboatName);
+        this.fetchTasksThread = new FetchTasksThread(this, allieName, uboatName, agentLoggedOut);
 
 
         isSubscribed.addListener((o, oldVal, newVal) -> {
@@ -189,7 +189,7 @@ public class MainController {
                 cancelStaticInfoTimer();
                 // schedule fetch candidates timer & fetch active teams
                 this.submitConclusionsTimer = new Timer();
-                this.submitConclusionsTimerTask = new SubmitConclusionsTimer(this, allieName, uboatName, client);
+                this.submitConclusionsTimerTask = new SubmitConclusionsTimer(this, allieName, uboatName, client, agentLoggedOut);
                 submitConclusionsTimer.schedule(submitConclusionsTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
                 // contest == not active =>

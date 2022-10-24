@@ -55,9 +55,9 @@ public class FetchIsAgentCanGetOutOfWaitingModeTimer extends TimerTask {
                 if (response.code() != 200) {
                     DTOstatus activeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
-                        if (activeStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED)) { // uboat logged out
+                        if ((activeStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED) || activeStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) && !agentLoggedOut.get()) { // uboat logged out
                             mainController.allieUnsubscribedFromCurrentContest();
-                        } else if (activeStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT)) { // allie logged out
+                        } else if (activeStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT) && !agentLoggedOut.get()) { // allie logged out
                             mainController.logoutAgent();
                         }
                         mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);

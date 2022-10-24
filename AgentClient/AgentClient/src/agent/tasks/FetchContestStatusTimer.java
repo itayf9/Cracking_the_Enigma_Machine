@@ -59,9 +59,9 @@ public class FetchContestStatusTimer extends TimerTask {
                 if (response.code() != 200) {
                     DTOstatus activeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
-                        if (activeStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED)) {
+                        if ((activeStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED) || activeStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) && !agentLoggedOut.get()) {
                             mainController.allieUnsubscribedFromCurrentContest();
-                        } else if (activeStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT)) {
+                        } else if (activeStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT) && !agentLoggedOut.get()) {
                             mainController.logoutAgent();
                         }
 

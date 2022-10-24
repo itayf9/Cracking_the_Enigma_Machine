@@ -21,9 +21,8 @@ import static http.url.URLconst.FETCH_STATIC_CONTEST_INFO_SRC;
 
 public class FetchStaticContestInfoTimer extends TimerTask {
 
-    private MainController mainController;
-
-    private OkHttpClient client;
+    private final MainController mainController;
+    private final OkHttpClient client;
     private final StringProperty allieName;
     private final BooleanProperty agentLoggedOut;
 
@@ -56,7 +55,7 @@ public class FetchStaticContestInfoTimer extends TimerTask {
                 if (response.code() != 200) {
                     DTOstatus staticInfoStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
-                        if (staticInfoStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED)) {
+                        if ((staticInfoStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED) || staticInfoStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) && !agentLoggedOut.get()) {
                             mainController.cancelStaticInfoTimer();
                             mainController.allieUnsubscribedFromCurrentContest();
                         } else if (staticInfoStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT) && !agentLoggedOut.get()) {

@@ -35,18 +35,14 @@ import static utill.Utility.*;
 public class EnigmaEngine implements Engine {
 
     // The engine contains Machine instance and machine records object.
-
     private final Map<String, Battlefield> uboatName2battleField;
     private final Map<String, Set<AgentInfo>> loggedAllieName2loggedAgents;
     private final Map<String, AgentInfo> agentName2agentInfo;
     private final Map<String, DecryptManager> allieName2decryptManager;
     private final Map<String, Boolean> loggedAllieName2isSubscribed;
     private final Set<String> loggedOutClients;
-
-
     private final Object waitingTasksQueueLock;
     private final Object conclusionQueueLock;
-
     public static String JAXB_XML_PACKAGE_NAME;
 
     public EnigmaEngine() {
@@ -1161,7 +1157,9 @@ public class EnigmaEngine implements Engine {
 
         if (onlyMy) { // fetching the info of a specific battlefield
             Battlefield battlefield = uboatName2battleField.get(uboatUserName);
-            if (battlefield == null) {
+            if (battlefield == null && loggedOutClients.contains(uboatUserName)) {
+                return new DTObattlefields(false, Problem.UBOAT_LOGGED_OUT, allBattlefieldsInfo);
+            } else if (battlefield == null) {
                 return new DTObattlefields(false, Problem.UBOAT_NAME_DOESNT_EXIST, allBattlefieldsInfo);
             } else if (!battlefield.isBattlefieldConfigured()) {
                 return new DTObattlefields(false, Problem.BATTLEFIELD_NOT_CONFIGURED, allBattlefieldsInfo);
@@ -1237,7 +1235,7 @@ public class EnigmaEngine implements Engine {
         if (!battlefields.isSucceed()) {
             return new DTOstaticContestInfo(false, battlefields.getDetails(), alliesList, battlefieldInfo);
         }
-
+        // cannot fail cause battlefield exist so only gets the allies subscribed to it
         DTOallies allies = getAlliesInfo(uboatName);
 
         if (!battlefields.isSucceed() || !allies.isSucceed()) {
@@ -1339,7 +1337,6 @@ public class EnigmaEngine implements Engine {
     @Override
     public DTOwinner getAllieWinnerInfo(String uboatName) {
 
-        List<AllieInfo> allieInfos = new ArrayList<>();
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         if (battlefield == null) {
             return new DTOwinner(false, Problem.UBOAT_NAME_DOESNT_EXIST, battlefield.getWinnerAllieInfo());
@@ -1421,6 +1418,18 @@ public class EnigmaEngine implements Engine {
             return new DTOtasks(false, Problem.UBOAT_NAME_DOESNT_EXIST, new ArrayList<>());
         }
 
+        // check if allie exist
+
+        DecryptManager allie = allieName2decryptManager.get(allieName);
+        if (allie == null) {
+            if (loggedOutClients.contains(allieName)) {
+                return new DTOtasks(false, Problem.ALLIE_LOGGED_OUT, new ArrayList<>());
+
+            }
+            return new DTOtasks(false, Problem.ALLIE_NAME_DOESNT_EXIST, new ArrayList<>());
+        }
+
+        // find my allie in the battlefield
         Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter(decryptManager -> decryptManager.getAllieName().equals(allieName)).findFirst();
         if (!allieMaybe.isPresent()) {
             return new DTOtasks(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD, new ArrayList<>());
@@ -1457,6 +1466,13 @@ public class EnigmaEngine implements Engine {
                 return new DTOstatus(false, Problem.UBOAT_LOGGED_OUT);
             }
             return new DTOstatus(false, Problem.UBOAT_NAME_DOESNT_EXIST);
+        }
+
+        if (allieName2decryptManager.get(allieName) == null) {
+            if (loggedOutClients.contains(allieName)) {
+                return new DTOstatus(false, Problem.ALLIE_LOGGED_OUT);
+            }
+            return new DTOstatus(false, Problem.ALLIE_NAME_DOESNT_EXIST);
         }
 
         Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter((decryptManager) -> decryptManager.getAllieName().equals(allieName)).findFirst();
@@ -1559,19 +1575,15 @@ public class EnigmaEngine implements Engine {
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         if (battlefield != null) {
             Optional<DecryptManager> allieMaybe = battlefield.getAllies().stream().filter(decryptManager -> decryptManager.getAllieName().equals(allieName)).findFirst();
-            if (!allieMaybe.isPresent()) {
-                return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD);
+            if (allieMaybe.isPresent()) {
+                // if the contest is active, stops the dm threads before removing
+                if (battlefield.isActive().get()) {
+                    allieMaybe.get().stopDecrypt();
+                }
+                // removes the dm that matches the allie
+                battlefield.getAllies().remove(allieMaybe.get());
             }
-
-            // if the contest is active, stops the dm threads before removing
-            if (battlefield.isActive().get()) {
-                allieMaybe.get().stopDecrypt();
-            }
-
-            // removes the dm that matches the allie
-            battlefield.getAllies().remove(allieMaybe.get());
         }
-
 
         // removes the dm from allieName2decryptManager map
         allieName2decryptManager.remove(allieName);
@@ -1587,7 +1599,27 @@ public class EnigmaEngine implements Engine {
     }
 
     @Override
-    public DTOstatus removeAgent(String usernameFromSession) {
+    public DTOstatus removeAgent(String agentName, String allieName) {
+
+        // this can't fail cause every agent has an ally
+        DecryptManager allie = allieName2decryptManager.get(allieName);
+        if (allie == null && !loggedOutClients.contains(allieName)) {
+            return new DTOstatus(false, Problem.ALLIE_NAME_DOESNT_EXIST);
+        }
+
+        // removes the agent from the set of AgentInfo in loggedAllieName2loggedAgents map
+        Set<AgentInfo> agents = loggedAllieName2loggedAgents.get(allieName);
+        if (agents != null) {
+            Optional<AgentInfo> maybeAgent = agents.stream().filter((agentInfo) -> agentInfo.getAgentName().equals(agentName)).findFirst();
+            maybeAgent.ifPresent(agents::remove);
+        }
+
+        // removes the agent from the agentName2agentInfo map
+        agentName2agentInfo.remove(agentName);
+
+        // adds the agent to the logged out clients set
+        loggedOutClients.add(agentName);
+
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
