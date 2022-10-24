@@ -693,4 +693,8 @@ public class MainController {
         isSubscribedToContest.set(false);
         tabPaneBody.getSelectionModel().selectFirst();
     }
+
+    private void clearStatusMessage() {
+        setStatusMessage("", MessageTone.INFO);
+    }
 }

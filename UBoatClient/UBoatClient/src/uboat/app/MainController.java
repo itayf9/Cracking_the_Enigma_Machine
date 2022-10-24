@@ -809,6 +809,7 @@ public class MainController {
     }
 
     public void approveUboatFinishGame() {
+        // this function may hold more functionality in the future
         cleanOldResults();
     }
 }

@@ -1609,10 +1609,12 @@ public class EnigmaEngine implements Engine {
 
         // removes the agent from the set of AgentInfo in loggedAllieName2loggedAgents map
         Set<AgentInfo> agents = loggedAllieName2loggedAgents.get(allieName);
-        if (agents != null) {
-            Optional<AgentInfo> maybeAgent = agents.stream().filter((agentInfo) -> agentInfo.getAgentName().equals(agentName)).findFirst();
-            maybeAgent.ifPresent(agents::remove);
+        if (agents == null) {
+            return new DTOstatus(false, Problem.ALLIE_NAME_DOESNT_EXIST);
         }
+
+        Optional<AgentInfo> maybeAgent = agents.stream().filter((agentInfo) -> agentInfo.getAgentName().equals(agentName)).findFirst();
+        maybeAgent.ifPresent(agents::remove);
 
         // removes the agent from the agentName2agentInfo map
         agentName2agentInfo.remove(agentName);
