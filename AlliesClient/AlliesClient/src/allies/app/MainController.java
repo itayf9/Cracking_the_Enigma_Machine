@@ -127,6 +127,7 @@ public class MainController {
             } else {// when contest is over // or when uboat logged out before contest has begun
                 isReady.set(false);
                 tabPaneBody.getSelectionModel().selectFirst();
+                setStatusMessage("Allie unsubscribed from the contest.", MessageTone.INFO);
             }
         });
 
