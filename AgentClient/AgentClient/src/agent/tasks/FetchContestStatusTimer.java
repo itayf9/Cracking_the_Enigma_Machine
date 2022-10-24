@@ -27,12 +27,15 @@ public class FetchContestStatusTimer extends TimerTask {
     private final StringProperty allieName;
     private final MainController mainController;
 
+    private final BooleanProperty agentLoggedOut;
 
-    public FetchContestStatusTimer(BooleanProperty isContestActive, StringProperty allieName, OkHttpClient client, MainController mainController) {
+
+    public FetchContestStatusTimer(BooleanProperty isContestActive, StringProperty allieName, OkHttpClient client, MainController mainController, BooleanProperty agentLoggedOut) {
         this.isContestActive = isContestActive;
         this.allieName = allieName;
         this.client = client;
         this.mainController = mainController;
+        this.agentLoggedOut = agentLoggedOut;
     }
 
     @Override

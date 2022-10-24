@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import dto.DTOactive;
 import dto.DTOstatus;
 import javafx.application.Platform;
-import javafx.scene.input.MouseEvent;
+import javafx.beans.property.BooleanProperty;
 import okhttp3.*;
 import problem.Problem;
 
@@ -23,11 +23,14 @@ public class FetchIsAgentCanGetOutOfWaitingModeTimer extends TimerTask {
     private final String allieName;
     private final MainController mainController;
 
+    private final BooleanProperty agentLoggedOut;
 
-    public FetchIsAgentCanGetOutOfWaitingModeTimer(String allieName, OkHttpClient client, MainController mainController) {
+
+    public FetchIsAgentCanGetOutOfWaitingModeTimer(String allieName, OkHttpClient client, MainController mainController, BooleanProperty agentLoggedOut) {
         this.allieName = allieName;
         this.client = client;
         this.mainController = mainController;
+        this.agentLoggedOut = agentLoggedOut;
     }
 
     @Override

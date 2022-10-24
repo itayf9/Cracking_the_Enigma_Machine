@@ -26,11 +26,14 @@ public class FetchSubscriptionStatusTimer extends TimerTask {
     private final StringProperty allieName;
     private MainController mainController;
 
-    public FetchSubscriptionStatusTimer(BooleanProperty isSubscribed, StringProperty allieName, OkHttpClient client, MainController mainController) {
+    private final BooleanProperty agentLoggedOut;
+
+    public FetchSubscriptionStatusTimer(BooleanProperty isSubscribed, StringProperty allieName, OkHttpClient client, MainController mainController, BooleanProperty agentLoggedOut) {
         this.isSubscribed = isSubscribed;
         this.allieName = allieName;
         this.client = client;
         this.mainController = mainController;
+        this.agentLoggedOut = agentLoggedOut;
     }
 
     @Override

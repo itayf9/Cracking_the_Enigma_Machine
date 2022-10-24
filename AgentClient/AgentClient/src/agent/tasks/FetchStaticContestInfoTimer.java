@@ -7,6 +7,7 @@ import dto.DTOstaticContestInfo;
 import dto.DTOstatus;
 import http.url.QueryParameter;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
 import problem.Problem;
@@ -24,11 +25,13 @@ public class FetchStaticContestInfoTimer extends TimerTask {
 
     private OkHttpClient client;
     private final StringProperty allieName;
+    private final BooleanProperty agentLoggedOut;
 
-    public FetchStaticContestInfoTimer(MainController mainController, StringProperty allieName, OkHttpClient client) {
+    public FetchStaticContestInfoTimer(MainController mainController, StringProperty allieName, OkHttpClient client, BooleanProperty agentLoggedOut) {
         this.mainController = mainController;
         this.allieName = allieName;
         this.client = client;
+        this.agentLoggedOut = agentLoggedOut;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class FetchStaticContestInfoTimer extends TimerTask {
                         if (staticInfoStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED)) {
                             mainController.cancelStaticInfoTimer();
                             mainController.allieUnsubscribedFromCurrentContest();
-                        } else if (staticInfoStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                        } else if (staticInfoStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT) && !agentLoggedOut.get()) {
                             mainController.logoutAgent();
                         }
                         mainController.setStatusMessage(mainController.convertProblemToMessage(staticInfoStatus.getDetails()), MessageTone.ERROR);

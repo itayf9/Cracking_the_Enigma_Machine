@@ -6,6 +6,7 @@ import dto.DTOstatus;
 import http.cookie.SimpleCookieManager;
 import http.url.Constants;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;

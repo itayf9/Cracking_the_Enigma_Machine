@@ -20,9 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
@@ -163,10 +161,10 @@ public class MainController {
                 setStatusMessage("Allie has subscribed to a Contest", MessageTone.INFO);
                 uboatLoggedOut = false;
                 this.fetchStaticInfoContestTimer = new Timer();
-                this.fetchStaticInfoContestTimerTask = new FetchStaticContestInfoTimer(this, allieName, client);
+                this.fetchStaticInfoContestTimerTask = new FetchStaticContestInfoTimer(this, allieName, client, agentLoggedOut);
                 fetchStaticInfoContestTimer.schedule(fetchStaticInfoContestTimerTask, REFRESH_RATE, REFRESH_RATE);
                 this.fetchContestStatusTimer = new Timer();
-                this.fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, allieName, client, this);
+                this.fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, allieName, client, this, agentLoggedOut);
                 fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {
                 fetchContestStatusTimer.cancel();
@@ -465,13 +463,13 @@ public class MainController {
         setUserName(agentName);
         if (isContestActive) {
             this.fetchIsAgentCanGetOutOfWaitingModeTimer = new Timer();
-            this.fetchIsAgentCanGetOutOfWaitingModeTimerTask = new FetchIsAgentCanGetOutOfWaitingModeTimer(allieName, client, this);
+            this.fetchIsAgentCanGetOutOfWaitingModeTimerTask = new FetchIsAgentCanGetOutOfWaitingModeTimer(allieName, client, this, agentLoggedOut);
             fetchIsAgentCanGetOutOfWaitingModeTimer.schedule(fetchIsAgentCanGetOutOfWaitingModeTimerTask, REFRESH_RATE, REFRESH_RATE);
             return;
         }
 
         this.fetchSubscribeTimer = new Timer();
-        this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client, this);
+        this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client, this, agentLoggedOut);
         fetchSubscribeTimer.schedule(fetchSubscribeTimerTask, REFRESH_RATE, REFRESH_RATE);
     }
 
@@ -544,6 +542,7 @@ public class MainController {
         }
         String body = "";
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGOUT_SRC).newBuilder();
+        urlBuilder.addQueryParameter(QueryParameter.ALLIE_NAME, allieName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -607,7 +606,7 @@ public class MainController {
 
     public void setAgentIsOutOfWaitingMode() {
         this.fetchSubscribeTimer = new Timer();
-        this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client, this);
+        this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client, this, agentLoggedOut);
         fetchSubscribeTimer.schedule(fetchSubscribeTimerTask, REFRESH_RATE, REFRESH_RATE);
 
         this.fetchIsAgentCanGetOutOfWaitingModeTimer.cancel();

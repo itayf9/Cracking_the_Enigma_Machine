@@ -1056,6 +1056,9 @@ public class EnigmaEngine implements Engine {
             }
             return new DTOallies(false, Problem.UBOAT_NAME_DOESNT_EXIST, alliesInfo);
         }
+
+        // goes through the all the allies in the battlefield
+        // adds an AllieInfo to a list for each of them
         for (DecryptManager allie : battlefield.getAllies()) {
             String allieName = allie.getAllieName();
             int numOfAgents = loggedAllieName2loggedAgents.get(allieName).size();
