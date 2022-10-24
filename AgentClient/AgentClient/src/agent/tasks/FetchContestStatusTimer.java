@@ -64,8 +64,6 @@ public class FetchContestStatusTimer extends TimerTask {
                         } else if (activeStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT) && !agentLoggedOut.get()) {
                             mainController.logoutAgent();
                         }
-
-                        mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);
                     });
 
                 } else {

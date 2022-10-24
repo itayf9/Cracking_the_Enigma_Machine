@@ -1601,12 +1601,6 @@ public class EnigmaEngine implements Engine {
     @Override
     public DTOstatus removeAgent(String agentName, String allieName) {
 
-        // this can't fail cause every agent has an ally
-        DecryptManager allie = allieName2decryptManager.get(allieName);
-        if (allie == null && !loggedOutClients.contains(allieName)) {
-            return new DTOstatus(false, Problem.ALLIE_NAME_DOESNT_EXIST);
-        }
-
         // removes the agent from the set of AgentInfo in loggedAllieName2loggedAgents map
         Set<AgentInfo> agents = loggedAllieName2loggedAgents.get(allieName);
         if (agents == null) {

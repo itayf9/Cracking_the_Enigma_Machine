@@ -63,6 +63,11 @@ public class LogoutServlet extends HttpServlet {
                     return;
                 case AGENT:
                     String allieName = req.getParameter(QueryParameter.ALLIE_NAME);
+                    if (allieName == null) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.ALLIE_NAME_DOESNT_EXIST)));
+                        return;
+                    }
                     DTOstatus agentRemoveStatus = engine.removeAgent(usernameFromSession, allieName);
                     if (!agentRemoveStatus.isSucceed()) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

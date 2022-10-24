@@ -47,9 +47,8 @@ public class FetchIsAgentCanGetOutOfWaitingModeTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch isAgentCanGetOutOFWaitingMode task response " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println(dtoAsStr);
+                System.out.println("fetch isAgentCanGetOutOFWaitingMode task response " + "Code: " + response.code() + " " + dtoAsStr);
                 Gson gson = new Gson();
 
                 if (response.code() != 200) {

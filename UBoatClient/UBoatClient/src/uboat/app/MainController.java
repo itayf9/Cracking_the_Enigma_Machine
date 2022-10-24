@@ -552,6 +552,12 @@ public class MainController {
     private void cleanOldResults() {
         headerController.clearOldResults();
         bodyController.clearOldResultsOfBruteForce();
+        totalDistinctCandidates.set(0);
+        clearStatusMessage();
+    }
+
+    private void clearStatusMessage() {
+        setStatusMessage("", MessageTone.INFO);
     }
 
     /**

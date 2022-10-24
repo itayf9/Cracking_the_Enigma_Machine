@@ -611,7 +611,6 @@ public class MainController {
 
         this.fetchIsAgentCanGetOutOfWaitingModeTimer.cancel();
         this.fetchIsAgentCanGetOutOfWaitingModeTimerTask.cancel();
-
     }
 
     private void clearStatusMessage() {
