@@ -44,8 +44,7 @@ public class FetchIsAgentCanGetOutOfWaitingModeTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch isAgentCanGetOutOFWaitingMode task response");
-                System.out.println("Code: " + response.code());
+                System.out.println("fetch isAgentCanGetOutOFWaitingMode task response " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 System.out.println(dtoAsStr);
                 Gson gson = new Gson();
@@ -56,7 +55,7 @@ public class FetchIsAgentCanGetOutOfWaitingModeTimer extends TimerTask {
                         if (activeStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED)) { // uboat logged out
                             mainController.allieUnsubscribedFromCurrentContest();
                         } else if (activeStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT)) { // allie logged out
-                            //mainController.switchToLoginScreen(new MouseEvent());
+                            mainController.logoutAgent();
                         }
                         mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);
                     });

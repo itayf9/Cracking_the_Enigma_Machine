@@ -44,15 +44,12 @@ public class FetchLoggedAlliesInfoTimer extends TimerTask {
                 .build();
         client.newCall(request).enqueue(new Callback() {
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
-
+                System.out.println("FetchLoggedAlliesInfoTimer resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
+
                 if (response.code() != 200) {
-
                     DTOstatus loginStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-
                     Platform.runLater(() -> {
                         errorLabel.setVisible(true);
                         errorLabel.setText(loginStatus.getDetails().name());
@@ -61,7 +58,6 @@ public class FetchLoggedAlliesInfoTimer extends TimerTask {
                 }
 
                 DTOloggedAllies alliesStatus = gson.fromJson(dtoAsStr, DTOloggedAllies.class);
-
                 Platform.runLater(() -> {
                     String currentTeamComboBoxValue = teamComboBox.getValue();
                     teamComboBox.getItems().clear();
@@ -80,5 +76,6 @@ public class FetchLoggedAlliesInfoTimer extends TimerTask {
             public void onFailure(Call call, IOException e) {
                 System.out.println("Oops... something went wrong..." + e.getMessage());
             }
-        });}
+        });
+    }
 }

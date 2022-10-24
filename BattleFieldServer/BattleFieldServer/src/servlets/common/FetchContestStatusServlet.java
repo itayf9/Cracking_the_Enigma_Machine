@@ -44,7 +44,9 @@ public class FetchContestStatusServlet extends HttpServlet {
                 uboatName = usernameFromSession;
             } else if (typeOfClient.equals(Client.ALLIE)) {
                 uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
-            } else { // case of agent is different
+            } else {
+
+                // this is case of agent only
                 allieName = req.getParameter(QueryParameter.ALLIE_NAME);
                 if (allieName == null) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -59,8 +61,9 @@ public class FetchContestStatusServlet extends HttpServlet {
                     resp.getWriter().println(gson.toJson(activeStatus));
                 }
                 return;
+                // end case of agent
             }
-            // case of uboat & allie
+            // start case of uboat & allie
             if (uboatName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));

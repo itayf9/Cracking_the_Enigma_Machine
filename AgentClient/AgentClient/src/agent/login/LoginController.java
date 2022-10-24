@@ -110,9 +110,8 @@ public class LoginController {
                 .build();
         client.newCall(request).enqueue(new Callback() {
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
+                System.out.println("login resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
                 Gson gson = new Gson();
 
                 DTOactive loginStatus = gson.fromJson(dtoAsStr, DTOactive.class);
@@ -124,8 +123,7 @@ public class LoginController {
                     });
                     return;
                 }
-
-
+                
                 Platform.runLater(() -> {
                     FXMLLoader loader = null;
                     try {
@@ -154,6 +152,5 @@ public class LoginController {
                 System.out.println("Oops... something went wrong..." + e.getMessage());
             }
         });
-
     }
 }

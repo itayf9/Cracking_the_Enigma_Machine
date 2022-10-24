@@ -46,7 +46,7 @@ public class FetchCandidatesTimer extends TimerTask {
         this.originalText = originalText;
         this.client = client;
     }
-    
+
     @Override
     public void run() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CANDIDATES_SRC).newBuilder();
@@ -59,8 +59,7 @@ public class FetchCandidatesTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetching candidates timer resp");
-                System.out.println("Code: " + response.code());
+                System.out.println("fetching candidates timer resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 

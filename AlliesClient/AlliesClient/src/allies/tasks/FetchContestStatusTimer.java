@@ -34,7 +34,7 @@ public class FetchContestStatusTimer extends TimerTask {
         this.client = client;
         this.mainController = mainController;
     }
-    
+
     @Override
     public void run() {
 
@@ -49,22 +49,20 @@ public class FetchContestStatusTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch contest status timer response");
-                System.out.println("Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println(dtoAsStr);
+                System.out.println("fetch contest status timer response " + "Code: " + response.code() + " " + dtoAsStr);
                 Gson gson = new Gson();
 
 
                 if (response.code() != 200) {
                     DTOstatus activeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-                        Platform.runLater(() -> {
-                            if (activeStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
-                                mainController.unsubscribeFromCurrentContest();
-                                mainController.cancelContestStatusTimer();
-                            }
-                            mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);
-                        });
+                    Platform.runLater(() -> {
+                        if (activeStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                            mainController.unsubscribeFromCurrentContest();
+                            mainController.cancelContestStatusTimer();
+                        }
+                        mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);
+                    });
                 } else {
                     DTOactive activeStatus = gson.fromJson(dtoAsStr, DTOactive.class);
 

@@ -45,19 +45,19 @@ public class FetchStaticContestInfoTimer extends TimerTask {
         client.newCall(request).enqueue(new Callback() {
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch staticContestInfo timer resp");
-                System.out.println("Code: " + response.code());
+                System.out.println("fetch staticContestInfo timer resp" + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 System.out.println(dtoAsStr);
                 Gson gson = new Gson();
 
                 if (response.code() != 200) {
                     DTOstatus staticInfoStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-
                     Platform.runLater(() -> {
-                        if (staticInfoStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                        if (staticInfoStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED)) {
                             mainController.cancelStaticInfoTimer();
                             mainController.allieUnsubscribedFromCurrentContest();
+                        } else if (staticInfoStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
+                            mainController.logoutAgent();
                         }
                         mainController.setStatusMessage(mainController.convertProblemToMessage(staticInfoStatus.getDetails()), MessageTone.ERROR);
                     });

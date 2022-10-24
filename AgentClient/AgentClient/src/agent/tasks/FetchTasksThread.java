@@ -50,7 +50,6 @@ public class FetchTasksThread implements Runnable {
     }
 
 
-
     @Override
     public void run() {
 
@@ -76,8 +75,7 @@ public class FetchTasksThread implements Runnable {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch agentTasks task response");
-                System.out.println("Code: " + response.code());
+                System.out.println("fetch agentTasks task response " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new GsonBuilder()
                         .registerTypeAdapter(AgentTask.class, new AgentTaskDeserializer())
@@ -98,7 +96,7 @@ public class FetchTasksThread implements Runnable {
                         Thread.sleep(25);
                     } catch (InterruptedException ignored) {
                     }
-                    Platform.runLater(()->mainController.executeTasks(tasksStatus.getTaskList()));
+                    Platform.runLater(() -> mainController.executeTasks(tasksStatus.getTaskList()));
                 }
             }
 

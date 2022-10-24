@@ -58,7 +58,7 @@ public class EnigmaEngine implements Engine {
         this.loggedAllieName2isSubscribed = new HashMap<>();
         this.waitingTasksQueueLock = new Object();
         this.conclusionQueueLock = new Object();
-        this. loggedOutClients = new HashSet<>();
+        this.loggedOutClients = new HashSet<>();
     }
 
     /**
@@ -1231,7 +1231,7 @@ public class EnigmaEngine implements Engine {
         BattlefieldInfo battlefieldInfo = new BattlefieldInfo();
 
         DTObattlefields battlefields = getBattleFieldsInfo(uboatName, true);
-        if(!battlefields.isSucceed()){
+        if (!battlefields.isSucceed()) {
             return new DTOstaticContestInfo(false, battlefields.getDetails(), alliesList, battlefieldInfo);
         }
 
@@ -1485,6 +1485,9 @@ public class EnigmaEngine implements Engine {
     public DTOactive checkIfAllieIsSubscribedToContest(String allieName) {
         Boolean isSubscribed = loggedAllieName2isSubscribed.get(allieName);
         if (isSubscribed == null) {
+            if (loggedOutClients.contains(allieName)) {
+                return new DTOactive(false, Problem.ALLIE_LOGGED_OUT, false);
+            }
             return new DTOactive(false, Problem.ALLIE_NAME_DOESNT_EXIST, false);
         }
 
@@ -1495,10 +1498,13 @@ public class EnigmaEngine implements Engine {
     public DTOactive checkIfAllieIsSubscribedToContestHasStarted(String allieName) {
         Boolean isSubscribed = loggedAllieName2isSubscribed.get(allieName);
         if (isSubscribed == null) {
+            if (loggedOutClients.contains(allieName)) {
+                return new DTOactive(false, Problem.ALLIE_LOGGED_OUT, false);
+            }
             return new DTOactive(false, Problem.ALLIE_NAME_DOESNT_EXIST, false);
         }
 
-        if (!isSubscribed) {
+        if (!isSubscribed) { // uboat logged out
             return new DTOactive(false, Problem.ALLIE_NOT_SUBSCRIBED, false);
         }
 
@@ -1534,14 +1540,14 @@ public class EnigmaEngine implements Engine {
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         Set<DecryptManager> allies = battlefield.getAllies();
 
-       for(DecryptManager allie : allies) {
-         Set<AgentInfo> agents = loggedAllieName2loggedAgents.get( allie.getAllieName());
-           agents.forEach(AgentInfo::resetDynamicInfo);
-       }
+        for (DecryptManager allie : allies) {
+            Set<AgentInfo> agents = loggedAllieName2loggedAgents.get(allie.getAllieName());
+            agents.forEach(AgentInfo::resetDynamicInfo);
+        }
     }
 
     @Override
-    public Set<String> getLoggedOutClients(){
+    public Set<String> getLoggedOutClients() {
         return loggedOutClients;
     }
 

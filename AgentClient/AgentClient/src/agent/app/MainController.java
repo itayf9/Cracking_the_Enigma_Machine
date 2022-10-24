@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -127,6 +128,7 @@ public class MainController {
     private FetchIsAgentCanGetOutOfWaitingModeTimer fetchIsAgentCanGetOutOfWaitingModeTimerTask;
     private BooleanProperty isSubscribed;
     private boolean uboatLoggedOut = false;
+    private BooleanProperty agentLoggedOut;
 
 
     @FXML
@@ -149,6 +151,7 @@ public class MainController {
         this.uboatName = new SimpleStringProperty("");
         this.allieName = new SimpleStringProperty("");
         this.usernameProperty = new SimpleStringProperty("");
+        this.agentLoggedOut = new SimpleBooleanProperty(false);
 
         // Timers
         this.fetchTasksThread = new FetchTasksThread(this, allieName, uboatName);
@@ -234,7 +237,7 @@ public class MainController {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
+                System.out.println("fetchWinnerMessage resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -468,7 +471,7 @@ public class MainController {
         }
 
         this.fetchSubscribeTimer = new Timer();
-        this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client);
+        this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client, this);
         fetchSubscribeTimer.schedule(fetchSubscribeTimerTask, REFRESH_RATE, REFRESH_RATE);
     }
 
@@ -529,7 +532,7 @@ public class MainController {
         return dictionary;
     }
 
-    public void logoutAgent(MouseEvent event) {
+    public void logoutAgent() {
         fetchSubscribeTimer.cancel();
         fetchSubscribeTimerTask.cancel();
 
@@ -539,7 +542,6 @@ public class MainController {
             fetchContestStatusTimer.cancel();
             fetchContestStatusTimerTask.cancel();
         }
-
         String body = "";
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGOUT_SRC).newBuilder();
         Request request = new Request.Builder()
@@ -549,10 +551,8 @@ public class MainController {
                 .build();
         client.newCall(request).enqueue(new Callback() {
 
-
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("logged out resp");
-                System.out.println("Code: " + response.code());
+                System.out.println("logged out resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -563,8 +563,10 @@ public class MainController {
                     });
                 } else {
                     Platform.runLater(() -> {
+                        agentLoggedOut.set(true);
                         isContestActive.set(false);
-                        switchToLoginScreen(event);
+                        Stage primaryStage = (Stage) (appGridPane.getScene().getWindow());
+                        switchToLoginScreen(primaryStage);
                     });
                 }
             }
@@ -573,10 +575,9 @@ public class MainController {
                 System.out.println("Oops... something went wrong..." + e.getMessage());
             }
         });
-
     }
 
-    public void switchToLoginScreen(MouseEvent event) {
+    public void switchToLoginScreen(Stage primaryStage) {
         FXMLLoader loader = null;
         try {
             loader = new FXMLLoader();
@@ -588,7 +589,6 @@ public class MainController {
             throw new RuntimeException(e);
         }
         Scene loginScene = new Scene(login, 300, 300);
-        Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         primaryStage.setScene(loginScene);
         primaryStage.show();
     }
@@ -607,7 +607,7 @@ public class MainController {
 
     public void setAgentIsOutOfWaitingMode() {
         this.fetchSubscribeTimer = new Timer();
-        this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client);
+        this.fetchSubscribeTimerTask = new FetchSubscriptionStatusTimer(isSubscribed, this.allieName, client, this);
         fetchSubscribeTimer.schedule(fetchSubscribeTimerTask, REFRESH_RATE, REFRESH_RATE);
 
         this.fetchIsAgentCanGetOutOfWaitingModeTimer.cancel();

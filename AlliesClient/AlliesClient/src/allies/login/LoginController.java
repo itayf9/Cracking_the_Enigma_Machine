@@ -55,7 +55,6 @@ public class LoginController {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGIN_SRC).newBuilder();
         urlBuilder.addQueryParameter(Constants.USERNAME, userNameTextField.getText());
         urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, ALLIE.getClientTypeAsString());
-        System.out.println(urlBuilder.build().toString());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -63,10 +62,8 @@ public class LoginController {
                 .build();
         client.newCall(request).enqueue(new Callback() {
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
-
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
+                System.out.println("login response Code: " + response.code() + " " + dtoAsStr);
 
                 if (response.code() != 200) {
                     Gson gson = new Gson();

@@ -1,5 +1,6 @@
 package agent.tasks;
 
+import agent.app.MainController;
 import com.google.gson.Gson;
 import dto.DTOactive;
 import dto.DTOstatus;
@@ -7,6 +8,7 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
+import problem.Problem;
 
 import java.io.IOException;
 import java.util.TimerTask;
@@ -19,16 +21,18 @@ import static http.url.URLconst.BASE_URL;
 
 public class FetchSubscriptionStatusTimer extends TimerTask {
 
-    private OkHttpClient client;
+    private final OkHttpClient client;
     private final BooleanProperty isSubscribed;
     private final StringProperty allieName;
+    private MainController mainController;
 
-    public FetchSubscriptionStatusTimer(BooleanProperty isSubscribed, StringProperty allieName, OkHttpClient client) {
+    public FetchSubscriptionStatusTimer(BooleanProperty isSubscribed, StringProperty allieName, OkHttpClient client, MainController mainController) {
         this.isSubscribed = isSubscribed;
         this.allieName = allieName;
         this.client = client;
+        this.mainController = mainController;
     }
-    
+
     @Override
     public void run() {
 
@@ -43,17 +47,17 @@ public class FetchSubscriptionStatusTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch subscription status timer response");
-                System.out.println("Code: " + response.code());
+                System.out.println("fetch subscription status timer response " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 System.out.println(dtoAsStr);
                 Gson gson = new Gson();
 
-
                 if (response.code() != 200) {
                     DTOstatus subscribeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
-
+                        if (subscribeStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT)) {
+                            mainController.allieUnsubscribedFromCurrentContest();
+                        }
                     });
 
                 } else {

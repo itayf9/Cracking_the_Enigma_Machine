@@ -36,8 +36,8 @@ public class HeaderController {
     }
 
     @FXML
-    void logoutAction(MouseEvent event) {
-        mainController.logoutAgent(event);
+    void logoutAction(MouseEvent ignored) {
+        mainController.logoutAgent();
     }
 
     public void setMainController(MainController mainController) {

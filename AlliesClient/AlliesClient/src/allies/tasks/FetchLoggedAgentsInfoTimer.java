@@ -17,7 +17,7 @@ import static http.url.URLconst.FETCH_LOGGED_AGENTS_INFO_SRC;
 public class FetchLoggedAgentsInfoTimer extends TimerTask {
 
     private OkHttpClient client;
-    private MainController mainController;
+    private final MainController mainController;
 
     public FetchLoggedAgentsInfoTimer(MainController mainController) {
         this.mainController = mainController;
@@ -45,8 +45,7 @@ public class FetchLoggedAgentsInfoTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch logged agents task response");
-                System.out.println("Code: " + response.code());
+                System.out.println("fetch logged agents task response " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 

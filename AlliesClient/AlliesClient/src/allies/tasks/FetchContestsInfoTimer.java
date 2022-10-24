@@ -18,7 +18,7 @@ import static http.url.URLconst.FETCH_BATTLEFIELDS_INFO_SRC;
 public class FetchContestsInfoTimer extends TimerTask {
 
     private OkHttpClient client;
-    private MainController mainController;
+    private final MainController mainController;
 
 
     public FetchContestsInfoTimer(MainController mainController) {
@@ -46,8 +46,7 @@ public class FetchContestsInfoTimer extends TimerTask {
         client.newCall(request).enqueue(new Callback() {
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch contests task response");
-                System.out.println("Code: " + response.code());
+                System.out.println("fetch contests timer response" + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 

@@ -22,9 +22,9 @@ import static http.url.URLconst.FETCH_ALLIES_INFO_SRC;
 
 public class FetchAlliesInfoTimer extends TimerTask {
 
-    private OkHttpClient client;
-    private MainController mainController;
-    private StringProperty uboatName;
+    private final OkHttpClient client;
+    private final MainController mainController;
+    private final StringProperty uboatName;
 
 
     public FetchAlliesInfoTimer(MainController mainController, StringProperty uboatName, OkHttpClient client) {
@@ -46,11 +46,9 @@ public class FetchAlliesInfoTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("allies info task response");
-                System.out.println("Code: " + response.code());
+                System.out.println("allies info timer response " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
-
 
                 if (response.code() != 200) {
                     DTOstatus alliesStatus = gson.fromJson(dtoAsStr, DTOstatus.class);

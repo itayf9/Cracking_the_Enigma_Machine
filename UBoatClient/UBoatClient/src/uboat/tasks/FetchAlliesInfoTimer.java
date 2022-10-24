@@ -37,8 +37,7 @@ public class FetchAlliesInfoTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetching allies info timer resp");
-                System.out.println("Code: " + response.code());
+                System.out.println("fetching allies info timer resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 

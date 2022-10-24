@@ -63,11 +63,8 @@ public class LoginController {
                 .build();
         client.newCall(request).enqueue(new Callback() {
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
-
+                System.out.println("login resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
-                System.out.println("Body: " + dtoAsStr);
-
                 if (response.code() != 200) {
                     Gson gson = new Gson();
                     DTOstatus loginStatus = gson.fromJson(dtoAsStr, DTOstatus.class);

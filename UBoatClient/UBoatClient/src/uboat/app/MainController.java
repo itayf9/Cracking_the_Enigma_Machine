@@ -124,7 +124,6 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        System.out.println("in initialize of uboat !!");
         // controller initialize
         headerController.setMainController(this);
         bodyController.setMainController(this);
@@ -157,8 +156,6 @@ public class MainController {
                 setStatusMessage("Contest has started", MessageTone.INFO);
                 fetchContestStatusTimerTask.cancel();
                 fetchContestStatusTimer.cancel();
-                fetchAlliesInfoTimerTask.run();
-                fetchAlliesInfoTimer.cancel();
 
                 // schedule fetch candidates timer
                 this.fetchCandidatesTimer = new Timer();
@@ -170,9 +167,6 @@ public class MainController {
                 // contest == not active => winner found
                 fetchCandidatesTimerTask.cancel();
                 fetchCandidatesTimer.cancel();
-                fetchAlliesInfoTimer = new Timer();
-                fetchAlliesInfoTimerTask = new FetchAlliesInfoTimer(client, this);
-                fetchAlliesInfoTimer.schedule(fetchAlliesInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
             }
         });
 
@@ -243,14 +237,9 @@ public class MainController {
                     .url(urlBuilder.build().toString())
                     .post(body)
                     .build();
-
-            System.out.println(request.headers());
-
             client.newCall(request).enqueue(new Callback() {
                 public void onResponse(Call call, Response response) throws IOException {
-                    System.out.println("load machine status resp");
-                    System.out.println("Code: " + response.code());
-
+                    System.out.println("load machine status resp " + "Code: " + response.code());
                     String dtoAsStr = response.body().string();
                     Gson gson = new Gson();
 
@@ -322,7 +311,7 @@ public class MainController {
                 .build();
         client.newCall(request).enqueue(new Callback() {
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
+                System.out.println("setManualMachineConfig resp " + "Code: " + response.code());
 
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
@@ -373,30 +362,22 @@ public class MainController {
 
         client.newCall(request).enqueue(new Callback() {
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
+                System.out.println("setRandomMachineConfig resp " + "Code: " + response.code());
 
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
                 if (response.code() != 200) {
-
                     DTOstatus configStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-
                     Platform.runLater(() -> {
                         setStatusMessage("Could not set a code. " + convertProblemToMessage(configStatus.getDetails()), MessageTone.ERROR);
                     });
                     return;
                 }
-
-                // response code is 200, therefore the request was successful
                 Platform.runLater(() -> {
-
                     DTOsecretConfig configStatus = gson.fromJson(dtoAsStr, DTOsecretConfig.class);
-
-                    // sets the properties that hold the configuration
                     ObservableList<Integer> rotorsObservableList = FXCollections.observableArrayList(configStatus.getRotors());
                     inUseRotorsIDsProperty.setValue(rotorsObservableList);
-
                     originalWindowsPositionsProperty.setValue(configStatus.getWindows());
                     currentWindowsCharactersProperty.setValue(configStatus.getWindows());
                     inUseReflectorSymbolProperty.setValue(configStatus.getReflectorSymbol());
@@ -438,7 +419,7 @@ public class MainController {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
+                System.out.println("cipher resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -487,7 +468,7 @@ public class MainController {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
+                System.out.println("resetMachineConfiguration resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -535,10 +516,8 @@ public class MainController {
                 .build();
         client.newCall(request).enqueue(new Callback() {
 
-
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("setReady status resp");
-                System.out.println("Code: " + response.code());
+                System.out.println("setReady status resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -634,8 +613,7 @@ public class MainController {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("announceTheWinnerOfTheContest resp");
-                System.out.println("Code: " + response.code());
+                System.out.println("announceTheWinnerOfTheContest resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -763,17 +741,17 @@ public class MainController {
     }
 
     public void logoutUBoat(MouseEvent event) {
-        if(isMachineLoadedProperty.get()){
+        if (isMachineLoadedProperty.get()) {
             fetchAlliesInfoTimer.cancel();
             fetchAlliesInfoTimerTask.cancel();
         }
-        if (isClientReady.get()){
-            if (fetchContestStatusTimer != null){
+        if (isClientReady.get()) {
+            if (fetchContestStatusTimer != null) {
                 fetchContestStatusTimer.cancel();
                 fetchContestStatusTimerTask.cancel();
             }
         }
-        if (isContestActive.get()){
+        if (isContestActive.get()) {
             if (fetchCandidatesTimer != null) {
                 fetchCandidatesTimer.cancel();
                 fetchCandidatesTimerTask.cancel();
@@ -790,8 +768,7 @@ public class MainController {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("logged out resp");
-                System.out.println("Code: " + response.code());
+                System.out.println("logged out resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 

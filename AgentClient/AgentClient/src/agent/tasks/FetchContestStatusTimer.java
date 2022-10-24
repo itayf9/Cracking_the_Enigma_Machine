@@ -49,8 +49,7 @@ public class FetchContestStatusTimer extends TimerTask {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch contest status task response");
-                System.out.println("Code: " + response.code());
+                System.out.println("fetch contest status timer response " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -59,7 +58,10 @@ public class FetchContestStatusTimer extends TimerTask {
                     Platform.runLater(() -> {
                         if (activeStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED)) {
                             mainController.allieUnsubscribedFromCurrentContest();
+                        } else if (activeStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT)) {
+                            mainController.logoutAgent();
                         }
+
                         mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);
                     });
 

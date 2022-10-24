@@ -35,6 +35,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 import java.util.Timer;
+
 import static http.url.URLconst.*;
 import static http.url.URLconst.BASE_URL;
 import static http.url.Constants.CONTENT_TYPE;
@@ -102,6 +103,7 @@ public class MainController {
     private FetchIsSubscribedToContestTimer fetchIsSubscribedToContestTimerTask;
 
     private BooleanProperty isReady;
+    private BooleanProperty allieLoggedOut;
 
     @FXML
     public void initialize() {
@@ -117,9 +119,10 @@ public class MainController {
         this.uboatName = new SimpleStringProperty();
         this.isReady = new SimpleBooleanProperty(false);
         this.usernameProperty = new SimpleStringProperty("");
+        this.allieLoggedOut = new SimpleBooleanProperty(false);
 
 
-        isSubscribedToContest.addListener((o, oldVal, newVal) ->{
+        isSubscribedToContest.addListener((o, oldVal, newVal) -> {
             if (newVal) { // subscribed to contest == true
                 fetchIsSubscribedToContestTimer = new Timer();
                 fetchIsSubscribedToContestTimerTask = new FetchIsSubscribedToContestTimer(isSubscribedToContest, uboatName, client, getMainController());
@@ -153,7 +156,9 @@ public class MainController {
                 fetchDynamicContestInfoTimerTask.cancel();
                 fetchContestStatusTimer.cancel();
                 fetchContestStatusTimerTask.cancel();
-                fetchWinnerMessage();
+                if (!allieLoggedOut.get()) {
+                    fetchWinnerMessage();
+                }
                 isReady.set(false);
             }
         });
@@ -196,7 +201,7 @@ public class MainController {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
+                System.out.println("fetchWinnerMessage resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -223,49 +228,7 @@ public class MainController {
     }
 
     /**
-     * #1 fetch logged agents info from server via http request
-     */
-    public void fetchLoggedAgentsInfoFromServer() {
-        String body = "";
-
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_LOGGED_AGENTS_INFO_SRC).newBuilder();
-        Request request = new Request.Builder()
-                .url(urlBuilder.build().toString())
-                .addHeader(CONTENT_TYPE, "text/plain")
-                .get()
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-
-
-            public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
-                String dtoAsStr = response.body().string();
-                Gson gson = new Gson();
-
-
-                if (response.code() != 200) {
-                    DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-                    Platform.runLater(() -> {
-                        setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR);
-                    });
-
-                } else {
-                    DTOresetConfig resetStatus = gson.fromJson(dtoAsStr, DTOresetConfig.class);
-
-                    Platform.runLater(() -> {
-
-                    });
-                }
-            }
-
-            public void onFailure(Call call, IOException e) {
-                System.out.println("Oops... something went wrong..." + e.getMessage());
-            }
-        });
-    }
-
-    /**
-     * #2 register the app to a battlefield with http request to the server
+     * #1 register the app to a battlefield with http request to the server
      */
     public void subscribeToBattlefield(String uboatNameToRegister) {
         String body = "";
@@ -281,7 +244,7 @@ public class MainController {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
+                System.out.println("subscribeToBattlefield resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -309,7 +272,7 @@ public class MainController {
     }
 
     /**
-     * #3 let the server know we are ready for contest to start
+     * #2 let the server know we are ready for contest to start
      */
     public void setReady(int taskSize) {
         String body = "";
@@ -325,7 +288,7 @@ public class MainController {
         client.newCall(request).enqueue(new Callback() {
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
+                System.out.println("setReady resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -352,7 +315,7 @@ public class MainController {
     }
 
     /**
-     * #4 fetch static info about the contest from the server via http request
+     * #3 fetch static info about the contest from the server via http request
      */
     public void fetchStaticInfoContest() {
 
@@ -366,7 +329,7 @@ public class MainController {
         client.newCall(request).enqueue(new Callback() {
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
+                System.out.println("fetchStaticInfoContest resp" + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -393,7 +356,7 @@ public class MainController {
     }
 
     /**
-     * #6 update Active Teams Info - Timer Task
+     * #4 update Active Teams Info - Timer Task
      *
      * @param alliesInfoList
      */
@@ -402,7 +365,7 @@ public class MainController {
     }
 
     /**
-     * confirm the contest is over and alert the server
+     * #5 confirm the contest is over and alert the server
      */
     public void approveContestIsOver() {
         String body = "";
@@ -417,7 +380,7 @@ public class MainController {
         client.newCall(request).enqueue(new Callback() {
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("Code: " + response.code());
+                System.out.println("approveContestIsOver resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -469,7 +432,6 @@ public class MainController {
             candidateTileController.setProcessedByAllieName(allieName);
             candidateTileController.setProcessedByAgentName(agentName);
             totalDistinctCandidates.set(totalDistinctCandidates.get() + 1);
-            System.out.println(totalDistinctCandidates.get());
             tabPaneBodyController.insertCandidateToFlowPane(singleCandidateTile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -572,7 +534,7 @@ public class MainController {
                 return "Each plug should have unique inputs and outputs.";
             case PLUGS_MISSING_VALUES:
                 return "Please complete the plug selection.";
-                
+
             case UBOAT_LOGGED_OUT:
                 return "The UBoat of the contest has logged out.";
             default:
@@ -681,6 +643,7 @@ public class MainController {
 
         String body = "";
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGOUT_SRC).newBuilder();
+        urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName.get());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
@@ -690,8 +653,7 @@ public class MainController {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("logged out resp");
-                System.out.println("Code: " + response.code());
+                System.out.println("logged out resp " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
@@ -706,7 +668,7 @@ public class MainController {
                         FXMLLoader loader = null;
                         try {
                             loader = new FXMLLoader();
-                            URL loginFxml = getClass().getResource("/allie/login/login.fxml");
+                            URL loginFxml = getClass().getResource("/allies/login/login.fxml");
                             loader.setLocation(loginFxml);
                             login = loader.load();
 
@@ -728,6 +690,7 @@ public class MainController {
     }
 
     public void unsubscribeFromCurrentContest() {
+        allieLoggedOut.set(true);
         isContestActive.set(false);
         cleanOldResults();
         isSubscribedToContest.set(false);
