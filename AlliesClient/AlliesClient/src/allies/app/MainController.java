@@ -101,7 +101,6 @@ public class MainController {
     private FetchContestsInfoTimer fetchContestsInfoTimerTask;
     private Timer fetchIsSubscribedToContestTimer;
     private FetchIsSubscribedToContestTimer fetchIsSubscribedToContestTimerTask;
-
     private BooleanProperty isReady;
     private BooleanProperty allieLoggedOut;
 
@@ -111,7 +110,6 @@ public class MainController {
         // controller initialize
         headerController.setMainController(this);
         tabPaneBodyController.setMainController(this);
-
         // property initialize
         this.totalDistinctCandidates = new SimpleIntegerProperty();
         this.isSubscribedToContest = new SimpleBooleanProperty();
@@ -120,7 +118,6 @@ public class MainController {
         this.isReady = new SimpleBooleanProperty(false);
         this.usernameProperty = new SimpleStringProperty("");
         this.allieLoggedOut = new SimpleBooleanProperty(false);
-
 
         isSubscribedToContest.addListener((o, oldVal, newVal) -> {
             if (newVal) { // subscribed to contest == true
