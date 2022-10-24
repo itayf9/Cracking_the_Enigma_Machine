@@ -668,6 +668,8 @@ public class MainController {
                 return "Please enter some text.";
             case CIPHER_INPUT_NOT_IN_ALPHABET:
                 return "The text should contain only letters from the machine's alphabet.";
+            case BATTLEFIELD_NAME_ALREADY_EXIST:
+                return "There is already a battlefield with that name";
             case FILE_NOT_ENOUGH_ROTORS:
                 return "There are not enough rotors.";
             case FILE_NUM_OF_REFLECTS_IS_NOT_HALF_OF_ABC:

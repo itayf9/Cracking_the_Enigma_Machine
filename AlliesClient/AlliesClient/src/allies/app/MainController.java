@@ -469,6 +469,8 @@ public class MainController {
                 return "Please enter some text.";
             case CIPHER_INPUT_NOT_IN_ALPHABET:
                 return "The text should contain only letters from the machine's alphabet.";
+            case CONTEST_IS_FULL:
+                return "This contest is full.";
             case NOT_ENOUGH_LOGGED_AGENTS:
                 return "Not enough agents are logged to your team.";
             case MISSING_TASK_SIZE:

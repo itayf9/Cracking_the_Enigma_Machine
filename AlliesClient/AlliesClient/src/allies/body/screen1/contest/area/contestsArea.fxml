@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="344.0" styleClass="component-with-background" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="allies.body.screen1.contest.area.ContestsAreaController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="356.0" styleClass="component-with-background" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="allies.body.screen1.contest.area.ContestsAreaController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
@@ -21,7 +21,7 @@
         <Label styleClass="component-title" text="Contests" />
         <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
          <content>
-            <FlowPane fx:id="contestsFlowpane" hgap="1.0" prefHeight="200.0" prefWidth="200.0" vgap="1.0">
+            <FlowPane fx:id="contestsFlowpane" hgap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" vgap="1.0">
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </padding></FlowPane>
