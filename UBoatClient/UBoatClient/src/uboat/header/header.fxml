@@ -15,10 +15,10 @@
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="NEVER" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.6666259765625" minWidth="10.0" prefWidth="100.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="119.6666259765625" minWidth="10.0" prefWidth="99.0" />
-        <ColumnConstraints maxWidth="103.66668701171875" minWidth="10.0" prefWidth="99.0" />
-        <ColumnConstraints maxWidth="103.66668701171875" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="99.0" />
+        <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="99.0" />
+        <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="NEVER" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" />
         <ColumnConstraints />
