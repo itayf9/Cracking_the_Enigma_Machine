@@ -91,7 +91,7 @@ public class LoginController {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    Scene appScene = new Scene(app, 900, 625);
+                    Scene appScene = new Scene(app, 700, 625);
                     Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     primaryStage.setScene(appScene);
                     primaryStage.show();
