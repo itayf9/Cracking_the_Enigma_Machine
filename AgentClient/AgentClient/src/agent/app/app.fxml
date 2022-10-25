@@ -27,7 +27,7 @@
       <StackPane GridPane.rowIndex="1">
          <children>
             <Pane cache="true" styleClass="body-background" />
-            <ImageView fx:id="startImage" fitHeight="224.0" fitWidth="176.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+            <ImageView fx:id="startImage" fitHeight="10.0" fitWidth="13.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
                <viewport>
                   <Rectangle2D />
                </viewport>
