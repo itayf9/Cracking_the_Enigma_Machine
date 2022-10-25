@@ -689,8 +689,12 @@ public class MainController {
         });
     }
 
-    public void unsubscribeFromCurrentContest() {
+    public void unsubscribeFromCurrentContestAllieLoggedOut() {
         allieLoggedOut.set(true);
+        unsubscribeFromCurrentContest();
+    }
+
+    public void unsubscribeFromCurrentContest() {
         isContestActive.set(false);
         cleanOldResults();
         isSubscribedToContest.set(false);

@@ -153,6 +153,7 @@ public class MainController {
             if (newVal) {
                 // contest == active
                 // stop allies & status timers
+                cleanOldResults();
                 setStatusMessage("Contest has started", MessageTone.INFO);
                 fetchContestStatusTimerTask.cancel();
                 fetchContestStatusTimer.cancel();
@@ -161,8 +162,6 @@ public class MainController {
                 this.fetchCandidatesTimer = new Timer();
                 this.fetchCandidatesTimerTask = new FetchCandidatesTimer(this, inUseRotorsIDsProperty, originalWindowsPositionsProperty, inUseReflectorSymbolProperty, originalText, client);
                 fetchCandidatesTimer.schedule(fetchCandidatesTimerTask, REFRESH_RATE, REFRESH_RATE);
-
-                cleanOldResults();
             } else {
                 // contest == not active => winner found
                 fetchCandidatesTimerTask.cancel();

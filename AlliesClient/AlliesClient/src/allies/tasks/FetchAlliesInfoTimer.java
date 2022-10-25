@@ -55,7 +55,7 @@ public class FetchAlliesInfoTimer extends TimerTask {
                     
                     Platform.runLater(() -> {
                         if (alliesStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
-                            mainController.unsubscribeFromCurrentContest();
+                            mainController.unsubscribeFromCurrentContestAllieLoggedOut();
                         }
                         mainController.setStatusMessage(mainController.convertProblemToMessage(alliesStatus.getDetails()), MessageTone.ERROR);
                     });

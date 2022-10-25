@@ -6,7 +6,6 @@ import allies.app.MessageTone;
 import com.google.gson.Gson;
 import dto.DTOactive;
 import dto.DTOstatus;
-import http.url.QueryParameter;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -58,7 +57,7 @@ public class FetchContestStatusTimer extends TimerTask {
                     DTOstatus activeStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
                         if (activeStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
-                            mainController.unsubscribeFromCurrentContest();
+                            mainController.unsubscribeFromCurrentContestAllieLoggedOut();
                             mainController.cancelContestStatusTimer();
                         }
                         mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);
