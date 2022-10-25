@@ -50,10 +50,9 @@ public class FetchContestStatusTimer extends TimerTask {
                 .build();
         client.newCall(request).enqueue(new Callback() {
 
-
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch contest status timer response " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
+                System.out.println("fetch contest status timer response " + "Code: " + response.code() + " " + dtoAsStr);
                 Gson gson = new Gson();
 
                 if (response.code() != 200) {
@@ -83,5 +82,4 @@ public class FetchContestStatusTimer extends TimerTask {
             }
         });
     }
-
 }

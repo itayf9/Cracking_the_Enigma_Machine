@@ -1373,6 +1373,7 @@ public class EnigmaEngine implements Engine {
         Set<AgentInfo> agents = loggedAllieName2loggedAgents.get(allieName);
         agents.forEach(AgentInfo::resetDynamicInfo);
         battlefield.getAllies().remove(allieMaybe.get());
+        allieName2decryptManager.remove(allieName);
         loggedAllieName2isSubscribed.put(allieName, false);
 
         return new DTOstatus(true, Problem.NO_PROBLEM);
@@ -1603,19 +1604,14 @@ public class EnigmaEngine implements Engine {
 
         // removes the agent from the set of AgentInfo in loggedAllieName2loggedAgents map
         Set<AgentInfo> agents = loggedAllieName2loggedAgents.get(allieName);
-        if (agents == null) {
-            return new DTOstatus(false, Problem.ALLIE_NAME_DOESNT_EXIST);
+        if (agents != null) {
+            Optional<AgentInfo> maybeAgent = agents.stream().filter((agentInfo) -> agentInfo.getAgentName().equals(agentName)).findFirst();
+            maybeAgent.ifPresent(agents::remove);
         }
-
-        Optional<AgentInfo> maybeAgent = agents.stream().filter((agentInfo) -> agentInfo.getAgentName().equals(agentName)).findFirst();
-        maybeAgent.ifPresent(agents::remove);
-
         // removes the agent from the agentName2agentInfo map
         agentName2agentInfo.remove(agentName);
-
         // adds the agent to the logged out clients set
         loggedOutClients.add(agentName);
-
         return new DTOstatus(true, Problem.NO_PROBLEM);
     }
 
