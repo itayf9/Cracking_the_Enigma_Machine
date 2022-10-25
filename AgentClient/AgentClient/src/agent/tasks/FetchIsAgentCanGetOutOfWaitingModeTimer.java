@@ -58,8 +58,9 @@ public class FetchIsAgentCanGetOutOfWaitingModeTimer extends TimerTask {
                             mainController.allieUnsubscribedFromCurrentContest();
                         } else if (activeStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT) && !agentLoggedOut.get()) { // allie logged out
                             mainController.logoutAgent();
+                        } else {
+                            mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);
                         }
-                        mainController.setStatusMessage(mainController.convertProblemToMessage(activeStatus.getDetails()), MessageTone.ERROR);
                     });
 
                 } else {

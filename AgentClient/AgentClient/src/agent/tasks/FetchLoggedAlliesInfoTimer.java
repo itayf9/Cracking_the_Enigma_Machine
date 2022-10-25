@@ -65,11 +65,13 @@ public class FetchLoggedAlliesInfoTimer extends TimerTask {
                     for (String allieName : alliesStatus.getLoggedAllies()) {
                         teamComboBox.getItems().add(allieName);
                     }
-                    Optional<String> maybeAllieName = teamComboBox.getItems().stream().filter(team -> team.equals(currentTeamComboBoxValue)).findFirst();
-                    if (maybeAllieName.isPresent()) {
-                        teamComboBox.setValue(currentTeamComboBoxValue);
-                    } else {
-                        errorLabel.setText("The selected team has logged out");
+                    if (currentTeamComboBoxValue != null) {
+                        Optional<String> maybeAllieName = teamComboBox.getItems().stream().filter(team -> team.equals(currentTeamComboBoxValue)).findFirst();
+                        if (maybeAllieName.isPresent()) {
+                            teamComboBox.setValue(currentTeamComboBoxValue);
+                        } else {
+                            errorLabel.setText("The selected team has logged out");
+                        }
                     }
                 });
             }
