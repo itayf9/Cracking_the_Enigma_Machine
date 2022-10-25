@@ -55,7 +55,6 @@ public class LoginController {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGIN_SRC).newBuilder();
         urlBuilder.addQueryParameter(Constants.USERNAME, userNameTextField.getText());
         urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, UBOAT.getClientTypeAsString());
-        System.out.println(urlBuilder.build().toString());
         Request request = new Request.Builder()
                 .url(urlBuilder.build().toString())
                 .addHeader(CONTENT_TYPE, "text/plain")
