@@ -186,8 +186,6 @@ public class MainController {
      * fetch the winner allie name from server and display it to everyone
      */
     private void fetchWinnerMessage() {
-        String body = "";
-
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + FETCH_CONTEST_WINNER).newBuilder();
         urlBuilder.addQueryParameter(QueryParameter.UBOAT_NAME, uboatName.get());
         Request request = new Request.Builder()
@@ -207,6 +205,9 @@ public class MainController {
                 if (response.code() != 200) {
                     DTOstatus winnerStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
+                        if (winnerStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)){
+                            unsubscribeFromCurrentContest();
+                        }
                         setStatusMessage(convertProblemToMessage(winnerStatus.getDetails()), MessageTone.ERROR);
                     });
 
@@ -385,12 +386,16 @@ public class MainController {
                 if (response.code() != 200) {
                     DTOstatus approveStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
-                        setStatusMessage(convertProblemToMessage(approveStatus.getDetails()), MessageTone.ERROR);
+                        if (approveStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)){
+                            unsubscribeFromCurrentContest();
+                        } else {
+                            setStatusMessage(convertProblemToMessage(approveStatus.getDetails()), MessageTone.ERROR);
+                        }
                     });
 
                 } else {
                     Platform.runLater(() -> {
-                        setStatusMessage("Contest is Approved", MessageTone.INFO);
+                        setStatusMessage("t is Approved", MessageTone.INFO);
                         unsubscribeFromCurrentContest();
                     });
                 }

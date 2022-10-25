@@ -1294,6 +1294,9 @@ public class EnigmaEngine implements Engine {
         Battlefield battlefield = uboatName2battleField.get(uboatUserName);
 
         if (battlefield == null) {
+            if (loggedOutClients.contains(uboatUserName)) {
+                return new DTOsubscribe(false, Problem.UBOAT_LOGGED_OUT, -1);
+            }
             return new DTOsubscribe(false, Problem.UBOAT_NAME_DOESNT_EXIST, -1);
         }
 
@@ -1319,11 +1322,13 @@ public class EnigmaEngine implements Engine {
 
         Optional<DecryptManager> allieMaybe = allies.stream().filter(decryptManager -> decryptManager.getAllieName().equals(allieName)).findFirst();
         if (!allieMaybe.isPresent()) {
+            if (loggedOutClients.contains(allieName)){
+                return new DTOstatus(false, Problem.ALLIE_LOGGED_OUT);
+            }
             return new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD);
         }
 
         DecryptManager allie = allieMaybe.get();
-
         int numOfAgents = loggedAllieName2loggedAgents.get(allieName).size();
         int taskSize = allie.getTaskSize();
         AllieInfo winnerAllieInfo = new AllieInfo(allieName, numOfAgents, taskSize);
@@ -1339,7 +1344,10 @@ public class EnigmaEngine implements Engine {
 
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         if (battlefield == null) {
-            return new DTOwinner(false, Problem.UBOAT_NAME_DOESNT_EXIST, battlefield.getWinnerAllieInfo());
+            if (loggedOutClients.contains(uboatName)){
+                return new DTOwinner(false, Problem.UBOAT_LOGGED_OUT, new AllieInfo("", 0,0));
+            }
+            return new DTOwinner(false, Problem.UBOAT_NAME_DOESNT_EXIST, new AllieInfo("", 0,0));
         }
         return new DTOwinner(true, Problem.NO_PROBLEM, battlefield.getWinnerAllieInfo());
     }
@@ -1348,14 +1356,19 @@ public class EnigmaEngine implements Engine {
     public DTOactive getAllieApprovalStatus(String allieName, String uboatName) {
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         if (battlefield == null) {
+            if (loggedOutClients.contains(uboatName)){
+                return new DTOactive(false, Problem.UBOAT_LOGGED_OUT, false);
+            }
             return new DTOactive(false, Problem.UBOAT_NAME_DOESNT_EXIST, false);
         }
 
         Boolean isSubscribe = loggedAllieName2isSubscribed.get(allieName);
         if (isSubscribe == null) {
+            if (loggedOutClients.contains(allieName)){
+                return new DTOactive(false, Problem.ALLIE_LOGGED_OUT, false);
+            }
             return new DTOactive(false, Problem.ALLIE_NAME_DOESNT_EXIST, false);
         }
-
         return new DTOactive(true, Problem.NO_PROBLEM, !isSubscribe);
     }
 
@@ -1363,6 +1376,9 @@ public class EnigmaEngine implements Engine {
     public DTOstatus setAllieApprovalStatus(boolean isApprove, String allieName, String uboatName) {
         Battlefield battlefield = uboatName2battleField.get(uboatName);
         if (battlefield == null) {
+            if (loggedOutClients.contains(uboatName)) {
+                return new DTOactive(false, Problem.UBOAT_LOGGED_OUT, false);
+            }
             return new DTOactive(false, Problem.UBOAT_NAME_DOESNT_EXIST, false);
         }
 

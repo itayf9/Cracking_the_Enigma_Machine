@@ -25,20 +25,18 @@ public class ApproveAllieFinishGameServlet extends HttpServlet {
         String usernameFromSession = SessionUtils.getUsername(req);
         Client typeOfClient = SessionUtils.getTypeOfClient(req);
         boolean isValidSession = validateAuthorization(usernameFromSession, resp, gson);
-
         if (isValidSession) {
-            Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
             if (!typeOfClient.equals(Client.ALLIE)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.UNAUTHORIZED_CLIENT_ACCESS)));
                 return;
             }
-
             String uboatName = req.getParameter(QueryParameter.UBOAT_NAME);
             if (uboatName == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.NO_UBOAT_NAME)));
             } else {
+                Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
                 DTOstatus approvalStatus = engine.setAllieApprovalStatus(true, usernameFromSession, uboatName);
                 if (!approvalStatus.isSucceed()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

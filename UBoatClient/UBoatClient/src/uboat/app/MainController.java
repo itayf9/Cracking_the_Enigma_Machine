@@ -625,9 +625,7 @@ public class MainController {
                 DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
 
                 if (response.code() != 200) {
-                    Platform.runLater(() -> {
-                        setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR);
-                    });
+                    Platform.runLater(() -> setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR));
 
                 } else {
                     Platform.runLater(() -> {
@@ -781,9 +779,7 @@ public class MainController {
 
                 DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                 if (response.code() != 200) {
-                    Platform.runLater(() -> {
-                        setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR);
-                    });
+                    Platform.runLater(() -> setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR));
                 } else {
                     Platform.runLater(() -> {
                         isContestActive.set(false);
