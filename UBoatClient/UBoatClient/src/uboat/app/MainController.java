@@ -622,11 +622,12 @@ public class MainController {
                 String dtoAsStr = response.body().string();
                 Gson gson = new Gson();
 
-                DTOstatus resetStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+                DTOstatus winnerStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
 
                 if (response.code() != 200) {
-                    Platform.runLater(() -> setStatusMessage(convertProblemToMessage(resetStatus.getDetails()), MessageTone.ERROR));
-
+                    if (!winnerStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT)) {
+                        Platform.runLater(() -> setStatusMessage(convertProblemToMessage(winnerStatus.getDetails()), MessageTone.ERROR));
+                    }
                 } else {
                     Platform.runLater(() -> {
                         setStatusMessage("A Winner Was Found. The Winner Team Is: " + allieWinnerName, MessageTone.INFO);

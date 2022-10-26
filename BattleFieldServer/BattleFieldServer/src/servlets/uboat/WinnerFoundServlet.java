@@ -54,9 +54,14 @@ public class WinnerFoundServlet extends HttpServlet {
                 // check if winner allie name is exist among the participants
                 Set<DecryptManager> allies = battlefields.get(usernameFromSession).getAllies();
                 Optional<DecryptManager> allieMaybe = allies.stream().filter(DecryptManager -> DecryptManager.getAllieName().equals(allieName)).findFirst();
+                Set<String> loggedOutClients = ServletUtils.getLoggedOutClients(getServletContext());
                 if (!allieMaybe.isPresent()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD)));
+                    if (loggedOutClients.contains(allieName)) {
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.ALLIE_LOGGED_OUT)));
+                    } else {
+                        resp.getWriter().println(gson.toJson(new DTOstatus(false, Problem.ALLIE_NAME_NOT_FOUND_IN_BATTLEFIELD)));
+                    }
                     return;
                 }
 
@@ -72,7 +77,7 @@ public class WinnerFoundServlet extends HttpServlet {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     resp.getWriter().println(gson.toJson(winnerStatus));
                 } else {
-                    // since status is ok this lines cant fail.
+                    // since status is ok this lines can't fail.
                     engine.setUboatReady(usernameFromSession, false);
                     resp.setStatus(HttpServletResponse.SC_OK);
                     // since both status succeeded we can send one arbitrarily
