@@ -11,7 +11,7 @@
 
 <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="900.0" styleClass="enigma-tabpane" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="allies.body.BodyController">
     <tabs>
-        <Tab styleClass="enigma-tab" text="Dashboard">
+        <Tab fx:id="dashboardTab" styleClass="enigma-tab" text="Dashboard">
             <content>
                 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="tab-scrollpane">
                     <content>
@@ -39,7 +39,7 @@
                 </ScrollPane>
             </content>
         </Tab>
-        <Tab styleClass="enigma-tab" text="Contest">
+        <Tab fx:id="contestTab" styleClass="enigma-tab" text="Contest">
             <content>
                 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="tab-scrollpane">
                     <content>

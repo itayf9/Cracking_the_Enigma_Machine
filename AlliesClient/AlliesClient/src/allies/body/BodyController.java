@@ -14,6 +14,7 @@ import info.battlefield.BattlefieldInfo;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
 import jobprogress.JobProgressInfo;
 
@@ -23,6 +24,12 @@ import java.util.Set;
 public class BodyController {
 
     private MainController mainController;
+
+    @FXML
+    private Tab dashboardTab;
+
+    @FXML
+    private Tab contestTab;
 
     /**
      * screen 1
@@ -161,5 +168,9 @@ public class BodyController {
 
     public void clearOldCandidates() {
         candidatesAreaController.clearOldResult();
+    }
+
+    public void setDisableDashboardPane(boolean disable) {
+        dashboardTab.setDisable(disable);
     }
 }

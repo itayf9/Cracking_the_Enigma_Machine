@@ -164,14 +164,14 @@ public class BodyController {
     public void bindComponents(BooleanProperty isMachineConfiguredProperty, ListProperty<Integer> inUseRotorsIDsProperty,
                                StringProperty currentWindowsCharactersProperty, StringProperty inUseReflectorSymbolProperty,
                                StringProperty inUsePlugs, ListProperty<Integer> currentNotchDistances, IntegerProperty cipherCounterProperty,
-                               IntegerProperty totalDistinctCandidates, BooleanProperty isClientReady, BooleanProperty isProcessedText) {
+                               IntegerProperty totalDistinctCandidates, BooleanProperty isClientReady, BooleanProperty isProcessedText, BooleanProperty isLoseWinAreaMessageVisible) {
 
 
         // binds the components that need the isConfigured Boolean property.
-        codeCalibration.disableProperty().bind(isClientReady);
-        encryptDecrypt.disableProperty().bind(isMachineConfiguredProperty.not().or(isClientReady));
+        codeCalibration.disableProperty().bind(isClientReady.or(isLoseWinAreaMessageVisible));
+        encryptDecrypt.disableProperty().bind(isMachineConfiguredProperty.not().or(isClientReady).or(isLoseWinAreaMessageVisible));
         candidatesArea.disableProperty().bind(isMachineConfiguredProperty.not());
-        dictionary.disableProperty().bind(isMachineConfiguredProperty.not().or(isClientReady));
+        dictionary.disableProperty().bind(isMachineConfiguredProperty.not().or(isClientReady).or(isLoseWinAreaMessageVisible));
         encryptDecryptController.bindProcessButton(isProcessedText);
 
         // config bindings

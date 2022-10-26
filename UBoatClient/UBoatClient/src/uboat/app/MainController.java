@@ -121,6 +121,8 @@ public class MainController {
     private StringProperty originalText;
     private BooleanProperty isProcessedText;
 
+    private BooleanProperty isLoseWinAreaMessageVisible;
+
 
     @FXML
     public void initialize() {
@@ -147,6 +149,7 @@ public class MainController {
         this.originalText = new SimpleStringProperty();
         this.usernameProperty = new SimpleStringProperty("");
         this.isProcessedText = new SimpleBooleanProperty(false);
+        this.isLoseWinAreaMessageVisible = new SimpleBooleanProperty(false);
 
         // isContestActive event listener
         isContestActive.addListener((o, oldVal, newVal) -> {
@@ -173,7 +176,7 @@ public class MainController {
         // binding initialize
         bodyController.bindComponents(isMachineConfiguredProperty, inUseRotorsIDsProperty,
                 currentWindowsCharactersProperty, inUseReflectorSymbolProperty, inUsePlugsProperty,
-                currentNotchDistances, cipherCounterProperty, totalDistinctCandidates, isClientReady, isProcessedText);
+                currentNotchDistances, cipherCounterProperty, totalDistinctCandidates, isClientReady, isProcessedText, isLoseWinAreaMessageVisible);
 
         // general setting to initialize sub components
         body.visibleProperty().bind(isMachineLoadedProperty);
@@ -632,6 +635,7 @@ public class MainController {
                     Platform.runLater(() -> {
                         setStatusMessage("A Winner Was Found. The Winner Team Is: " + allieWinnerName, MessageTone.INFO);
                         headerController.announceWinner(allieWinnerName);
+                        isLoseWinAreaMessageVisible.set(true);
                         isContestActive.set(false);
                         isClientReady.set(false);
                     });
@@ -815,5 +819,8 @@ public class MainController {
     public void approveUboatFinishGame() {
         // this function may hold more functionality in the future
         cleanOldResults();
+        isLoseWinAreaMessageVisible.set(false);
+        resetMachineConfiguration();
+        bodyController.clearTextFields();
     }
 }
