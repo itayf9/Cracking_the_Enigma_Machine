@@ -120,7 +120,6 @@ public class MainController {
     private FetchCandidatesTimer fetchCandidatesTimerTask;
     private StringProperty originalText;
     private BooleanProperty isProcessedText;
-
     private BooleanProperty isLoseWinAreaMessageVisible;
 
 
