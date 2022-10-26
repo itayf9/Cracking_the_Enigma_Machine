@@ -127,6 +127,7 @@ public class MainController {
             } else {// when contest is over // or when uboat logged out before contest has begun
                 isReady.set(false);
                 tabPaneBody.getSelectionModel().selectFirst();
+                headerController.clearOldResults();
                 setStatusMessage("Allie unsubscribed from the contest.", MessageTone.INFO);
             }
         });
@@ -395,7 +396,7 @@ public class MainController {
 
                 } else {
                     Platform.runLater(() -> {
-                        setStatusMessage("t is Approved", MessageTone.INFO);
+                        setStatusMessage("", MessageTone.INFO);
                         unsubscribeFromCurrentContest();
                     });
                 }
