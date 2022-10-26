@@ -611,8 +611,8 @@ public class MainController {
         tabPaneBodyController.displayDynamicContestInfo(agentsInfo, jobStatus);
 
         // clear old candidates from flow-pane
-        clearOldCandidates();
-        totalDistinctCandidates.set(0);
+        // clearOldCandidates();
+        // totalDistinctCandidates.set(0);
     }
 
     public MainController getMainController() {
@@ -670,7 +670,8 @@ public class MainController {
                     });
                 } else {
                     Platform.runLater(() -> {
-                        isContestActive.set(false);
+                        allieLoggedOut.set(true);
+                        isContestActive.set(false); // -> fetch winner won't happen now
                         FXMLLoader loader = null;
                         try {
                             loader = new FXMLLoader();

@@ -24,7 +24,8 @@ public class DecryptManager {
 
     private BlockingQueue<AgentConclusion> agentReportsOfCandidatesQueue;
     private Thread collector;
-    private final List<AgentConclusion> allConclusions = new ArrayList<>();
+    private final List<AgentConclusion> allConclusions;
+    private final BlockingQueue<AgentConclusion> allBlockingQueueConclusions;
     private Thread taskProducer;
     private final Machine enigmaMachine;
     private final Dictionary dictionary;
@@ -60,6 +61,8 @@ public class DecryptManager {
         this.isContestActive = battlefield.isActive();
         this.uboatName = battlefield.getUboatName();
         setTotalConfigs(difficultyLevel);
+        this.allConclusions = new ArrayList<>();
+        this.allBlockingQueueConclusions = new LinkedBlockingQueue<>();
     }
 
     public BooleanProperty getIsContestActive() {
@@ -90,9 +93,6 @@ public class DecryptManager {
         // setting a thread that produces tasks
         taskProducer = new Thread(new TaskProducer(this));
         taskProducer.setName("TASK_PRODUCER");
-
-        // trigger the threads
-        // threadExecutor.prestartAllCoreThreads();
 
         taskProducer.start();
         collector.start();

@@ -193,7 +193,7 @@ public interface Engine {
 
     DTOstatus setAllieWinnerInfo(String uboatName, String allieName);
 
-    public DTOwinner getAllieWinnerInfo(String uboatName);
+    DTOwinner getAllieWinnerInfo(String uboatName);
 
     boolean getIsUboatReady(String uboatName);
 

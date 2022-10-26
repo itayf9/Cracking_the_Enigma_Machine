@@ -33,7 +33,6 @@ public class FetchWinnerServlet extends HttpServlet {
         boolean isValidSession = validateAuthorization(userNameFromSession, resp, gson);
         if (isValidSession) {
 
-
             // get engine from context
             Engine engine = (Engine) getServletContext().getAttribute(Constants.ENGINE);
 
