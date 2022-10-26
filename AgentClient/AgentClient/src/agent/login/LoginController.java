@@ -99,7 +99,9 @@ public class LoginController {
         OkHttpClient client = new OkHttpClient().newBuilder().cookieJar(new SimpleCookieManager()).build();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + LOGIN_SRC).newBuilder();
         urlBuilder.addQueryParameter(Constants.USERNAME, userNameTextField.getText());
-        urlBuilder.addQueryParameter(QueryParameter.ALLIE_NAME, teamComboBox.getValue());
+        if (teamComboBox.getValue() != null) {
+            urlBuilder.addQueryParameter(QueryParameter.ALLIE_NAME, teamComboBox.getValue());
+        }
         urlBuilder.addQueryParameter(QueryParameter.NUM_OF_THREADS, String.valueOf((int) threadsSlider.getValue()));
         urlBuilder.addQueryParameter(QueryParameter.MISSION_COUNT, tasksPerPullSpinner.getEditor().getText());
         urlBuilder.addQueryParameter(Constants.CLIENT_TYPE, AGENT.getClientTypeAsString());
@@ -113,14 +115,19 @@ public class LoginController {
                 String dtoAsStr = response.body().string();
                 System.out.println("login resp " + "Code: " + response.code() + " " + dtoAsStr);
                 Gson gson = new Gson();
-                DTOactive loginStatus = gson.fromJson(dtoAsStr, DTOactive.class);
+
                 if (response.code() != 200) {
+                    DTOstatus loginStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
+
                     Platform.runLater(() -> {
                         errorLabel.setVisible(true);
                         errorLabel.setText(loginStatus.getDetails().problemToGeneralMessage());
                     });
                     return;
                 }
+
+                DTOactive loginStatus = gson.fromJson(dtoAsStr, DTOactive.class);
+
                 Platform.runLater(() -> {
                     FXMLLoader loader = null;
                     try {

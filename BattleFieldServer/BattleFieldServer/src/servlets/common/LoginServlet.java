@@ -89,6 +89,7 @@ public class LoginServlet extends HttpServlet {
                         if (allieNameToJoin == null) {
                             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                             response.getWriter().println(gson.toJson(new DTOstatus(false, Problem.MISSING_ALLIE_NAME)));
+                            return;
                         }
                         int numOfThreads;
                         try {
