@@ -132,7 +132,7 @@ public class EncryptDecryptController {
 
     public void clearTextFields() {
         inputTextField.setText("");
-        outputLabel.setText("");
+        //outputLabel.setText("");
     }
 
     @FXML
