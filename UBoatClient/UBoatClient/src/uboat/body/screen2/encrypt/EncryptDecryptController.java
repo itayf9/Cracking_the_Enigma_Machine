@@ -170,5 +170,6 @@ public class EncryptDecryptController {
 
     public void bindProcessButton(BooleanProperty isProcessedText) {
         processButton.disableProperty().bind(isProcessedText);
+        clearButton.disableProperty().bind(isProcessedText);
     }
 }
