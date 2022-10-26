@@ -104,6 +104,8 @@ public class MainController {
     private FetchIsSubscribedToContestTimer fetchIsSubscribedToContestTimerTask;
     private BooleanProperty isReady;
     private BooleanProperty allieLoggedOut;
+    private BooleanProperty uboatLoggedOut;
+
 
     @FXML
     public void initialize() {
@@ -119,6 +121,7 @@ public class MainController {
         this.isReady = new SimpleBooleanProperty(false);
         this.usernameProperty = new SimpleStringProperty("");
         this.allieLoggedOut = new SimpleBooleanProperty(false);
+        this.uboatLoggedOut = new SimpleBooleanProperty(false);
 
         isSubscribedToContest.addListener((o, oldVal, newVal) -> {
             if (newVal) { // subscribed to contest == true
@@ -156,7 +159,7 @@ public class MainController {
                 fetchDynamicContestInfoTimerTask.cancel();
                 fetchContestStatusTimer.cancel();
                 fetchContestStatusTimerTask.cancel();
-                if (!allieLoggedOut.get()) {
+                if (!allieLoggedOut.get() || !uboatLoggedOut.get()) {
                     tabPaneBodyController.setDisableDashboardPane(true);
                     fetchWinnerMessage();
                 }
@@ -210,7 +213,7 @@ public class MainController {
                     DTOstatus winnerStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
                         if (winnerStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)){
-                            unsubscribeFromCurrentContest();
+                            unsubscribeFromCurrentContestUboatLoggedOut();
                         }
                         setStatusMessage(convertProblemToMessage(winnerStatus.getDetails()), MessageTone.ERROR);
                     });
@@ -391,7 +394,7 @@ public class MainController {
                     DTOstatus approveStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
                     Platform.runLater(() -> {
                         if (approveStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)){
-                            unsubscribeFromCurrentContest();
+                            unsubscribeFromCurrentContestUboatLoggedOut();
                         } else {
                             setStatusMessage(convertProblemToMessage(approveStatus.getDetails()), MessageTone.ERROR);
                         }
@@ -699,8 +702,8 @@ public class MainController {
         });
     }
 
-    public void unsubscribeFromCurrentContestAllieLoggedOut() {
-        allieLoggedOut.set(true);
+    public void unsubscribeFromCurrentContestUboatLoggedOut() {
+        uboatLoggedOut.set(true);
         unsubscribeFromCurrentContest();
     }
 

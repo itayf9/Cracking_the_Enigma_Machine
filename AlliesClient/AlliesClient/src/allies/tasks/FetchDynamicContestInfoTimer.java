@@ -58,7 +58,7 @@ public class FetchDynamicContestInfoTimer extends TimerTask {
                     Platform.runLater(() -> {
                         if (contestInfoStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) {
                             
-                            mainController.unsubscribeFromCurrentContest();
+                            mainController.unsubscribeFromCurrentContestUboatLoggedOut();
                         }
                         mainController.setStatusMessage(mainController.convertProblemToMessage(contestInfoStatus.getDetails()), MessageTone.ERROR);
                     });

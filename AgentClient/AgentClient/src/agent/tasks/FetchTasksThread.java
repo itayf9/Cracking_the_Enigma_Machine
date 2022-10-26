@@ -66,7 +66,6 @@ public class FetchTasksThread implements Runnable {
 
 
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("fetch agentTasks task response " + "Code: " + response.code());
                 String dtoAsStr = response.body().string();
                 Gson gson = new GsonBuilder()
                         .registerTypeAdapter(AgentTask.class, new AgentTaskDeserializer())
@@ -74,16 +73,18 @@ public class FetchTasksThread implements Runnable {
 
                 if (response.code() != 200) {
                     DTOstatus tasksStatus = gson.fromJson(dtoAsStr, DTOstatus.class);
-
+                    System.out.println("fetch agentTasks task response " + "Code: " + response.code() + " " + tasksStatus.getDetails());
                     Platform.runLater(() -> {
                         if ((tasksStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED) || tasksStatus.getDetails().equals(Problem.UBOAT_LOGGED_OUT)) && !agentLoggedOut.get()) {
                             mainController.allieUnsubscribedFromCurrentContest();
-                        } else if (tasksStatus.getDetails().equals(Problem.ALLIE_NOT_SUBSCRIBED) && !agentLoggedOut.get()) {
-                            mainController.allieUnsubscribedFromCurrentContest();
+                        } else if (tasksStatus.getDetails().equals(Problem.ALLIE_LOGGED_OUT) && !agentLoggedOut.get()) {
+                            mainController.logoutAgent();
                         }
                     });
 
                 } else {
+                    System.out.println("fetch agentTasks task response " + "Code: " + response.code());
+
                     DTOtasks tasksStatus = gson.fromJson(dtoAsStr, DTOtasks.class);
                     try {
                         Thread.sleep(25);
