@@ -247,4 +247,7 @@ public class BodyController {
         activeTeamsController.setTeams(alliesInfoList);
     }
 
+    public void clearTextFields() {
+        encryptDecryptController.clearTextFields();
+    }
 }

@@ -157,6 +157,7 @@ public class MainController {
                 fetchContestStatusTimer.cancel();
                 fetchContestStatusTimerTask.cancel();
                 if (!allieLoggedOut.get()) {
+                    tabPaneBodyController.setDisableDashboardPane(true);
                     fetchWinnerMessage();
                 }
                 isReady.set(false);
@@ -704,6 +705,7 @@ public class MainController {
     }
 
     public void unsubscribeFromCurrentContest() {
+        tabPaneBodyController.setDisableDashboardPane(false);
         isContestActive.set(false);
         cleanOldResults();
         isSubscribedToContest.set(false);
