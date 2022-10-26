@@ -1281,7 +1281,7 @@ public class EnigmaEngine implements Engine {
         agentsInfo = loggedAllieName2loggedAgents.get(allieName);
 
         // fetch all candidates
-        allConclusions = allie.getAllConclusions();
+        allConclusions = allie.getNextConclusions();
 
         // fetch overall progress
         jobProgressInfo = allie.getJobProgressInfo();

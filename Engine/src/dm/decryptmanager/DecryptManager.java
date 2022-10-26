@@ -171,6 +171,10 @@ public class DecryptManager {
         return allConclusions;
     }
 
+    public BlockingQueue<AgentConclusion> getAllBlockingQueueConclusions() {
+        return allBlockingQueueConclusions;
+    }
+
     public DifficultyLevel getDifficultyLevel() {
         return difficultyLevel;
     }
@@ -199,5 +203,20 @@ public class DecryptManager {
 
     public String getUboatName() {
         return uboatName;
+    }
+
+    public List<AgentConclusion> getNextConclusions() {
+        List<AgentConclusion> nextConclusions = new ArrayList<>();
+
+        while (!allBlockingQueueConclusions.isEmpty()) {
+
+            AgentConclusion conclusion = allBlockingQueueConclusions.poll();
+            if (conclusion != null) {
+                nextConclusions.add(conclusion);
+            } else {
+                break;
+            }
+        }
+        return nextConclusions;
     }
 }
