@@ -73,6 +73,10 @@ public class DecryptManager {
      * cancel the bruteForce execution
      */
     public void stopDecrypt() {
+
+        // makes the dm unready, for the next contest.
+        setDMReady(false);
+
         //  stopping the collector Task / Thread
         collector.interrupt();
 
