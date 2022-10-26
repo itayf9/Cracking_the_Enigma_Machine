@@ -159,7 +159,7 @@ public class MainController {
                 fetchDynamicContestInfoTimerTask.cancel();
                 fetchContestStatusTimer.cancel();
                 fetchContestStatusTimerTask.cancel();
-                if (!allieLoggedOut.get() || !uboatLoggedOut.get()) {
+                if (!allieLoggedOut.get() && !uboatLoggedOut.get()) {
                     tabPaneBodyController.setDisableDashboardPane(true);
                     fetchWinnerMessage();
                 }
