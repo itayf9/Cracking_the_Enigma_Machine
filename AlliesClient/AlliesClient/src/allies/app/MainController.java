@@ -20,7 +20,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -124,6 +123,10 @@ public class MainController {
         this.uboatLoggedOut = new SimpleBooleanProperty(false);
 
         isSubscribedToContest.addListener((o, oldVal, newVal) -> {
+            // if we subscribed to contest then we can set those to false
+            uboatLoggedOut.set(false);
+            allieLoggedOut.set(false);
+
             if (newVal) { // subscribed to contest == true
                 fetchIsSubscribedToContestTimer = new Timer();
                 fetchIsSubscribedToContestTimerTask = new FetchIsSubscribedToContestTimer(isSubscribedToContest, uboatName, client, getMainController());
@@ -564,7 +567,7 @@ public class MainController {
     }
 
     /**
-     * disaply a list of all contests
+     * display a list of all contests
      *
      * @param allBattlefields all contests
      */
