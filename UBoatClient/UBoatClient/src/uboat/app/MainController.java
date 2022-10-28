@@ -632,7 +632,7 @@ public class MainController {
                     }
                 } else {
                     Platform.runLater(() -> {
-                        setStatusMessage("A winner was found. the winner team is: " + allieWinnerName, MessageTone.INFO);
+                        setStatusMessage("A winner was found. The winner team is: " + allieWinnerName, MessageTone.INFO);
                         headerController.announceWinner(allieWinnerName);
                         isLoseWinAreaMessageVisible.set(true);
                         isContestActive.set(false);
