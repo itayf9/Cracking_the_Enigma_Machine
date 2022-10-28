@@ -132,10 +132,11 @@ public class MainController {
                 fetchIsSubscribedToContestTimerTask = new FetchIsSubscribedToContestTimer(isSubscribedToContest, uboatName, client, getMainController());
                 fetchIsSubscribedToContestTimer.schedule(fetchIsSubscribedToContestTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {// when contest is over // or when uboat logged out before contest has begun
-                isReady.set(false);
-                tabPaneBody.getSelectionModel().selectFirst();
-                headerController.clearOldResults();
-                setStatusMessage("Allie unsubscribed from the contest.", MessageTone.INFO);
+//                isReady.set(false);
+//                tabPaneBody.getSelectionModel().selectFirst();
+//                headerController.clearOldResults();
+                unsubscribeFromCurrentContest();
+                setStatusMessage("Ally has unsubscribed from the contest.", MessageTone.INFO);
             }
         });
 
@@ -144,7 +145,7 @@ public class MainController {
             if (newVal) {
                 // contest == active
                 // stop allies & status timers
-                setStatusMessage("Contest has started", MessageTone.INFO);
+                setStatusMessage("Contest has started.", MessageTone.INFO);
                 fetchStaticInfoContest();
 
                 // schedule fetch candidates timer & fetch active teams
@@ -225,7 +226,7 @@ public class MainController {
                     DTOwinner winnerStatus = gson.fromJson(dtoAsStr, DTOwinner.class);
                     Platform.runLater(() -> {
                         headerController.displayWinnerMessage(winnerStatus.getAllieWinner());
-                        setStatusMessage("Found a Winner !", MessageTone.SUCCESS);
+                        setStatusMessage("Found a winner !", MessageTone.SUCCESS);
                     });
                 }
             }
@@ -269,7 +270,7 @@ public class MainController {
                         uboatName.set(uboatNameToRegister);
                         isSubscribedToContest.set(true);
                         tabPaneBodyController.setTaskSizeSpinner(subscribeStatus.getTotalPossibleWindowsPositions());
-                        setStatusMessage("Subscribed Successfully", MessageTone.SUCCESS);
+                        setStatusMessage("Subscribed successfully.", MessageTone.SUCCESS);
                     });
                 }
             }
@@ -310,7 +311,7 @@ public class MainController {
                         fetchContestStatusTimer = new Timer();
                         fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, uboatName, client, getMainController());
                         fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
-                        setStatusMessage("Allie is Ready", MessageTone.INFO);
+                        setStatusMessage("Ally is ready. Waiting for the contest to start.", MessageTone.INFO);
                         isReady.set(true);
                         tabPaneBody.getSelectionModel().selectNext();
                     });

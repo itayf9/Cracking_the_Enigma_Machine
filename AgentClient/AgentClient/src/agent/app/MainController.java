@@ -158,7 +158,7 @@ public class MainController {
         isSubscribed.addListener((o, oldVal, newVal) -> {
             if (newVal) {
                 // allie just subscribed
-                setStatusMessage("Allie has subscribed to a Contest", MessageTone.INFO);
+                setStatusMessage("Ally has subscribed to the contest.", MessageTone.INFO);
                 uboatLoggedOut = false;
                 this.fetchStaticInfoContestTimer = new Timer();
                 this.fetchStaticInfoContestTimerTask = new FetchStaticContestInfoTimer(this, allieName, client, agentLoggedOut);
@@ -172,7 +172,7 @@ public class MainController {
                 fetchStaticInfoContestTimer.cancel();
                 fetchStaticInfoContestTimerTask.cancel();
                 // allie has unsubscribed, when the contest is finished
-                setStatusMessage("Team has unsubscribed from the game", MessageTone.INFO);
+                setStatusMessage("Team has unsubscribed from the contest.", MessageTone.INFO);
                 cleanOldResults();
             }
         });
@@ -184,7 +184,7 @@ public class MainController {
                 new Thread(this.fetchTasksThread).start();
                 // contest == active
                 // stop allies & status timers
-                setStatusMessage("Contest has started", MessageTone.INFO);
+                setStatusMessage("Contest has started.", MessageTone.INFO);
                 fetchStaticInfoContestTimerTask.run();
                 cancelStaticInfoTimer();
                 // schedule fetch candidates timer & fetch active teams
@@ -195,7 +195,7 @@ public class MainController {
                 // contest == not active =>
                 if (!uboatLoggedOut) {
                     fetchWinnerMessage();
-                    setStatusMessage("Winner Found", MessageTone.INFO);
+                    setStatusMessage("A winner was found.", MessageTone.INFO);
                 }
                 threadPool.shutdownNow();
                 submitConclusionsTimer.cancel();
@@ -246,7 +246,7 @@ public class MainController {
                 } else {
                     DTOwinner winnerStatus = gson.fromJson(dtoAsStr, DTOwinner.class);
                     Platform.runLater(() -> {
-                        setStatusMessage("Found a Winner !", MessageTone.SUCCESS);
+                        setStatusMessage("Found a winner !", MessageTone.SUCCESS);
                         headerController.displayWinnerMessage(winnerStatus.getAllieWinner());
                     });
                 }

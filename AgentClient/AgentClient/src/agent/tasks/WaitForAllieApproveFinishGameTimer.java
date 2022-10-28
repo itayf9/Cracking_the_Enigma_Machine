@@ -60,7 +60,7 @@ public class WaitForAllieApproveFinishGameTimer extends TimerTask {
                     DTOactive approvalStatus = gson.fromJson(dtoAsStr, DTOactive.class);
                     Platform.runLater(() -> {
                         if (approvalStatus.isActive()) {
-                            mainController.setStatusMessage("Team has unsubscribed from the game", MessageTone.INFO);
+                            mainController.setStatusMessage("Team has unsubscribed from the contest.", MessageTone.INFO);
                             mainController.cleanOldResults();
                             mainController.setIsSubscribed(false);
                         }

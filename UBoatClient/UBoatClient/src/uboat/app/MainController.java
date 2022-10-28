@@ -156,7 +156,7 @@ public class MainController {
                 // contest == active
                 // stop allies & status timers
                 cleanOldResults();
-                setStatusMessage("Contest has started", MessageTone.INFO);
+                setStatusMessage("Contest has started.", MessageTone.INFO);
                 fetchContestStatusTimerTask.cancel();
                 fetchContestStatusTimer.cancel();
 
@@ -211,7 +211,7 @@ public class MainController {
 
         // prevents double loading
         if (isMachineLoadedProperty.get()) {
-            setStatusMessage("Can't load more then 1 file.", MessageTone.ERROR);
+            setStatusMessage("Can't load more then one file.", MessageTone.ERROR);
         } else {
             // then load new machine
 
@@ -276,7 +276,7 @@ public class MainController {
                             fetchAlliesInfoTimer = new Timer();
                             fetchAlliesInfoTimerTask = new FetchAlliesInfoTimer(client, getMainController());
                             fetchAlliesInfoTimer.schedule(fetchAlliesInfoTimerTask, REFRESH_RATE, REFRESH_RATE);
-                            setStatusMessage("Machine Loaded Successfully!", MessageTone.SUCCESS);
+                            setStatusMessage("Machine loaded successfully!", MessageTone.SUCCESS);
                         });
                     }
                 }
@@ -337,7 +337,7 @@ public class MainController {
                     // display original config in machine specs
                     bodyController.displayOriginalConfig(configStatus.getRotors(), configStatus.getWindows(),
                             configStatus.getReflectorSymbol(), configStatus.getPlugs(), configStatus.getNotchDistances());
-                    setStatusMessage("Configured Successfully", MessageTone.SUCCESS);
+                    setStatusMessage("Configured successfully.", MessageTone.SUCCESS);
                     isMachineConfiguredProperty.setValue(Boolean.TRUE);
                 });
             }
@@ -385,7 +385,7 @@ public class MainController {
                     inUsePlugsProperty.setValue(configStatus.getPlugs());
                     ObservableList<Integer> notchDistanceObservableList = FXCollections.observableArrayList(configStatus.getNotchDistances());
                     currentNotchDistances.setValue(notchDistanceObservableList);
-                    setStatusMessage("Configured Successfully", MessageTone.SUCCESS);
+                    setStatusMessage("Configured successfully.", MessageTone.SUCCESS);
                     isMachineConfiguredProperty.setValue(Boolean.TRUE);
                     bodyController.displayOriginalConfig(inUseRotorsIDsProperty.getValue(), currentWindowsCharactersProperty.getValue(), inUseReflectorSymbolProperty.getValue(), inUsePlugsProperty.getValue(), currentNotchDistances.getValue());
                 });
@@ -487,7 +487,7 @@ public class MainController {
                         ObservableList<Integer> notchDistanceObservableList = FXCollections.observableArrayList(resetStatus.getCurrentNotchDistances()); // current should be the same here
                         currentNotchDistances.setValue(notchDistanceObservableList);
                         isProcessedText.set(Boolean.FALSE);
-                        setStatusMessage("Reset Successfully", MessageTone.SUCCESS);
+                        setStatusMessage("Reset successfully.", MessageTone.SUCCESS);
                     });
                 }
             }
@@ -503,7 +503,7 @@ public class MainController {
      */
     public void setReady() {
         if (textHasBeenCiphered.get() == Boolean.FALSE) {
-            setStatusMessage("please cipher some text", MessageTone.ERROR);
+            setStatusMessage("Please cipher some text.", MessageTone.ERROR);
             return;
         }
 
@@ -535,7 +535,7 @@ public class MainController {
                         fetchContestStatusTimer = new Timer();
                         fetchContestStatusTimerTask = new FetchContestStatusTimer(isContestActive, client);
                         fetchContestStatusTimer.schedule(fetchContestStatusTimerTask, REFRESH_RATE, REFRESH_RATE);
-                        setStatusMessage("uboat is ready", MessageTone.SUCCESS);
+                        setStatusMessage("Uboat is ready. Waiting for the contest to start.", MessageTone.SUCCESS);
                     });
                 }
             }
@@ -632,7 +632,7 @@ public class MainController {
                     }
                 } else {
                     Platform.runLater(() -> {
-                        setStatusMessage("A Winner Was Found. The Winner Team Is: " + allieWinnerName, MessageTone.INFO);
+                        setStatusMessage("A winner was found. the winner team is: " + allieWinnerName, MessageTone.INFO);
                         headerController.announceWinner(allieWinnerName);
                         isLoseWinAreaMessageVisible.set(true);
                         isContestActive.set(false);

@@ -77,6 +77,6 @@ public class CandidateTileController {
     }
 
     public void setProcessedByAllieName(String processedByAgentName) {
-        foundByAllieNameLabel.setText("Allie: " + processedByAgentName);
+        foundByAllieNameLabel.setText("Ally: " + processedByAgentName);
     }
 }
