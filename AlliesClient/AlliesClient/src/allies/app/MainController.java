@@ -123,18 +123,17 @@ public class MainController {
         this.uboatLoggedOut = new SimpleBooleanProperty(false);
 
         isSubscribedToContest.addListener((o, oldVal, newVal) -> {
-            // if we subscribed to contest then we can set those to false
-            uboatLoggedOut.set(false);
-            allieLoggedOut.set(false);
+
 
             if (newVal) { // subscribed to contest == true
+                // if we subscribed to contest then we can set those to false
+                uboatLoggedOut.set(false);
+                allieLoggedOut.set(false);
+
                 fetchIsSubscribedToContestTimer = new Timer();
                 fetchIsSubscribedToContestTimerTask = new FetchIsSubscribedToContestTimer(isSubscribedToContest, uboatName, client, getMainController());
                 fetchIsSubscribedToContestTimer.schedule(fetchIsSubscribedToContestTimerTask, REFRESH_RATE, REFRESH_RATE);
             } else {// when contest is over // or when uboat logged out before contest has begun
-//                isReady.set(false);
-//                tabPaneBody.getSelectionModel().selectFirst();
-//                headerController.clearOldResults();
                 unsubscribeFromCurrentContest();
                 setStatusMessage("Ally has unsubscribed from the contest.", MessageTone.INFO);
             }
